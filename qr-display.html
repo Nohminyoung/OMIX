@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OMIX — Live Booth Display</title>
+<link rel="icon" href="symbol.png" type="image/png" />
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css" />
+<style>
+:root {
+  --qd-bg: #050505;
+  --qd-muted: #555;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 100%; height: 100%; overflow: hidden; }
+body {
+  background: var(--qd-bg);
+  color: var(--white);
+  font-family: 'Montserrat', sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+body::after {
+  content: '';
+  position: fixed; inset: 0;
+  background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(255,255,255,.012) 3px, rgba(255,255,255,.012) 4px);
+  pointer-events: none; z-index: 0;
+}
+
+/* ── STANDBY ── */
+#standby {
+  position: relative; z-index: 1;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 28px; text-align: center;
+}
+
+.qd-logo-title {
+  font-size: clamp(3rem, 9vw, 6.5rem);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  line-height: 0.95;
+}
+.qd-logo-title em {
+  font-style: italic;
+  color: var(--red);
+}
+
+.qd-logo-sub {
+  font-size: clamp(0.7rem, 2vw, 1rem);
+  letter-spacing: 0.35em;
+  color: var(--qd-muted);
+  text-transform: uppercase;
+}
+
+.qd-waiting {
+  font-size: clamp(0.8rem, 2vw, 1.1rem);
+  letter-spacing: 0.2em;
+  color: var(--qd-muted);
+  display: flex; align-items: center; gap: 10px;
+  text-transform: uppercase;
+}
+
+.qd-dots { display: flex; gap: 6px; }
+.qd-dots span {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--red);
+  animation: qd-pulse 1.4s ease-in-out infinite;
+}
+.qd-dots span:nth-child(2) { animation-delay: .2s; }
+.qd-dots span:nth-child(3) { animation-delay: .4s; }
+@keyframes qd-pulse {
+  0%, 80%, 100% { opacity: .2; transform: scale(.8); }
+  40% { opacity: 1; transform: scale(1.2); }
+}
+
+/* ── QR 팝업 ── */
+#qr-pop {
+  display: none;
+  position: fixed; inset: 0; z-index: 10;
+  background: rgba(5,5,5,0.97);
+  align-items: center; justify-content: center;
+  flex-direction: column;
+}
+#qr-pop.show { display: flex; animation: qd-fade .5s ease; }
+@keyframes qd-fade {
+  from { opacity: 0; transform: scale(.95); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.qd-card {
+  position: relative;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 28px;
+  padding: 48px 56px;
+  text-align: center;
+  max-width: 560px;
+  width: 90%;
+}
+
+.qd-badge {
+  display: inline-block;
+  font-size: .75rem;
+  letter-spacing: .15em;
+  color: #000;
+  background: var(--red);
+  padding: 5px 16px;
+  border-radius: 20px;
+  margin-bottom: 24px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.qd-dj-name {
+  font-size: clamp(2.4rem, 7vw, 4rem);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  margin-bottom: 8px;
+  word-break: keep-all;
+}
+.qd-dj-name em { font-style: italic; color: var(--red); }
+
+.qd-track {
+  font-size: clamp(.8rem, 2vw, 1rem);
+  color: rgba(255,255,255,0.55);
+  letter-spacing: .05em;
+  margin-bottom: 32px;
+  word-break: break-word;
+}
+
+.qd-qr-wrap {
+  display: inline-block;
+  background: #fff;
+  padding: 14px;
+  border-radius: 16px;
+  margin-bottom: 26px;
+  box-shadow: 0 0 50px rgba(249,21,54,.25);
+}
+#qrCanvas { display: block; }
+
+.qd-hint {
+  font-size: clamp(.65rem, 1.8vw, .85rem);
+  letter-spacing: .1em;
+  color: var(--qd-muted);
+  margin-bottom: 28px;
+}
+
+.qd-countdown-wrap {
+  width: 100%;
+  background: rgba(255,255,255,.08);
+  border-radius: 3px;
+  height: 4px;
+  overflow: hidden;
+}
+.qd-countdown-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--red), #A647FF);
+  border-radius: 3px;
+  width: 100%;
+  transition: none;
+}
+.qd-countdown-label {
+  font-size: .65rem;
+  color: var(--qd-muted);
+  letter-spacing: .1em;
+  margin-top: 8px;
+}
+
+/* history strip */
+#history {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 5;
+  padding: 12px 24px;
+  display: flex; gap: 12px; overflow-x: auto;
+  background: rgba(5,5,5,.92);
+  border-top: 1px solid rgba(255,255,255,.06);
+}
+#history::-webkit-scrollbar { display: none; }
+
+.qd-hist-item {
+  flex-shrink: 0;
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 14px;
+  border: 1px solid rgba(255,255,255,.09);
+  border-radius: 8px;
+  text-decoration: none; color: inherit;
+}
+.qd-hist-num { font-weight: 900; font-size: 1rem; color: var(--red); }
+.qd-hist-info { display: flex; flex-direction: column; gap: 1px; }
+.qd-hist-dj { font-weight: 700; font-size: .85rem; letter-spacing: .02em; }
+.qd-hist-track { font-size: .6rem; color: var(--qd-muted); letter-spacing: .03em; }
+
+/* ws status */
+#ws-status {
+  position: fixed; top: 20px; right: 24px; z-index: 20;
+  font-size: .65rem; letter-spacing: .1em; text-transform: uppercase;
+  display: flex; align-items: center; gap: 8px; color: var(--qd-muted);
+}
+#ws-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--qd-muted); }
+#ws-dot.live { background: var(--red); animation: qd-blink 1.5s ease-in-out infinite; }
+@keyframes qd-blink { 0%,100%{opacity:1} 50%{opacity:.3} }
+</style>
+</head>
+<body>
+
+<!-- 대기 화면 -->
+<div id="standby">
+  <div class="qd-logo-title">OMIX <em>LIVE</em></div>
+  <div class="qd-logo-sub">전시 부스 — Live Sound Archive</div>
+  <div class="qd-waiting">
+    녹음 대기 중
+    <div class="qd-dots"><span></span><span></span><span></span></div>
+  </div>
+</div>
+
+<!-- QR 팝업 -->
+<div id="qr-pop">
+  <div class="qd-card">
+    <div class="qd-badge">🎵 NEW TRACK READY</div>
+    <div class="qd-dj-name" id="qDjName"></div>
+    <div class="qd-track" id="qTrack"></div>
+    <div class="qd-qr-wrap"><div id="qrCanvas"></div></div>
+    <div class="qd-hint">📱 QR을 스캔하면 나만의 OMIX 페이지가 열립니다</div>
+    <div class="qd-countdown-wrap"><div class="qd-countdown-bar" id="countBar"></div></div>
+    <div class="qd-countdown-label" id="countLabel"></div>
+  </div>
+</div>
+
+<!-- 하단 히스토리 -->
+<div id="history"></div>
+
+<!-- 연결 상태 -->
+<div id="ws-status">
+  <div id="ws-dot"></div>
+  <span id="ws-text">연결 중...</span>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="exhibit-config.js"></script>
+<script src="qr-display.js"></script>
+</body>
+</html>

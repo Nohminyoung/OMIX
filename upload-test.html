@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>OMIX — 업로드 테스트 (내부용)</title>
+<style>
+  body { background:#0a0a0a; color:#eee; font-family:sans-serif; display:flex; align-items:center; justify-content:center; min-height:100vh; margin:0; }
+  .box { background:#151515; border:1px solid #333; border-radius:16px; padding:40px; width:min(420px,90vw); }
+  h1 { font-size:18px; margin:0 0 6px; }
+  p.hint { color:#888; font-size:13px; margin:0 0 24px; }
+  input[type=file] { width:100%; margin-bottom:16px; color:#eee; }
+  button { width:100%; padding:12px; background:#F91536; border:none; border-radius:8px; color:#fff; font-weight:700; cursor:pointer; }
+  button:disabled { opacity:.5; cursor:default; }
+  #result { margin-top:20px; font-size:13px; word-break:break-all; line-height:1.6; }
+  #result a { color:#00D4FF; }
+  .ok { color:#39FF14; }
+  .err { color:#ff5555; }
+</style>
+</head>
+<body>
+  <div class="box">
+    <h1>🎵 OMIX 업로드 테스트</h1>
+    <p class="hint">내부 확인용 페이지 — 방문객에게 노출하지 마세요.</p>
+    <input type="file" id="file" accept=".wav,.mp3,.aif,.aiff,.flac" />
+    <button id="btn">업로드 → QR 생성</button>
+    <div id="result"></div>
+  </div>
+
+<script src="exhibit-config.js"></script>
+<script>
+const API_BASE = (window.OMIX_EXHIBIT_CONFIG && window.OMIX_EXHIBIT_CONFIG.API_BASE) || 'http://localhost:3000';
+document.getElementById('btn').addEventListener('click', async () => {
+  const fileInput = document.getElementById('file');
+  const resultEl = document.getElementById('result');
+  if (!fileInput.files[0]) { resultEl.innerHTML = '<span class="err">파일을 먼저 선택하세요.</span>'; return; }
+
+  const btn = document.getElementById('btn');
+  btn.disabled = true; btn.textContent = '업로드 중...';
+  resultEl.textContent = '';
+
+  const fd = new FormData();
+  fd.append('audio', fileInput.files[0]);
+
+  try {
+    const res = await fetch(`${API_BASE}/upload`, {
+      method: 'POST',
+      headers: { 'x-api-key': 'omix-secret-key' },
+      body: fd
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || '업로드 실패');
+    resultEl.innerHTML = `
+      <p class="ok">✔ 업로드 성공 — ${data.card.djName} / ${data.card.trackName}</p>
+      <p>qr-display.html 화면에 QR이 떴는지 확인하세요.</p>
+      <p>카드 페이지 바로 열기: <a href="${data.card.cardUrl}" target="_blank">${data.card.cardUrl}</a></p>
+    `;
+  } catch (e) {
+    resultEl.innerHTML = `<span class="err">✖ ${e.message} (서버가 켜져 있는지, x-api-key가 맞는지 확인)</span>`;
+  } finally {
+    btn.disabled = false; btn.textContent = '업로드 → QR 생성';
+  }
+});
+</script>
+</body>
+</html>

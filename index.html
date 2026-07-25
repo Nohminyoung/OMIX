@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OMIX — Listen. Mix. Return.</title>
+  <link rel="icon" href="symbol.png" type="image/png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,700&family=Stack+Sans+Notch&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/fontawesome.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/brands.min.css" />
+  <script src="theme.js"></script>
+  <script src="click-sound.js"></script>
+  <script src="transition-head.js"></script>
+</head>
+<body class="page-index">
+
+  <!-- ================================================
+    [LP 꺼내기 로딩 스크린]
+    로딩이미지.png 슬리브에서 LP 바이닐이 오른쪽으로 빠져나오는 연출
+    window.load + 700ms 또는 최대 4.5s 후 페이드아웃
+    ================================================ -->
+  <div class="loader-overlay" id="loaderOverlay">
+    <div class="lv-wrap">
+      <div class="lv-scene">
+        <!-- LP 바이닐: z-index 1 (슬리브 뒤), 오른쪽으로 슬라이드 아웃 -->
+        <div class="lv-vinyl" id="lvVinyl">
+          <div class="lv-vinyl-label">
+            <span class="lv-stereo">STEREO</span>
+            <strong class="lv-vname">OMIX.</strong>
+            <div class="lv-vhole"></div>
+          </div>
+        </div>
+        <!-- 앨범 슬리브: z-index 2 (바이닐 앞에서 가림) -->
+        <div class="lv-sleeve"></div>
+      </div>
+      <p class="loader-text">LOADING</p>
+    </div>
+  </div>
+
+  <!-- ================================================
+    [가이드 오버레이]
+    페이지 최초 진입 시 표시 — 스크롤 또는 클릭으로 사라짐
+    ================================================ -->
+  <div class="guide-overlay" id="guideOverlay">
+    <div class="guide-callout">
+      <p class="guide-title">버튼을 눌러 OMIX의<br>색상을 변경해보세요</p>
+      <div class="guide-color-row">
+        <span class="guide-color-dot" style="background:#F91536"></span>
+        <span class="guide-color-dot" style="background:#A647FF"></span>
+        <span class="guide-color-dot" style="background:#00D4FF"></span>
+        <span class="guide-color-dot" style="background:#39FF14"></span>
+        <span class="guide-color-dot" style="background:#FFB800"></span>
+      </div>
+      <!-- 말풍선 꼬리: 버튼 방향(아래 오른쪽) -->
+      <span class="guide-tail"></span>
+    </div>
+  </div>
+
+  <!-- [커스텀 커서]
+       .cursor : 레드 테두리 원, 마우스를 부드럽게 따라옴 (관성 효과)
+       .cursor-dot : 마우스 위치에 정확히 붙는 작은 점
+       main.js [1]번 블록에서 위치 제어 -->
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-dot" id="cursorDot"></div>
+  <div class="grain"></div>
+
+  <!-- NAV -->
+  <nav class="nav" id="nav">
+    <ul class="nav-menu">
+      <li><a href="chart.html"     class="nav-link">Chart</a></li>
+      <li><a href="genre.html"     class="nav-link">Explore</a></li>
+      <li><a href="store.html"     class="nav-link">Store</a></li>
+      <li><a href="about.html"     class="nav-link">About</a></li>
+      <li><a href="my-player.html" class="nav-link">My Player</a></li>
+    </ul>
+    <a href="index.html" class="nav-logo-center" id="navLogoCenter"><img src="logo.png" alt="OMIX" class="logo-img" /></a>
+    <div class="nav-sns">
+      <a href="#" class="nav-sns-link" aria-label="Spotify"    target="_blank"><i class="fab fa-spotify"></i></a>
+      <a href="#" class="nav-sns-link" aria-label="Instagram"  target="_blank"><i class="fab fa-instagram"></i></a>
+      <a href="#" class="nav-sns-link" aria-label="YouTube"    target="_blank"><i class="fab fa-youtube"></i></a>
+      <a href="#" class="nav-sns-link" aria-label="SoundCloud" target="_blank"><i class="fab fa-soundcloud"></i></a>
+    </div>
+    <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+  </nav>
+
+  <!-- ================================================
+    [무한 스크롤 텍스트 띠 — marquee]
+    nav 바로 아래 고정 위치 (position: fixed, top: var(--nav-h))
+    LISTEN ◆ MIX ◆ RETURN ◆ BUDDHISM × MUSIC ◆ 108 SOUNDS ◆ OMIX
+    텍스트 2세트 복제 → 끊김 없이 왼쪽으로 루프
+    marqueeScroll 애니메이션: 20초 주기로 왼→오 무한 이동
+    ================================================ -->
+  <div class="site-marquee">
+    <div class="marquee-track">
+      <span class="marquee-item-wrap">LISTEN</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">MIX</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">REMIX</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">ARCHIVE</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">BUDDHISM × MUSIC</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">OM MUSIC IMMERSIVE EXPERIENCE</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">108 SOUNDS</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">MY MIX, MY RITUAL</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">LISTEN</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">MIX</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">REMIX</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">ARCHIVE</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">BUDDHISM × MUSIC</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">OM MUSIC IMMERSIVE EXPERIENCE</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">108 SOUNDS</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">MY MIX, MY RITUAL</span><span class="dot-sep">◆</span>
+    </div>
+  </div>
+
+  <!-- ══ 1. HERO ══ -->
+  <section class="idx-hero" id="idxHero">
+    <!-- 로딩 종료 후 글자별로 등장 — hn-play 클래스는 로더가 사라진 시점에 JS로 부여 -->
+    <div class="idx-hero-name-wrap" id="idxHeroNameWrap">
+      <svg class="idx-hero-name" id="idxHeroName" role="img" aria-label="OMIX" viewBox="0 0 187.31 54.28" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <path d="M134.87.27h-10.78c-1.19,0-1.19,1.1-1.19,1.1v50.72s.14,1.21,1.42,1.21h10.32c1.27,0,1.42-1.21,1.42-1.21V1.38s0-1.1-1.19-1.1Z"/>
+        <path d="M170.56,28.88l-6.97,9.57,9.57,13.82c.94,1.23,1.95,1.02,1.95,1.02h10.49c1.77-.3.71-1.68.71-1.68l-15.74-22.73Z"/>
+        <path d="M154.57,24.42l6.97-9.57-9.57-13.82c-.94-1.23-1.95-1.02-1.95-1.02h-10.49c-1.77.3-.71,1.68-.71,1.68l15.74,22.73Z"/>
+        <path d="M186.29.03h-10.49s-1-.21-1.95,1.02l-9.57,13.82v.02s-25.46,36.73-25.46,36.73c0,0-1.07,1.38.71,1.68h10.49s1,.21,1.95-1.02l19.6-28.25v-.02s15.42-22.3,15.42-22.3c0,0,1.07-1.38-.71-1.68Z"/>
+        <path d="M118.62,1.57v-.45s0-1.12-1.16-1.12h-11.88s-.02,0-.02,0l-17.48,25.23L70.6.01h-.02s0,0,0,0h-11.88c-1.16,0-1.16,1.12-1.16,1.12v51.22s.14,1.22,1.38,1.22h11.66V20.91l17.17,24.91s.06.08.16.13c0,0,.01,0,.02.01.02,0,.04.02.05.02.02,0,.04.02.06.02.01,0,.03,0,.05,0,.02,0,.03,0,.05,0,.02,0,.04-.01.06-.02.02,0,.04-.01.05-.02,0,0,.01,0,.02-.01.09-.06.16-.13.16-.13l13.06-18.95L118.62,1.57Z"/>
+        <path d="M105.59,24.63v28.93h11.66c1.24,0,1.38-1.22,1.38-1.22V5.93l-13.04,18.71Z"/>
+        <path d="M28,.46v23.26c2.48.54,4.34,2.74,4.34,5.38,0,3.04-2.47,5.51-5.51,5.51s-5.51-2.47-5.51-5.51c0-2.68,1.91-4.91,4.44-5.4V.46C11.43,1.07,0,12.88,0,27.36s12.05,26.92,26.92,26.92,26.92-12.05,26.92-26.92S42.37,1.03,28,.46Z"/>
+      </svg>
+      <p class="idx-hero-sub" id="idxHeroSub">Korean Buddhism Music Platform</p>
+      <button class="idx-hero-audio-btn" id="idxHeroAudioBtn" type="button" aria-label="배경 음악 재생/정지" aria-pressed="false">
+        <span id="idxHeroAudioIcon">▶</span>
+      </button>
+    </div>
+    <div class="idx-hero-meta">
+      <span>★★★★★</span>
+      <span class="idx-pipe">|</span>
+      <span>Korean Buddhism</span>
+      <span class="idx-pipe">|</span>
+      <span>Electronic</span>
+      <span class="idx-pipe">|</span>
+      <span>Seoul, Korea</span>
+    </div>
+  </section>
+
+  <!-- ══ 2. LP 섹션 ══ -->
+  <section class="idx-lp-section">
+    <span class="stc-br stc-tl"></span>
+    <span class="stc-br stc-tr"></span>
+    <span class="stc-br stc-bl"></span>
+    <span class="stc-br stc-br-pos"></span>
+    <div class="idx-lp-carousel" id="lpCarousel">
+      <button class="idx-lp-arrow idx-lp-arrow-l" id="lpArrowL" aria-label="Previous track">&#10094;</button>
+
+      <div class="idx-lp-stage" id="lpStage"></div>
+
+      <button class="idx-lp-arrow idx-lp-arrow-r" id="lpArrowR" aria-label="Next track">&#10095;</button>
+    </div>
+    <div class="idx-lp-info">
+      <p class="idx-lp-eyebrow reveal-up delay-1" id="lpEyebrow">Track 01</p>
+      <p class="idx-lp-name reveal-up delay-2" id="lpName">Void <span class="accent-pt">Mandala</span></p>
+    </div>
+
+    <!-- Play / Listen Now — store 상품 카드(stpc-)의 뱃지 · 라운드 버튼 언어 참고 -->
+    <div class="idx-cta-card reveal-up delay-3">
+      <span class="idx-cta-badge">✳ FREE STREAM</span>
+      <div class="idx-cta-row">
+        <a href="my-player.html" class="idx-store-btn idx-store-btn-fill">▶&nbsp;&nbsp;Play</a>
+        <a href="my-player.html" class="idx-store-btn idx-store-btn-outline">Listen Now</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ 3. Korean Buddhism Tracks ══ -->
+  <section class="idx-kb-section">
+    <div class="idx-kb-intro">
+      <div>
+        <p class="idx-kb-eyebrow reveal-up">Section 03</p>
+        <h2 class="idx-kb-head reveal-up delay-1">Korean<br>Buddhism<br>Tracks</h2>
+      </div>
+      <p class="idx-kb-desc reveal-up delay-2">
+        Rooted in the ancient resonance of Korean Buddhist chanting,
+        OMIX translates sacred sound into the language of the club.
+        Each track is a meditation — structured not by dogma, but by
+        rhythm, space, and the persistent hum of being.
+        108 BPM. One breath. One return.
+      </p>
+    </div>
+    <div class="idx-stagger" id="idxStagger">
+      <span class="idx-line idx-line-l" data-dir="-1">KOREAN</span>
+      <span class="idx-line idx-line-r" data-dir="1">BUDDHISM</span>
+      <span class="idx-line idx-line-l" data-dir="-1">TRACKS</span>
+    </div>
+  </section>
+
+  <!-- ══ 4. 트랙 리스트 ══ -->
+  <section class="idx-tracks">
+    <div class="idx-tracks-header">
+      <span>#</span><span>Track</span><span>Duration</span>
+    </div>
+    <div class="idx-track-row reveal-up"><span class="idx-t-num">01</span><span class="idx-t-name">Void Mandala</span><span class="idx-t-dur">3:48</span></div>
+    <div class="idx-track-row reveal-up delay-1"><span class="idx-t-num">02</span><span class="idx-t-name">Lotus Fire</span><span class="idx-t-dur">5:12</span></div>
+    <div class="idx-track-row reveal-up delay-2"><span class="idx-t-num">03</span><span class="idx-t-name">108 BPM</span><span class="idx-t-dur">4:06</span></div>
+    <div class="idx-track-row reveal-up delay-3"><span class="idx-t-num">04</span><span class="idx-t-name">Dharma Drop</span><span class="idx-t-dur">6:33</span></div>
+    <div class="idx-track-row reveal-up delay-4"><span class="idx-t-num">05</span><span class="idx-t-name">AUM Club</span><span class="idx-t-dur">7:01</span></div>
+    <div class="idx-track-row reveal-up delay-5"><span class="idx-t-num">06</span><span class="idx-t-name">Mindful Roots</span><span class="idx-t-dur">4:44</span></div>
+    <div class="idx-track-row reveal-up delay-6"><span class="idx-t-num">07</span><span class="idx-t-name">Monk Sequence</span><span class="idx-t-dur">5:28</span></div>
+    <div class="idx-track-row reveal-up"><span class="idx-t-num">08</span><span class="idx-t-name">Temple Bass</span><span class="idx-t-dur">3:55</span></div>
+    <div class="idx-tracks-bottom">
+      <a href="chart.html" class="idx-btn idx-btn-fill">▶ &nbsp;Full Chart</a>
+      <a href="store.html" class="idx-btn idx-btn-outline">Order Vinyl</a>
+    </div>
+  </section>
+
+  <!-- ══ 5. 최신 믹스 ══ -->
+  <section class="idx-video-section">
+    <div class="idx-vid-marquee">
+      <div class="idx-vid-mq-track" id="idxVidMqTrack" aria-hidden="true"></div>
+      <span class="sr-only">Latest Mix / Void Mandala / Watch Now /</span>
+    </div>
+    <div class="idx-video-frame">
+      <span class="stc-br stc-tl"></span>
+      <span class="stc-br stc-tr"></span>
+      <span class="stc-br stc-bl"></span>
+      <span class="stc-br stc-br-pos"></span>
+      <img src="background_img.jpg" alt="Latest Mix" />
+      <a href="my-player.html" class="idx-video-play">▶</a>
+    </div>
+    <p class="idx-video-cap">OMIX Studio · DJ Haein × OMIX</p>
+  </section>
+
+  <!-- ══ 6. 이벤트 ══ -->
+  <section class="idx-events">
+    <div class="idx-ev-heading">
+      <span class="idx-ev-line">OMIX</span>
+      <span class="idx-ev-line inv">ON</span>
+      <span class="idx-ev-line stroke">STAGE</span>
+    </div>
+    <div class="idx-event-list">
+      <div class="idx-event-row reveal-up">
+        <span class="idx-e-date">Jul 12, 2026</span>
+        <div><p class="idx-e-name">AUM Club Seoul</p><p class="idx-e-loc">Seoul, Korea</p></div>
+        <div class="idx-e-btns"><button class="idx-e-btn">RSVP</button><button class="idx-e-btn fill">GET TICKETS</button></div>
+      </div>
+      <div class="idx-event-row reveal-up delay-1">
+        <span class="idx-e-date">Aug 03, 2026</span>
+        <div><p class="idx-e-name">Zandari Festa</p><p class="idx-e-loc">Seoul, Korea</p></div>
+        <div class="idx-e-btns"><button class="idx-e-btn">RSVP</button><button class="idx-e-btn fill">GET TICKETS</button></div>
+      </div>
+      <div class="idx-event-row reveal-up delay-2">
+        <span class="idx-e-date">Sep 20, 2026</span>
+        <div><p class="idx-e-name">Berghain</p><p class="idx-e-loc">Berlin, Germany</p></div>
+        <div class="idx-e-btns"><button class="idx-e-btn">RSVP</button><button class="idx-e-btn fill">GET TICKETS</button></div>
+      </div>
+      <div class="idx-event-row reveal-up delay-3">
+        <span class="idx-e-date">Oct 08, 2026</span>
+        <div><p class="idx-e-name">Fabric London</p><p class="idx-e-loc">London, UK</p></div>
+        <div class="idx-e-btns"><button class="idx-e-btn">RSVP</button><button class="idx-e-btn fill">GET TICKETS</button></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ 7. FOOTER ══ -->
+  <footer class="idx-footer">
+    <div class="idx-footer-brand">
+      <img src="logo.png" alt="OMIX" class="idx-footer-logo" />
+      <p class="idx-footer-copy">© 2026 OMIX Studio.<br>Korean Buddhism × Modern Music.<br>Seoul, Korea.</p>
+    </div>
+    <nav class="idx-footer-links">
+      <a href="chart.html"     class="idx-footer-link">Chart</a>
+      <a href="genre.html"     class="idx-footer-link">Explore</a>
+      <a href="store.html"     class="idx-footer-link">Store</a>
+      <a href="about.html"     class="idx-footer-link">About</a>
+      <a href="my-player.html" class="idx-footer-link">My Player</a>
+    </nav>
+    <div class="idx-footer-sns">
+      <a href="#" class="nav-sns-link" style="font-size:20px"><i class="fab fa-spotify"></i></a>
+      <a href="#" class="nav-sns-link" style="font-size:20px"><i class="fab fa-instagram"></i></a>
+      <a href="#" class="nav-sns-link" style="font-size:20px"><i class="fab fa-youtube"></i></a>
+      <a href="#" class="nav-sns-link" style="font-size:20px"><i class="fab fa-soundcloud"></i></a>
+    </div>
+  </footer>
+
+  <!-- ================================================
+    [하단 고정 미니 플레이어]
+    position: fixed, bottom: 0 → 항상 화면 최하단 고정
+    5열 그리드: 곡정보 / 컨트롤 / 프로그레스 / 볼륨 / 좋아요
+    main.js [7~10]번 블록에서 재생/정지/진행 제어
+    ================================================ -->
+  <!-- 배경 음악 — 히어로 버튼 · 하단 미니 플레이어가 이 오디오 하나를 같이 제어(main.js [4]) -->
+  <audio id="bgAudio" src="Floating%20in%20Bardo.mp3" loop preload="auto"></audio>
+
+  <div class="mini-player" id="miniPlayer">
+
+    <!-- 좌: 회전 LP 디스크 + 곡명/아티스트
+         .spinning 클래스 on/off → spinSlow 애니메이션 제어 -->
+    <div class="player-track">
+      <div class="player-disc spinning" id="playerDisc">
+        <div class="disc-hole"></div>
+      </div>
+      <div class="player-info">
+        <p class="player-name">Floating in Bardo</p>
+        <p class="player-artist">DJ Haein × OMIX Studio</p>
+      </div>
+    </div>
+
+    <!-- 중: 이전곡 / 재생정지 / 다음곡 -->
+    <div class="player-controls">
+      <button class="ctrl-btn">⏮</button>
+      <!-- playPauseBtn: 클릭 시 ▶ ↔ ⏸ 토글, 디스크 회전 on/off -->
+      <button class="ctrl-btn ctrl-play" id="playPauseBtn">▶</button>
+      <button class="ctrl-btn">⏭</button>
+    </div>
+
+    <!-- 프로그레스 바 + 현재/전체 시간
+         .progress-fill width: JS가 0.05%씩 증가
+         바 클릭: 해당 위치로 재생 시점 이동 -->
+    <div class="player-progress">
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+      <div class="progress-times">
+        <span id="currentTime">0:00</span>
+        <span id="totalTime">0:00</span>
+      </div>
+    </div>
+
+    <!-- 볼륨 슬라이더 -->
+    <div class="player-vol">
+      <span>🔊</span>
+      <input type="range" class="vol-slider" min="0" max="100" value="70" />
+    </div>
+
+    <!-- 좋아요: ♡ ↔ ♥ + 레드 토글 -->
+    <button class="player-like">♡</button>
+  </div>
+
+  <!-- main.js: 커스텀 커서, 파티클, 스크롤 reveal,
+       플레이어 재생/정지, 좋아요, 3D 틸트 -->
+  <!-- ── 컬러 테마 스위처 ── -->
+  <div class="theme-switcher" id="themeSwitcher">
+    <button class="theme-toggle" id="themeToggle" aria-label="테마 색상 변경">
+      <span class="theme-toggle-dot" id="themeToggleDot"></span>
+    </button>
+    <div class="theme-palette" id="themePalette">
+      <button class="theme-swatch active" data-color="#F91536" data-name="RED"    style="background:#F91536" title="OMIX Red"></button>
+      <button class="theme-swatch"        data-color="#A647FF" data-name="PURPLE" style="background:#A647FF" title="Violet"></button>
+      <button class="theme-swatch"        data-color="#00D4FF" data-name="CYAN"   style="background:#00D4FF" title="Cyan"></button>
+      <button class="theme-swatch"        data-color="#39FF14" data-name="GREEN"  style="background:#39FF14" title="Neon Green"></button>
+      <button class="theme-swatch"        data-color="#FFB800" data-name="GOLD"   style="background:#FFB800" title="Gold"></button>
+    </div>
+  </div>
+
+  <script src="hero-reveal.js"></script>
+  <script src="lp-carousel.js"></script>
+  <script src="dot-marquee.js"></script>
+  <script src="om-resonance.js"></script>
+  <script src="main.js"></script>
+  <script src="now-playing-panel.js"></script>
+  <script>
+  /* ── 히어로 OMIX 글자 등장 — 로딩 화면이 사라진 뒤에만 재생 (화면 전환 커튼과 무관) ── */
+  (function(){
+    const heroNameWrap = document.getElementById('idxHeroNameWrap');
+    const heroName     = document.getElementById('idxHeroName');
+    const heroSub      = document.getElementById('idxHeroSub');
+    const loader       = document.getElementById('loaderOverlay');
+    if(!heroNameWrap) return;
+
+    function play(){
+      heroNameWrap.classList.add('hn-play');
+    }
+
+    /* 등장 애니메이션이 끝나면 animation을 해제 — 이후 스크롤 스크립트가
+       inline transform/opacity로 이동·축소 효과를 제어할 수 있도록 (forwards fill이
+       inline style보다 우선 적용되는 것을 막기 위함) */
+    if(heroName){
+      heroName.addEventListener('animationend', function(){
+        heroName.style.animation  = 'none';
+        heroName.style.opacity    = '1';
+        heroName.style.transform  = 'none';
+      }, { once: true });
+    }
+    if(heroSub){
+      heroSub.addEventListener('animationend', function(){
+        heroSub.style.animation = 'none';
+        heroSub.style.opacity   = '1';
+      }, { once: true });
+    }
+
+    if(loader){
+      const mo = new MutationObserver(function(){
+        if(loader.classList.contains('fade-out')){
+          mo.disconnect();
+          play();
+        }
+      });
+      mo.observe(loader, {attributes:true, attributeFilter:['class']});
+    }
+    /* 안전장치: 로더 감지에 실패해도 최대 3.5초 후 재생 */
+    setTimeout(play, 3500);
+  })();
+  </script>
+  <script>
+  /* ── OMIX 히어로 → 네비 로고 스크롤 애니메이션 ── */
+  (function(){
+    const heroEl    = document.getElementById('idxHeroName');
+    const heroSub   = document.getElementById('idxHeroSub');
+    const navLogo   = document.getElementById('navLogoCenter');
+    const nav       = document.querySelector('.nav');
+    const heroSec   = document.getElementById('idxHero');
+    if(!heroEl || !nav || !heroSec) return;
+
+    let raf = null;
+
+    function update(){
+      const secH    = heroSec.offsetHeight;
+      const scrollY = window.scrollY;
+      /* 히어로 섹션이 뷰포트 위로 얼마나 올라갔는지 0→1 */
+      const progress = Math.min(Math.max(scrollY / (secH * 0.75), 0), 1);
+
+      /* 히어로 텍스트: 스케일 축소 + 위로 이동 + 페이드 */
+      const navRect  = nav.getBoundingClientRect();
+      const heroRect = heroEl.getBoundingClientRect();
+
+      /* 네비 중심 → 현재 히어로 텍스트 중심 간 거리 */
+      const navCX  = navRect.left + navRect.width  / 2;
+      const navCY  = navRect.top  + navRect.height / 2;
+      const heroCX = heroRect.left + heroRect.width  / 2;
+      const heroCY = heroRect.top  + heroRect.height / 2;
+
+      const dx = navCX - heroCX;
+      const dy = navCY - heroCY;
+
+      /* 네비 로고 너비 기준 스케일 계산 */
+      const logoEl = navLogo ? navLogo.querySelector('img') : null;
+      const logoW  = logoEl ? logoEl.offsetWidth : 90;
+      const scaleT = logoW / heroEl.getBoundingClientRect().width;
+      const scale  = 1 + (scaleT - 1) * progress;
+
+      heroEl.style.transform = `translate(${dx * progress}px, ${dy * progress}px) scale(${scale})`;
+      heroEl.style.opacity   = String(1 - progress);
+
+      /* 로고 자리로 이동하는 동안 포인트 컬러 → 흰색으로 크로스페이드 */
+      const colorP = Math.min(progress / 0.8, 1);
+      heroEl.style.color = `color-mix(in srgb, #fff ${colorP * 100}%, var(--red) ${100 - colorP * 100}%)`;
+
+      /* 아래 설명 문구: 로고가 위로 움직이기 시작하면 먼저 사라짐 */
+      if(heroSub) heroSub.style.opacity = String(Math.max(0, 1 - progress * 2.2));
+
+      /* 네비 로고: progress 0.6 이상부터 페이드인 */
+      if(navLogo){
+        const logoP = Math.min(Math.max((progress - 0.55) / 0.3, 0), 1);
+        if(logoP > 0){
+          navLogo.classList.add('nav-logo-visible');
+          navLogo.style.opacity = String(logoP);
+        } else {
+          navLogo.classList.remove('nav-logo-visible');
+          navLogo.style.opacity = '0';
+        }
+      }
+
+      raf = null;
+    }
+
+    window.addEventListener('scroll', ()=>{
+      if(!raf) raf = requestAnimationFrame(update);
+    }, {passive:true});
+
+    /* ── 스태거드 parallax ── */
+    const lines = document.querySelectorAll('.idx-line');
+    window.addEventListener('scroll', ()=>{
+      lines.forEach(line=>{
+        const rect = line.getBoundingClientRect();
+        const vc   = window.innerHeight / 2;
+        const dist = (rect.top + rect.height / 2 - vc) / vc;
+        const dir  = parseFloat(line.dataset.dir) || 1;
+        line.style.transform = `translateX(${dist * dir * 60}px)`;
+      });
+    }, {passive:true});
+
+    /* ── reveal-up IntersectionObserver ── */
+    const reveals = document.querySelectorAll('.reveal-up');
+    const io = new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{
+        if(e.isIntersecting){ e.target.style.animationPlayState='running'; io.unobserve(e.target); }
+      });
+    },{threshold:0.1});
+    reveals.forEach(el=>{ el.style.animationPlayState='paused'; io.observe(el); });
+  })();
+  </script>
+  <script>
+  /* ── 컬러 테마 스위처 ── */
+  (function () {
+    const toggle  = document.getElementById('themeToggle');
+    const dot     = document.getElementById('themeToggleDot');
+    const palette = document.getElementById('themePalette');
+    const swatches = document.querySelectorAll('.theme-swatch');
+    let open = false;
+
+    /* 저장된 테마 복원 */
+    const saved = localStorage.getItem('omix-accent');
+    if (saved) applyColor(saved);
+
+    toggle.addEventListener('click', () => {
+      open = !open;
+      palette.classList.toggle('visible', open);
+      toggle.classList.toggle('active', open);
+    });
+
+    swatches.forEach(sw => {
+      sw.addEventListener('click', () => {
+        const color = sw.dataset.color;
+        applyColor(color);
+        localStorage.setItem('omix-accent', color);
+        swatches.forEach(s => s.classList.remove('active'));
+        sw.classList.add('active');
+        dot.style.background = color;
+        open = false;
+        palette.classList.remove('visible');
+        toggle.classList.remove('active');
+      });
+    });
+
+    function applyColor(color) {
+      document.documentElement.style.setProperty('--red', color);
+      dot.style.background = color;
+      /* 저장된 색상으로 active 표시 */
+      swatches.forEach(sw => {
+        sw.classList.toggle('active', sw.dataset.color === color);
+      });
+    }
+
+    /* 팔레트 외부 클릭 시 닫기 */
+    document.addEventListener('click', e => {
+      if (open && !document.getElementById('themeSwitcher').contains(e.target)) {
+        open = false;
+        palette.classList.remove('visible');
+        toggle.classList.remove('active');
+      }
+    });
+  })();
+  </script>
+  <script src="transition.js"></script>
+  <script src="exhibit-config.js"></script>
+  <script src="card-overlay.js"></script>
+</body>
+</html>

@@ -1,0 +1,37 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dir \"C:\\\\Users\\\\roh28\\\\Desktop\\\\OMIX\\\\3\" /B)",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(where python3 *)",
+      "Bash(where python *)",
+      "Bash(where py *)",
+      "Bash(py -3 -m http.server 3700 --directory \"C:\\\\Users\\\\roh28\\\\Desktop\\\\OMIX\\\\3\")",
+      "Bash(where npx *)",
+      "Bash(where node *)",
+      "Bash(Get-Command npx, node, python, python3, py -ErrorAction SilentlyContinue)",
+      "Bash(Select-Object Name, Source)",
+      "PowerShell(Get-Command npx, node, python, python3, py -ErrorAction SilentlyContinue)",
+      "Bash(python -m http.server --help)",
+      "Bash(python3 -m http.server 3700)",
+      "Bash(curl -s http://localhost:3700/)",
+      "Bash(npx --version)",
+      "PowerShell(node --version)",
+      "PowerShell(npx --version)",
+      "Bash(python -m http.server 3456 --directory \"C:\\\\Users\\\\roh28\\\\Desktop\\\\OMIX\\\\3\")",
+      "Bash(Start-Sleep -Seconds 2)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3456/index.html)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3456/)",
+      "PowerShell(node --version 2>&1)",
+      "PowerShell(python3 --version 2>&1)",
+      "Bash(python3 -m http.server 3456 --directory \"C:/Users/roh28/Desktop/OMIX/3\")",
+      "WebFetch(domain:kipsta.wokine.com)",
+      "mcp__visualize__show_widget",
+      "Bash(sed -n '115,150p' about.html)",
+      "Bash(sed -n '82,95p' store.html)",
+      "Bash(sed -n '78,90p' genre.html)",
+      "Bash(sed -n '88,105p' studio.html)",
+      "PowerShell($l=New-Object System.Net.HttpListener; $l.Prefixes.Add\\('http://localhost:5500/'\\); $l.Start\\(\\); Write-Output \"OK\"; $l.Stop\\(\\))"
+    ]
+  }
+}

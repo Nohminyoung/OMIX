@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OMIX — Mockup</title>
+  <link rel="icon" href="symbol.png" type="image/png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,600;0,700;0,900;1,700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/fontawesome.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/brands.min.css" />
+  <style>
+    /* ── 모킹업 전용 추가 스타일 ── */
+
+    /* ──────────────────────────────────
+       1. HERO — 풀와이드 대형 텍스트
+    ────────────────────────────────── */
+    .mk-hero {
+      min-height: 90vh;
+      display: flex; flex-direction: column;
+      justify-content: flex-end;
+      padding-bottom: 60px;
+      border-bottom: 1px solid var(--border);
+      overflow: hidden;
+      padding-top: calc(var(--nav-h) + var(--marquee-h));
+    }
+    .mk-hero-name-wrap {
+      display: flex; justify-content: center;
+    }
+    .mk-hero-name {
+      font-size: clamp(100px, 19vw, 270px);
+      font-weight: 900;
+      letter-spacing: -0.05em;
+      line-height: 0.85;
+      text-transform: uppercase;
+      color: var(--white);
+      white-space: nowrap;
+      transform-origin: top center;
+      will-change: transform, opacity;
+      display: block;
+      -webkit-font-smoothing: antialiased;
+    }
+    .mk-hero-meta {
+      display: flex; align-items: center; justify-content: center;
+      gap: 24px; padding: 32px 40px 0;
+      font-size: 10px; font-weight: 700; letter-spacing: 0.28em;
+      text-transform: uppercase; color: var(--gray-2);
+    }
+    .mk-pipe { color: var(--border); }
+
+    /* ──────────────────────────────────
+       2. LP 섹션
+    ────────────────────────────────── */
+    .mk-lp-section {
+      display: flex; flex-direction: column; align-items: center;
+      padding: 80px 40px 72px;
+      border-bottom: 1px solid var(--border);
+      gap: 48px;
+      position: relative;
+    }
+    /* 코너 브래킷 기준점 */
+    .mk-lp-section { }
+
+    .mk-lp-disc-wrap {
+      position: relative;
+      width: clamp(220px, 32vw, 400px);
+      aspect-ratio: 1/1;
+      animation: mkSpin 8s linear infinite;
+      flex-shrink: 0;
+    }
+    @keyframes mkSpin { 0%{transform:rotate(0deg)} 100%{transform:rotate(360deg)} }
+
+    .mk-lp-disc {
+      width: 100%; height: 100%; border-radius: 50%;
+      background:
+        radial-gradient(circle at 50% 50%, #1a1a1a 0%, #1a1a1a 13.5%, transparent 14%),
+        repeating-radial-gradient(circle at 50% 50%,
+          #0e0e0e 0px, #1c1c1c 2px, #0e0e0e 4px,
+          #161616 6px, #0e0e0e 8px, #1a1a1a 10px,
+          #0e0e0e 12px, #1c1c1c 14px
+        );
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.05),
+        0 24px 80px rgba(0,0,0,0.85),
+        inset 0 0 0 1px rgba(255,255,255,0.04);
+    }
+    .mk-lp-label {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 30%; aspect-ratio: 1/1; border-radius: 50%;
+      background: var(--red);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 2px;
+    }
+    .mk-lp-brand { font-size: clamp(7px, 1vw, 13px); font-weight: 900; letter-spacing: 0.12em; color: #fff; }
+    .mk-lp-sub   { font-size: clamp(5px, 0.6vw, 8px); font-weight: 600; letter-spacing: 0.1em; color: rgba(255,255,255,0.7); text-transform: uppercase; }
+    .mk-lp-hole  {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 4.5%; aspect-ratio: 1/1; border-radius: 50%;
+      background: var(--black);
+    }
+
+    .mk-lp-info { text-align: center; display: flex; flex-direction: column; gap: 6px; }
+    .mk-lp-eyebrow { font-size: 10px; font-weight: 700; letter-spacing: 0.3em; text-transform: uppercase; color: var(--red); }
+    .mk-lp-name { font-size: clamp(22px, 3vw, 40px); font-weight: 900; letter-spacing: -0.03em; text-transform: uppercase; }
+
+    .mk-cta-row { display: flex; gap: 16px; }
+    .mk-btn {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-size: 11px; font-weight: 700; letter-spacing: 0.2em;
+      text-transform: uppercase; padding: 15px 36px;
+      border: 1px solid; cursor: pointer;
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
+      font-family: var(--font);
+    }
+    .mk-btn-fill    { background: var(--white); color: var(--black); border-color: var(--white); }
+    .mk-btn-fill:hover { background: var(--red); border-color: var(--red); color: var(--white); }
+    .mk-btn-outline { background: transparent; color: var(--white); border-color: var(--border); }
+    .mk-btn-outline:hover { background: var(--white); color: var(--black); border-color: var(--white); }
+
+    /* ──────────────────────────────────
+       3. Korean Buddhism Tracks 스태거드
+    ────────────────────────────────── */
+    .mk-kb-section {
+      border-bottom: 1px solid var(--border);
+      overflow: hidden;
+      padding: 80px 0 60px;
+    }
+    .mk-kb-intro {
+      padding: 0 48px 60px;
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 48px; align-items: end;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 0;
+    }
+    .mk-kb-head-wrap {}
+    .mk-kb-eyebrow { font-size: 9px; font-weight: 700; letter-spacing: 0.3em; text-transform: uppercase; color: var(--red); margin-bottom: 12px; }
+    .mk-kb-head {
+      font-size: clamp(32px, 5vw, 64px);
+      font-weight: 900; letter-spacing: -0.03em;
+      text-transform: uppercase; line-height: 0.95;
+    }
+    .mk-kb-desc {
+      font-size: 13px; font-weight: 300; line-height: 1.9;
+      color: var(--gray-2);
+    }
+
+    /* 풀와이드 스태거드 */
+    .mk-stagger { position: relative; padding: 20px 0; }
+    .mk-line {
+      display: block;
+      font-size: clamp(72px, 13.5vw, 200px);
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      line-height: 0.88;
+      text-transform: uppercase;
+      white-space: nowrap;
+      will-change: transform;
+      -webkit-font-smoothing: antialiased;
+    }
+    .mk-line-l { color: var(--white); padding-left: 24px; }
+    .mk-line-r {
+      color: transparent;
+      -webkit-text-stroke: 1.5px rgba(245,244,240,0.4);
+      text-align: right; padding-right: 24px;
+    }
+
+    /* ──────────────────────────────────
+       4. 트랙 리스트
+    ────────────────────────────────── */
+    .mk-tracks { border-bottom: 1px solid var(--border); }
+    .mk-tracks-header {
+      display: grid; grid-template-columns: 72px 1fr auto;
+      padding: 18px 48px; border-bottom: 1px solid var(--border);
+      font-size: 9px; font-weight: 700; letter-spacing: 0.3em;
+      text-transform: uppercase; color: var(--gray-3);
+    }
+    .mk-track-row {
+      display: grid; grid-template-columns: 72px 1fr auto;
+      align-items: center; padding: 20px 48px;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer; transition: background 0.15s;
+    }
+    .mk-track-row:hover { background: rgba(255,255,255,0.03); }
+    .mk-track-row:last-child { border-bottom: none; }
+    .mk-t-num  { font-size: 12px; font-weight: 700; color: var(--gray-3); letter-spacing: 0.06em; }
+    .mk-t-name { font-size: clamp(18px, 2.5vw, 34px); font-weight: 700; letter-spacing: -0.02em; text-transform: uppercase; }
+    .mk-t-dur  { font-size: 11px; color: var(--gray-3); letter-spacing: 0.06em; }
+    .mk-tracks-bottom { display: flex; justify-content: center; gap: 16px; padding: 48px; }
+
+    /* ──────────────────────────────────
+       5. 최신 믹스 마퀴 + 비디오
+    ────────────────────────────────── */
+    .mk-video-section { border-bottom: 1px solid var(--border); padding-bottom: 80px; }
+    .mk-vid-marquee { overflow: hidden; background: var(--white); padding: 16px 0; margin-bottom: 60px; }
+    .mk-vid-mq-track { display: flex; white-space: nowrap; animation: mq 12s linear infinite; }
+    @keyframes mq { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+    .mk-vid-mqi { font-size: clamp(18px, 2.8vw, 32px); font-weight: 900; letter-spacing: -0.01em; text-transform: uppercase; color: var(--black); padding-right: 32px; }
+    .mk-vid-mqi em { font-style: italic; color: var(--red); }
+
+    .mk-video-frame {
+      position: relative;
+      width: clamp(300px, 52vw, 720px); margin: 0 auto;
+      aspect-ratio: 16/9;
+      background: #111;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .mk-video-frame img { width:100%; height:100%; object-fit:cover; opacity:0.55; }
+    .mk-video-play {
+      position: absolute; width: 68px; height: 68px; border-radius: 50%;
+      border: 1.5px solid var(--white); background: rgba(0,0,0,0.4);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; color: var(--white); cursor: pointer; padding-left: 5px;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .mk-video-play:hover { background: var(--red); border-color: var(--red); }
+    .mk-video-cap { text-align: center; margin-top: 14px; font-size: 9px; font-weight: 700; letter-spacing: 0.28em; text-transform: uppercase; color: var(--gray-3); }
+
+    /* ──────────────────────────────────
+       6. 이벤트
+    ────────────────────────────────── */
+    .mk-events { border-bottom: 1px solid var(--border); }
+    .mk-ev-heading { overflow: hidden; padding: 40px 0 0; }
+    .mk-ev-line {
+      display: block;
+      font-size: clamp(80px, 14vw, 200px);
+      font-weight: 900; letter-spacing: -0.04em; line-height: 0.88;
+      text-transform: uppercase; padding: 0 28px;
+      -webkit-font-smoothing: antialiased;
+    }
+    .mk-ev-line.inv { background: var(--white); color: var(--black); padding: 4px 28px; }
+    .mk-ev-line.stroke { color: transparent; -webkit-text-stroke: 1.5px rgba(245,244,240,0.35); }
+
+    .mk-event-list { padding: 0 48px; }
+    .mk-event-row {
+      display: grid; grid-template-columns: 160px 1fr auto;
+      align-items: center; padding: 22px 0;
+      border-bottom: 1px solid var(--border); gap: 24px;
+    }
+    .mk-event-row:last-child { border-bottom: none; }
+    .mk-e-date { font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gray-3); }
+    .mk-e-name { font-size: 18px; font-weight: 700; letter-spacing: -0.01em; text-transform: uppercase; }
+    .mk-e-loc  { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gray-3); margin-top: 2px; }
+    .mk-e-btns { display: flex; gap: 8px; }
+    .mk-e-btn  { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; padding: 10px 18px; border: 1px solid var(--border); color: var(--white); cursor: pointer; font-family: var(--font); transition: background 0.2s, border-color 0.2s; }
+    .mk-e-btn:hover, .mk-e-btn.fill { background: var(--red); border-color: var(--red); }
+
+    /* ──────────────────────────────────
+       FOOTER
+    ────────────────────────────────── */
+    .mk-footer { display: grid; grid-template-columns: 1fr 1fr 1fr; padding: 60px 48px 120px; gap: 40px; border-top: 1px solid var(--border); }
+    .mk-footer-logo { height: 28px; margin-bottom: 16px; opacity: 0.9; }
+    .mk-footer-copy { font-size: 10px; color: var(--gray-3); letter-spacing: 0.06em; line-height: 1.8; }
+    .mk-footer-links { display: flex; flex-direction: column; gap: 12px; }
+    .mk-footer-link { font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gray-3); transition: color 0.2s; }
+    .mk-footer-link:hover { color: var(--white); }
+    .mk-footer-sns { display: flex; flex-direction: column; align-items: flex-end; gap: 14px; }
+  </style>
+</head>
+<body>
+
+  <!-- 커스텀 커서 (기존 style.css) -->
+  <div class="cursor"    id="cursor"></div>
+  <div class="cursor-dot" id="cursorDot"></div>
+  <!-- 그레인 오버레이 (기존 style.css) -->
+  <div class="grain"></div>
+
+  <!-- ── NAV (기존 구조 그대로) ── -->
+  <nav class="nav" id="mainNav">
+    <ul class="nav-menu">
+      <li><a href="chart.html"     class="nav-link">Chart</a></li>
+      <li><a href="genre.html"     class="nav-link">Explore</a></li>
+      <li><a href="store.html"     class="nav-link">Store</a></li>
+      <li><a href="about.html"     class="nav-link">About</a></li>
+      <li><a href="my-player.html" class="nav-link">My Player</a></li>
+    </ul>
+    <a href="index.html" class="nav-logo-center" id="navLogo">
+      <img src="logo.png" alt="OMIX" class="logo-img" />
+    </a>
+    <div class="nav-sns">
+      <a href="#" class="nav-sns-link" aria-label="Spotify"    target="_blank"><i class="fab fa-spotify"></i></a>
+      <a href="#" class="nav-sns-link" aria-label="Instagram"  target="_blank"><i class="fab fa-instagram"></i></a>
+      <a href="#" class="nav-sns-link" aria-label="YouTube"    target="_blank"><i class="fab fa-youtube"></i></a>
+      <a href="#" class="nav-sns-link" aria-label="SoundCloud" target="_blank"><i class="fab fa-soundcloud"></i></a>
+    </div>
+    <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+  </nav>
+
+  <!-- ── MARQUEE (marquee-still 호버 이미지 포함) ── -->
+  <div class="site-marquee">
+    <div class="marquee-track">
+      <span class="marquee-item-wrap">LISTEN</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">MIX</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">REMIX</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">ARCHIVE</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">BUDDHISM × MUSIC</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">OM MUSIC IMMERSIVE EXPERIENCE</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">108 SOUNDS</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">MY MIX, MY RITUAL</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">LISTEN</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">MIX</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">REMIX</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">ARCHIVE</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">BUDDHISM × MUSIC</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">OM MUSIC IMMERSIVE EXPERIENCE</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">108 SOUNDS</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">MY MIX, MY RITUAL</span><span class="dot-sep">◆</span>
+    </div>
+  </div>
+
+  <!-- ══ 1. HERO ══ -->
+  <section class="mk-hero" id="mkHero">
+    <div class="mk-hero-name-wrap">
+      <span class="mk-hero-name" id="mkHeroName">OMIX</span>
+    </div>
+    <div class="mk-hero-meta">
+      <span>★★★★★</span>
+      <span class="mk-pipe">|</span>
+      <span>Korean Buddhism</span>
+      <span class="mk-pipe">|</span>
+      <span>Electronic</span>
+      <span class="mk-pipe">|</span>
+      <span>Seoul, Korea</span>
+    </div>
+  </section>
+
+  <!-- ══ 2. LP 섹션 ══ -->
+  <section class="mk-lp-section">
+    <!-- 코너 브래킷 (기존 style.css) -->
+    <span class="stc-br stc-tl"></span>
+    <span class="stc-br stc-tr"></span>
+    <span class="stc-br stc-bl"></span>
+    <span class="stc-br stc-br-pos"></span>
+
+    <div class="mk-lp-disc-wrap">
+      <div class="mk-lp-disc"></div>
+      <div class="mk-lp-label">
+        <span class="mk-lp-brand">OMIX</span>
+        <span class="mk-lp-sub">Stereo</span>
+        <span class="mk-lp-sub">Vol. 1</span>
+      </div>
+      <div class="mk-lp-hole"></div>
+    </div>
+
+    <div class="mk-lp-info">
+      <p class="mk-lp-eyebrow reveal-up delay-1">New Mix — 2026</p>
+      <p class="mk-lp-name reveal-up delay-2">Mix Tape Vol.1</p>
+    </div>
+
+    <div class="mk-cta-row reveal-up delay-3">
+      <a href="#" class="mk-btn mk-btn-fill">▶ &nbsp;Play</a>
+      <a href="#" class="mk-btn mk-btn-outline">Listen Now</a>
+    </div>
+  </section>
+
+  <!-- ══ 3. Korean Buddhism Tracks ══ -->
+  <section class="mk-kb-section">
+    <div class="mk-kb-intro">
+      <div class="mk-kb-head-wrap">
+        <p class="mk-kb-eyebrow reveal-up">Section 03</p>
+        <h2 class="mk-kb-head reveal-up delay-1">Korean<br>Buddhism<br>Tracks</h2>
+      </div>
+      <p class="mk-kb-desc reveal-up delay-2">
+        Rooted in the ancient resonance of Korean Buddhist chanting,
+        OMIX translates sacred sound into the language of the club.
+        Each track is a meditation — structured not by dogma, but by
+        rhythm, space, and the persistent hum of being.
+        108 BPM. One breath. One return.
+      </p>
+    </div>
+
+    <div class="mk-stagger" id="mkStagger">
+      <span class="mk-line mk-line-l" data-dir="-1">KOREAN</span>
+      <span class="mk-line mk-line-r" data-dir="1">BUDDHISM</span>
+      <span class="mk-line mk-line-l" data-dir="-1">TRACKS</span>
+    </div>
+  </section>
+
+  <!-- ══ 4. 트랙 리스트 ══ -->
+  <section class="mk-tracks">
+    <div class="mk-tracks-header">
+      <span>#</span><span>Track</span><span>Duration</span>
+    </div>
+    <div class="mk-track-row reveal-up"><span class="mk-t-num">01</span><span class="mk-t-name">Void Mandala</span><span class="mk-t-dur">3:48</span></div>
+    <div class="mk-track-row reveal-up delay-1"><span class="mk-t-num">02</span><span class="mk-t-name">Lotus Fire</span><span class="mk-t-dur">5:12</span></div>
+    <div class="mk-track-row reveal-up delay-2"><span class="mk-t-num">03</span><span class="mk-t-name">108 BPM</span><span class="mk-t-dur">4:06</span></div>
+    <div class="mk-track-row reveal-up delay-3"><span class="mk-t-num">04</span><span class="mk-t-name">Dharma Drop</span><span class="mk-t-dur">6:33</span></div>
+    <div class="mk-track-row reveal-up delay-4"><span class="mk-t-num">05</span><span class="mk-t-name">AUM Club</span><span class="mk-t-dur">7:01</span></div>
+    <div class="mk-track-row reveal-up delay-5"><span class="mk-t-num">06</span><span class="mk-t-name">Mindful Roots</span><span class="mk-t-dur">4:44</span></div>
+    <div class="mk-track-row reveal-up delay-6"><span class="mk-t-num">07</span><span class="mk-t-name">Monk Sequence</span><span class="mk-t-dur">5:28</span></div>
+    <div class="mk-track-row reveal-up"><span class="mk-t-num">08</span><span class="mk-t-name">Temple Bass</span><span class="mk-t-dur">3:55</span></div>
+    <div class="mk-tracks-bottom">
+      <a href="#" class="mk-btn mk-btn-fill">▶ &nbsp;Stream Full Mix</a>
+      <a href="#" class="mk-btn mk-btn-outline">Order Vinyl</a>
+    </div>
+  </section>
+
+  <!-- ══ 5. 최신 믹스 ══ -->
+  <section class="mk-video-section">
+    <div class="mk-vid-marquee">
+      <div class="mk-vid-mq-track">
+        <span class="mk-vid-mqi">Latest Mix /&nbsp;<em>Void Mandala</em>&nbsp;/ Watch Now /&nbsp;</span>
+        <span class="mk-vid-mqi">Latest Mix /&nbsp;<em>Void Mandala</em>&nbsp;/ Watch Now /&nbsp;</span>
+        <span class="mk-vid-mqi">Latest Mix /&nbsp;<em>Void Mandala</em>&nbsp;/ Watch Now /&nbsp;</span>
+        <span class="mk-vid-mqi">Latest Mix /&nbsp;<em>Void Mandala</em>&nbsp;/ Watch Now /&nbsp;</span>
+      </div>
+    </div>
+    <div class="mk-video-frame">
+      <span class="stc-br stc-tl"></span>
+      <span class="stc-br stc-tr"></span>
+      <span class="stc-br stc-bl"></span>
+      <span class="stc-br stc-br-pos"></span>
+      <img src="background_img.jpg" alt="Latest Mix" />
+      <div class="mk-video-play">▶</div>
+    </div>
+    <p class="mk-video-cap">OMIX Studio · DJ Haein × OMIX</p>
+  </section>
+
+  <!-- ══ 6. 이벤트 ══ -->
+  <section class="mk-events">
+    <div class="mk-ev-heading">
+      <span class="mk-ev-line">OMIX</span>
+      <span class="mk-ev-line inv">ON</span>
+      <span class="mk-ev-line stroke">STAGE</span>
+    </div>
+    <div class="mk-event-list">
+      <div class="mk-event-row reveal-up">
+        <span class="mk-e-date">Jul 12, 2026</span>
+        <div><p class="mk-e-name">AUM Club Seoul</p><p class="mk-e-loc">Seoul, Korea</p></div>
+        <div class="mk-e-btns"><button class="mk-e-btn">RSVP</button><button class="mk-e-btn fill">GET TICKETS</button></div>
+      </div>
+      <div class="mk-event-row reveal-up delay-1">
+        <span class="mk-e-date">Aug 03, 2026</span>
+        <div><p class="mk-e-name">Zandari Festa</p><p class="mk-e-loc">Seoul, Korea</p></div>
+        <div class="mk-e-btns"><button class="mk-e-btn">RSVP</button><button class="mk-e-btn fill">GET TICKETS</button></div>
+      </div>
+      <div class="mk-event-row reveal-up delay-2">
+        <span class="mk-e-date">Sep 20, 2026</span>
+        <div><p class="mk-e-name">Berghain</p><p class="mk-e-loc">Berlin, Germany</p></div>
+        <div class="mk-e-btns"><button class="mk-e-btn">RSVP</button><button class="mk-e-btn fill">GET TICKETS</button></div>
+      </div>
+      <div class="mk-event-row reveal-up delay-3">
+        <span class="mk-e-date">Oct 08, 2026</span>
+        <div><p class="mk-e-name">Fabric London</p><p class="mk-e-loc">London, UK</p></div>
+        <div class="mk-e-btns"><button class="mk-e-btn">RSVP</button><button class="mk-e-btn fill">GET TICKETS</button></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ FOOTER ══ -->
+  <footer class="mk-footer">
+    <div>
+      <img src="logo.png" alt="OMIX" class="mk-footer-logo" />
+      <p class="mk-footer-copy">© 2026 OMIX Studio.<br>Korean Buddhism × Modern Music.<br>Seoul, Korea.</p>
+    </div>
+    <nav class="mk-footer-links">
+      <a href="chart.html"     class="mk-footer-link">Chart</a>
+      <a href="genre.html"     class="mk-footer-link">Explore</a>
+      <a href="store.html"     class="mk-footer-link">Store</a>
+      <a href="about.html"     class="mk-footer-link">About</a>
+      <a href="my-player.html" class="mk-footer-link">My Player</a>
+    </nav>
+    <div class="mk-footer-sns">
+      <a href="#" class="nav-sns-link" style="font-size:20px"><i class="fab fa-spotify"></i></a>
+      <a href="#" class="nav-sns-link" style="font-size:20px"><i class="fab fa-instagram"></i></a>
+      <a href="#" class="nav-sns-link" style="font-size:20px"><i class="fab fa-youtube"></i></a>
+      <a href="#" class="nav-sns-link" style="font-size:20px"><i class="fab fa-soundcloud"></i></a>
+    </div>
+  </footer>
+
+  <!-- ── MINI PLAYER (기존 style.css 클래스 그대로) ── -->
+  <div class="mini-player" id="miniPlayer">
+    <div class="player-track">
+      <div class="player-disc spinning" id="playerDisc">
+        <div class="disc-hole"></div>
+      </div>
+      <div class="player-info">
+        <p class="player-name">Void Mandala</p>
+        <p class="player-artist">DJ Haein × OMIX Studio</p>
+      </div>
+    </div>
+    <div class="player-controls">
+      <button class="ctrl-btn">⏮</button>
+      <button class="ctrl-btn ctrl-play" id="playPauseBtn">▶</button>
+      <button class="ctrl-btn">⏭</button>
+    </div>
+    <div class="player-progress">
+      <div class="progress-bar" id="progressBar">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+      <div class="progress-times">
+        <span id="currentTime">0:00</span>
+        <span>3:48</span>
+      </div>
+    </div>
+    <div class="player-vol">
+      <span>🔊</span>
+      <input type="range" class="vol-slider" min="0" max="100" value="70" />
+    </div>
+    <button class="player-like" id="globalLike">♡</button>
+  </div>
+
+  <script>
+  (function () {
+    /* ── 커스텀 커서 ── */
+    const cursor    = document.getElementById('cursor');
+    const cursorDot = document.getElementById('cursorDot');
+    let mx = -100, my = -100, cx = -100, cy = -100;
+    if (cursor && cursorDot) {
+      document.addEventListener('mousemove', e => {
+        mx = e.clientX; my = e.clientY;
+        cursorDot.style.left = mx + 'px';
+        cursorDot.style.top  = my + 'px';
+      });
+      (function animCursor() {
+        cx += (mx - cx) * 0.12;
+        cy += (my - cy) * 0.12;
+        cursor.style.left = cx + 'px';
+        cursor.style.top  = cy + 'px';
+        requestAnimationFrame(animCursor);
+      })();
+    }
+
+    /* ── 1. HERO → NAV 로고 스크롤 애니메이션 ── */
+    const heroName = document.getElementById('mkHeroName');
+    const heroSec  = document.getElementById('mkHero');
+    const navLogo  = document.getElementById('navLogo');
+
+    navLogo.style.opacity = '0';
+
+    function updateHero() {
+      const heroRect = heroSec.getBoundingClientRect();
+      const progress = Math.max(0, Math.min(1, -heroRect.top / (heroRect.height * 0.75)));
+
+      const startSize = Math.min(window.innerWidth * 0.19, 270);
+      const scale = (1 - progress) + progress * (36 / startSize);
+
+      const logoRect = navLogo.getBoundingClientRect();
+      const logoCX   = logoRect.left + logoRect.width / 2;
+      const nameCX   = window.innerWidth / 2;
+      const nameRect = heroName.getBoundingClientRect();
+      const nameCY   = nameRect.top + nameRect.height / 2;
+      const logoCY   = logoRect.top + logoRect.height / 2;
+
+      const tx = progress * (logoCX - nameCX);
+      const ty = progress * (logoCY - nameCY);
+
+      heroName.style.transform = `translate(${tx}px, ${ty}px) scale(${scale})`;
+      heroName.style.opacity   = progress > 0.85 ? 1 - (progress - 0.85) / 0.15 : 1;
+      navLogo.style.opacity    = progress > 0.7  ? (progress - 0.7) / 0.3 : 0;
+    }
+
+    window.addEventListener('scroll', updateHero, { passive: true });
+    window.addEventListener('resize', updateHero);
+    updateHero();
+
+    /* ── 3. 스태거드 스크롤 패럴랙스 ── */
+    const mkLines = document.querySelectorAll('.mk-line[data-dir]');
+    function updateStagger() {
+      const stagger = document.getElementById('mkStagger');
+      if (!stagger) return;
+      const rect   = stagger.getBoundingClientRect();
+      const center = rect.top + rect.height / 2 - window.innerHeight / 2;
+      mkLines.forEach(line => {
+        const dir = parseFloat(line.dataset.dir);
+        const tx  = Math.max(-150, Math.min(150, center * 0.22 * dir));
+        line.style.transform = `translateX(${tx}px)`;
+      });
+    }
+    window.addEventListener('scroll', updateStagger, { passive: true });
+    updateStagger();
+
+    /* ── reveal-up IntersectionObserver ── */
+    const revealEls = document.querySelectorAll('.reveal-up');
+    const observer  = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.animationPlayState = 'running';
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+    revealEls.forEach(el => {
+      el.style.animationPlayState = 'paused';
+      observer.observe(el);
+    });
+
+    /* ── 햄버거 ── */
+    const hamburger = document.getElementById('hamburger');
+    const navMenu   = document.querySelector('.nav-menu');
+    if (hamburger) {
+      hamburger.addEventListener('click', () => {
+        hamburger.classList.toggle('open');
+        if (navMenu) navMenu.classList.toggle('mobile-open');
+      });
+    }
+  })();
+  </script>
+</body>
+</html>

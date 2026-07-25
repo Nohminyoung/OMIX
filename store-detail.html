@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OMIX — VOID MANDALA LP</title>
+  <link rel="icon" href="symbol.png" type="image/png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <script src="theme.js"></script>
+  <script src="click-sound.js"></script>
+  <style>
+  /* ============================================================
+     STORE DETAIL — scroll-driven 3-phase layout  (총 380vh)
+     Phase 1 (0~28%)  : zoom-in  (scale 0.76 → 1.04)
+     Phase 2 (28~52%) : split    (이미지 좌측 + 옵션 패널 우측 등장)
+     Phase 3 (52~100%): HOLD     (split 완성 상태 고정 → 아래 콘텐츠로)
+     ============================================================ */
+
+  .stdet-page {
+    padding-top: calc(var(--nav-h) + var(--marquee-h));
+    padding-bottom: var(--player-h);
+  }
+
+  /* ── 스크롤 공간 ── */
+  .stdet-hero {
+    position: relative;
+    height: 380vh;   /* 충분한 hold 구간 확보 */
+  }
+
+  /* ── 스티키 뷰포트 ── */
+  .stdet-sticky {
+    position: sticky;
+    top: calc(var(--nav-h) + var(--marquee-h));
+    height: calc(100vh - var(--nav-h) - var(--marquee-h) - var(--player-h));
+    overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  /* ── 배경 레이어 ── */
+  .stdet-bg {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 70% 60% at 50% 50%,
+      rgba(249,21,54,0.06) 0%, transparent 70%);
+    pointer-events: none;
+    transition: background 0.6s;
+  }
+
+  /* ── 이미지 씬 (transform 중심점) ── */
+  .stdet-img-scene {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    display: flex; align-items: center; justify-content: center;
+    will-change: transform;
+  }
+
+  /* ── 이미지 카드 ── */
+  .stdet-img-card {
+    width: min(400px, 62vw);
+    aspect-ratio: 3/4;
+    background: linear-gradient(148deg, #1a0408 0%, #3a0c18 40%, #0d0306 100%);
+    border-radius: 4px;
+    border: 1px solid rgba(255,255,255,0.07);
+    box-shadow: 0 40px 120px rgba(0,0,0,0.85);
+    overflow: hidden;
+    position: relative;
+    will-change: transform;
+    flex-shrink: 0;
+  }
+
+  .stdet-img-ph {
+    width: 100%; height: 100%;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 10px;
+    color: rgba(255,255,255,0.18);
+    font-size: 10px; font-weight: 700;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    text-align: center; padding: 20px;
+  }
+  .stdet-img-ph em { font-size: 32px; opacity: 0.12; font-style: normal; }
+
+  /* 이미지 카운터 */
+  .stdet-img-counter {
+    position: absolute; bottom: 14px; right: 14px;
+    font-size: 9px; font-weight: 700; letter-spacing: 0.15em;
+    color: rgba(255,255,255,0.3);
+  }
+
+  /* ── 우측 옵션 패널 ── */
+  .stdet-options {
+    position: absolute;
+    top: 0; right: 0; bottom: 0;
+    width: 42%;
+    display: flex; flex-direction: column;
+    justify-content: center;
+    padding: 40px clamp(24px,4vw,56px);
+    opacity: 0;
+    transform: translateX(40px);
+    pointer-events: none;
+    will-change: opacity, transform;
+    overflow-y: auto;
+    scrollbar-width: none;
+  }
+  .stdet-options::-webkit-scrollbar { display: none; }
+  .stdet-options.active { pointer-events: all; }
+
+  .stdet-opt-eyebrow {
+    font-size: 9px; font-weight: 700; letter-spacing: 0.28em;
+    text-transform: uppercase; color: var(--red);
+    margin-bottom: 12px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .stdet-opt-eyebrow::before {
+    content: ''; display: block;
+    width: 18px; height: 1px; background: var(--red);
+  }
+
+  .stdet-opt-title {
+    font-family: 'Stack Sans Notch', var(--font);
+    font-size: clamp(28px, 3.5vw, 46px);
+    font-weight: 900; line-height: 0.95;
+    letter-spacing: 0.02em; text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .stdet-opt-sub {
+    font-size: 12px; color: var(--gray-3);
+    letter-spacing: 0.08em; text-transform: uppercase;
+    margin-bottom: 28px;
+  }
+
+  .stdet-opt-price-row {
+    display: flex; align-items: baseline; gap: 10px;
+    margin-bottom: 28px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--border);
+  }
+  .stdet-opt-price {
+    font-size: 30px; font-weight: 800; color: var(--white);
+  }
+  .stdet-opt-price-note {
+    font-size: 11px; color: var(--gray-3);
+  }
+
+  /* 사이즈 */
+  .stdet-opt-size-label {
+    font-size: 9px; font-weight: 700; letter-spacing: 0.22em;
+    text-transform: uppercase; color: var(--gray-3);
+    margin-bottom: 10px;
+  }
+  .stdet-opt-sizes {
+    display: flex; gap: 6px; flex-wrap: wrap;
+    margin-bottom: 24px;
+  }
+  .stdet-size-btn {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.08em;
+    padding: 8px 16px; border-radius: 2px;
+    border: 1px solid rgba(255,255,255,0.12);
+    color: var(--gray-2); background: transparent;
+    transition: all 0.2s;
+  }
+  .stdet-size-btn:hover { color: var(--white); border-color: rgba(255,255,255,0.35); }
+  .stdet-size-btn.sel { background: var(--white); color: #000; border-color: var(--white); }
+
+  /* 버튼들 */
+  .stdet-opt-buy-btn {
+    width: 100%;
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    padding: 14px 24px;
+    background: var(--red); color: var(--white);
+    font-size: 11px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase;
+    border-radius: 2px; margin-bottom: 8px;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .stdet-opt-buy-btn:hover { background: var(--red-dk); transform: translateY(-1px); }
+
+  .stdet-opt-wish-btn {
+    width: 100%;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 12px 24px;
+    border: 1px solid rgba(255,255,255,0.1); color: var(--gray-2);
+    font-size: 11px; font-weight: 600; letter-spacing: 0.12em;
+    border-radius: 2px;
+    transition: all 0.2s;
+    margin-bottom: 24px;
+  }
+  .stdet-opt-wish-btn:hover { color: var(--white); border-color: rgba(255,255,255,0.28); }
+
+  /* 간단 스펙 */
+  .stdet-opt-specs {
+    display: flex; flex-direction: column; gap: 0;
+    border-top: 1px solid var(--border);
+  }
+  .stdet-opt-spec-row {
+    display: flex; justify-content: space-between;
+    padding: 9px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    font-size: 11px;
+  }
+  .stdet-opt-spec-k { color: var(--gray-3); font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
+  .stdet-opt-spec-v { color: var(--gray-1); }
+
+  /* ── 좌측 세로 라벨 ── */
+  .stdet-side-label {
+    position: absolute; left: max(20px, 2.5vw);
+    top: 50%; transform: translateY(-50%);
+    writing-mode: vertical-rl;
+    display: flex; flex-direction: column; gap: 6px;
+    opacity: 1; transition: opacity 0.4s;
+  }
+  .stdet-side-label span {
+    font-size: 9px; font-weight: 700; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--gray-3);
+  }
+  .stdet-side-label strong { color: var(--red); }
+
+  /* ── 스크롤 힌트 (초기에만 표시) ── */
+  .stdet-scroll-hint {
+    position: absolute; bottom: 60px; left: 50%;
+    transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    opacity: 1; transition: opacity 0.5s;
+  }
+  .stdet-scroll-hint.hidden { opacity: 0; }
+  .stdet-scroll-hint span {
+    font-size: 9px; font-weight: 700; letter-spacing: 0.28em;
+    text-transform: uppercase; color: var(--gray-3);
+  }
+  .stdet-scroll-arrow {
+    width: 1px; height: 40px;
+    background: linear-gradient(to bottom, var(--red), transparent);
+    animation: scrollLineDown 1.6s ease-in-out infinite;
+  }
+  @keyframes scrollLineDown {
+    0%   { transform: scaleY(0); transform-origin: top; }
+    50%  { transform: scaleY(1); transform-origin: top; }
+    51%  { transform: scaleY(1); transform-origin: bottom; }
+    100% { transform: scaleY(0); transform-origin: bottom; }
+  }
+
+  /* ── 하단 정보 바 ── */
+  .stdet-bar {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    display: flex; align-items: center;
+    padding: 14px max(24px, 3vw);
+    border-top: 1px solid rgba(255,255,255,0.06);
+    background: rgba(12,12,11,0.65);
+    backdrop-filter: blur(20px);
+    gap: 20px; z-index: 10;
+  }
+  .stdet-bar-back {
+    font-size: 10px; font-weight: 700; letter-spacing: 0.15em;
+    text-transform: uppercase; color: var(--gray-3);
+    transition: color 0.2s; flex-shrink: 0;
+  }
+  .stdet-bar-back:hover { color: var(--white); }
+  .stdet-bar-name {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--gray-2); flex: 1;
+  }
+  .stdet-bar-price {
+    font-size: 15px; font-weight: 800; color: var(--white); flex-shrink: 0;
+  }
+  .stdet-bar-info-btn {
+    font-size: 10px; font-weight: 700; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--gray-3);
+    padding: 7px 14px; border-radius: 2px;
+    border: 1px solid rgba(255,255,255,0.1);
+    transition: all 0.2s; flex-shrink: 0;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .stdet-bar-info-btn:hover,
+  .stdet-bar-info-btn.active { color: var(--white); border-color: var(--red); }
+
+  /* ── 진행 바 (상단 얇은 선) ── */
+  .stdet-progress-bar {
+    position: absolute; top: 0; left: 0;
+    height: 2px; background: var(--red);
+    width: 0%; transition: width 0.05s linear;
+    z-index: 20;
+  }
+
+  /* ============================================================
+     [2] DETAIL CUTS — 가로 스크롤
+     ============================================================ */
+  .stdet-cuts {
+    padding: 80px max(24px, 5vw);
+    max-width: 1200px; margin: 0 auto;
+  }
+  .stdet-cuts-hdr {
+    display: flex; align-items: baseline; justify-content: space-between;
+    margin-bottom: 36px;
+    padding-bottom: 18px; border-bottom: 1px solid var(--border);
+  }
+  .stdet-cuts-title {
+    font-size: 10px; font-weight: 700; letter-spacing: 0.28em;
+    text-transform: uppercase; color: var(--red);
+  }
+  .stdet-cuts-count { font-size: 10px; color: var(--gray-3); letter-spacing: 0.1em; }
+
+  .stdet-cuts-scroll {
+    display: flex; gap: 14px;
+    overflow-x: auto; scrollbar-width: none;
+    padding-bottom: 6px; cursor: grab;
+  }
+  .stdet-cuts-scroll:active { cursor: grabbing; }
+  .stdet-cuts-scroll::-webkit-scrollbar { display: none; }
+
+  .stdet-cut {
+    flex-shrink: 0;
+    width: clamp(200px, 28vw, 340px);
+    aspect-ratio: 3/4;
+    background: #1a1a18;
+    border-radius: 4px; overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.05);
+    position: relative; cursor: pointer;
+    transition: transform 0.45s cubic-bezier(0.23,1,0.32,1), box-shadow 0.45s;
+  }
+  .stdet-cut:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 24px 60px rgba(0,0,0,0.7), 0 0 0 1px rgba(249,21,54,0.2);
+  }
+  .stdet-cut-ph {
+    width: 100%; height: 100%;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 8px;
+    color: rgba(255,255,255,0.15); font-size: 9px;
+    font-weight: 700; letter-spacing: 0.18em;
+    text-transform: uppercase; text-align: center; padding: 16px;
+  }
+  .stdet-cut-ph em { font-size: 28px; opacity: 0.1; font-style: normal; }
+  .stdet-cut-lbl {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    padding: 28px 14px 12px;
+    background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 100%);
+    font-size: 9px; font-weight: 700; letter-spacing: 0.18em;
+    text-transform: uppercase; color: rgba(255,255,255,0.55);
+  }
+
+  /* ============================================================
+     [3] 풀컷 패럴랙스 섹션
+     ============================================================ */
+  .stdet-fullcut {
+    position: relative;
+    height: 75vh; overflow: hidden;
+    border-top: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .stdet-fullcut-bg {
+    position: absolute; inset: -20%;
+    display: flex; align-items: center; justify-content: center;
+    will-change: transform;
+  }
+  .stdet-fullcut-ph {
+    width: 100%; height: 100%;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 10px;
+    background: #111;
+    color: rgba(255,255,255,0.12); font-size: 10px;
+    font-weight: 700; letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+  .stdet-fullcut-ph em { font-size: 36px; opacity: 0.08; font-style: normal; }
+  .stdet-fullcut-caption {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    padding: 80px max(32px,5vw) 28px;
+    background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 100%);
+    display: flex; align-items: flex-end; justify-content: space-between;
+  }
+  .stdet-fullcut-num {
+    font-family: 'Stack Sans Notch', var(--font);
+    font-size: clamp(56px, 10vw, 110px); font-weight: 900;
+    line-height: 1; letter-spacing: 0.02em;
+    color: rgba(255,255,255,0.06);
+  }
+  .stdet-fullcut-info { text-align: right; }
+  .stdet-fullcut-tag {
+    display: block; font-size: 9px; font-weight: 700;
+    letter-spacing: 0.28em; text-transform: uppercase;
+    color: var(--red); margin-bottom: 5px;
+  }
+  .stdet-fullcut-desc { font-size: 12px; color: rgba(255,255,255,0.55); line-height: 1.5; }
+
+  /* ============================================================
+     [4] 관련 상품
+     ============================================================ */
+  .stdet-related {
+    padding: 60px max(24px,5vw) 40px;
+    border-top: 1px solid var(--border);
+  }
+  .stdet-related-hdr {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 28px;
+  }
+  .stdet-related-title {
+    font-size: 10px; font-weight: 700; letter-spacing: 0.28em;
+    text-transform: uppercase; color: var(--gray-3);
+  }
+  .stdet-related-all {
+    font-size: 10px; font-weight: 700; letter-spacing: 0.15em;
+    text-transform: uppercase; color: var(--red); transition: opacity 0.2s;
+  }
+  .stdet-related-all:hover { opacity: 0.7; }
+  .stdet-related-grid {
+    display: grid; grid-template-columns: repeat(4,1fr); gap: 14px;
+  }
+  .stdet-rel-card { display: block; cursor: pointer; }
+  .stdet-rel-img {
+    width: 100%; aspect-ratio: 1;
+    background: #1a1a18; border-radius: 4px; overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.05); margin-bottom: 10px;
+    transition: border-color 0.25s; position: relative;
+  }
+  .stdet-rel-card:hover .stdet-rel-img { border-color: rgba(249,21,54,0.3); }
+  .stdet-rel-ph {
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column; gap: 5px;
+    color: rgba(255,255,255,0.12); font-size: 8px;
+    font-weight: 700; letter-spacing: 0.15em;
+    text-transform: uppercase; text-align: center; padding: 10px;
+  }
+  .stdet-rel-ph em { font-size: 20px; opacity: 0.15; font-style: normal; }
+  .stdet-rel-name { font-size: 11px; font-weight: 700; color: var(--gray-1); margin-bottom: 2px; }
+  .stdet-rel-price { font-size: 10px; color: var(--gray-3); }
+
+  /* ============================================================
+     INFO 모달
+     ============================================================ */
+  .stdet-modal-bg {
+    position: fixed; inset: 0; z-index: 6900;
+    background: rgba(0,0,0,0); pointer-events: none;
+    transition: background 0.4s;
+  }
+  .stdet-modal-bg.open { background: rgba(0,0,0,0.55); pointer-events: all; }
+
+  .stdet-modal {
+    position: fixed; top: 0; right: 0; bottom: 0;
+    width: min(440px, 90vw); z-index: 7000;
+    background: #0e0e0d;
+    border-left: 1px solid rgba(255,255,255,0.08);
+    box-shadow: -20px 0 80px rgba(0,0,0,0.6);
+    transform: translateX(100%);
+    transition: transform 0.5s cubic-bezier(0.23,1,0.32,1);
+    display: flex; flex-direction: column;
+    overflow-y: auto; scrollbar-width: none;
+  }
+  .stdet-modal::-webkit-scrollbar { display: none; }
+  .stdet-modal.open { transform: translateX(0); }
+
+  .stdet-modal-topbar {
+    display: flex; align-items: center; gap: 14px;
+    padding: 18px 22px;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    margin-top: calc(var(--nav-h) + var(--marquee-h));
+    flex-shrink: 0;
+  }
+  .stdet-modal-nav { display: flex; gap: 4px; }
+  .stdet-modal-navbtn {
+    width: 24px; height: 24px; border-radius: 2px;
+    border: 1px solid rgba(255,255,255,0.1); color: var(--gray-3);
+    display: flex; align-items: center; justify-content: center; font-size: 12px;
+    transition: all 0.2s;
+  }
+  .stdet-modal-navbtn:hover { color: var(--white); border-color: rgba(255,255,255,0.3); }
+  .stdet-modal-tab {
+    flex: 1; text-align: center;
+    font-size: 10px; font-weight: 700; letter-spacing: 0.22em;
+    text-transform: uppercase; color: var(--gray-2);
+  }
+  .stdet-modal-x {
+    width: 26px; height: 26px; border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.1); color: var(--gray-2);
+    display: flex; align-items: center; justify-content: center; font-size: 11px;
+    transition: all 0.2s;
+  }
+  .stdet-modal-x:hover { color: var(--white); border-color: rgba(255,255,255,0.3); background: rgba(255,255,255,0.04); }
+
+  .stdet-modal-body { padding: 28px 22px 48px; flex: 1; }
+  .stdet-modal-ptitle {
+    font-family: 'Stack Sans Notch', var(--font);
+    font-size: clamp(20px,3vw,28px); font-weight: 900;
+    letter-spacing: 0.02em; text-transform: uppercase;
+    text-align: center; margin-bottom: 6px;
+  }
+  .stdet-modal-psub { text-align: center; font-size: 11px; color: var(--gray-3); margin-bottom: 22px; }
+  .stdet-modal-brand {
+    display: flex; justify-content: center; margin-bottom: 24px;
+    padding-bottom: 24px; border-bottom: 1px solid rgba(255,255,255,0.07);
+  }
+  .stdet-modal-brandname {
+    font-family: 'Stack Sans Notch', var(--font);
+    font-size: 26px; font-weight: 900; letter-spacing: 0.06em; color: var(--red);
+  }
+  .stdet-modal-desc {
+    font-size: 13px; line-height: 1.8; color: rgba(255,255,255,0.5);
+    margin-bottom: 28px;
+  }
+  .stdet-modal-links-ttl {
+    font-size: 9px; font-weight: 700; letter-spacing: 0.25em;
+    text-transform: uppercase; color: var(--gray-3); margin-bottom: 10px;
+  }
+  .stdet-modal-links { display: flex; flex-direction: column; gap: 0; margin-bottom: 24px; }
+  .stdet-modal-link {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--gray-2);
+    padding: 9px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
+    display: flex; justify-content: space-between; align-items: center;
+    transition: color 0.2s;
+  }
+  .stdet-modal-link:hover { color: var(--white); }
+  .stdet-modal-link::after { content: '↗'; font-size: 10px; opacity: 0.35; }
+  .stdet-modal-misc { display: flex; flex-direction: column; gap: 6px; }
+  .stdet-modal-mlink {
+    font-size: 11px; color: var(--gray-3);
+    text-decoration: underline; text-underline-offset: 3px; transition: color 0.2s;
+  }
+  .stdet-modal-mlink:hover { color: var(--gray-1); }
+
+  /* ── 반응형 ── */
+  @media (max-width: 860px) {
+    .stdet-side-label { display: none; }
+    .stdet-options { width: 55%; padding: 24px 20px; }
+    .stdet-related-grid { grid-template-columns: repeat(2,1fr); }
+  }
+  @media (max-width: 640px) {
+    .stdet-options { width: 100%; }
+    .stdet-related-grid { grid-template-columns: repeat(2,1fr); gap: 10px; }
+  }
+  </style>
+  <script src="transition-head.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/fontawesome.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/brands.min.css" />
+</head>
+<body>
+
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-dot" id="cursorDot"></div>
+  <div class="grain"></div>
+
+  <!-- NAV -->
+  <nav class="nav" id="nav">
+    <ul class="nav-menu">
+      <li><a href="chart.html"     class="nav-link">Chart</a></li>
+      <li><a href="genre.html"     class="nav-link">Explore</a></li>
+      <li><a href="store.html"     class="nav-link">Store</a></li>
+      <li><a href="about.html"     class="nav-link">About</a></li>
+      <li><a href="my-player.html" class="nav-link">My Player</a></li>
+    </ul>
+    <a href="index.html" class="nav-logo-center"><img src="logo.png" alt="OMIX" class="logo-img" /></a>
+    <div class="nav-sns">
+      <a href="#" class="nav-sns-link" aria-label="Spotify"    target="_blank"><i class="fab fa-spotify"></i></a>
+      <a href="#" class="nav-sns-link" aria-label="Instagram"  target="_blank"><i class="fab fa-instagram"></i></a>
+      <a href="#" class="nav-sns-link" aria-label="YouTube"    target="_blank"><i class="fab fa-youtube"></i></a>
+      <a href="#" class="nav-sns-link" aria-label="SoundCloud" target="_blank"><i class="fab fa-soundcloud"></i></a>
+    </div>
+    <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+  </nav>
+
+  <!-- MARQUEE -->
+  <div class="site-marquee">
+    <div class="marquee-track">
+      <span class="marquee-item-wrap">LISTEN</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">MIX</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">REMIX</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">ARCHIVE</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">BUDDHISM × MUSIC</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">OM MUSIC IMMERSIVE EXPERIENCE</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">108 SOUNDS</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">MY MIX, MY RITUAL</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">LISTEN</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">MIX</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">REMIX</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">ARCHIVE</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">BUDDHISM × MUSIC</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">OM MUSIC IMMERSIVE EXPERIENCE</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">108 SOUNDS</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">MY MIX, MY RITUAL</span><span class="dot-sep">◆</span>
+    </div>
+  </div>
+
+  <!-- INFO 모달 배경 -->
+  <div class="stdet-modal-bg" id="stdetModalBg"></div>
+
+  <!-- INFO 모달 -->
+  <aside class="stdet-modal" id="stdetModal" aria-hidden="true">
+    <div class="stdet-modal-topbar">
+      <div class="stdet-modal-nav">
+        <button class="stdet-modal-navbtn">‹</button>
+        <button class="stdet-modal-navbtn">›</button>
+      </div>
+      <span class="stdet-modal-tab">INFO</span>
+      <button class="stdet-modal-x" id="stdetModalClose">✕</button>
+    </div>
+    <div class="stdet-modal-body">
+      <h2 class="stdet-modal-ptitle">VOID MANDALA<br />OMIX LP.01</h2>
+      <p class="stdet-modal-psub">A RELEASE BY OMIX</p>
+      <div class="stdet-modal-brand"><span class="stdet-modal-brandname">OMIX ✦</span></div>
+      <p class="stdet-modal-desc">
+        OMIX는 한국 불교 사운드와 현대 전자음악이 교차하는 지점에서 태어난 음악 플랫폼입니다.
+        Void Mandala는 공(空)의 개념을 베이스라인으로 풀어낸 첫 번째 LP로, 클럽 씬과 명상 문화
+        양쪽에 발을 딛고 있습니다. 한정 바이닐 500장, 더블 자켓, OBI 스트립 포함.
+      </p>
+      <p class="stdet-modal-links-ttl">소셜 채널</p>
+      <div class="stdet-modal-links">
+        <a href="#" class="stdet-modal-link">INSTAGRAM</a>
+        <a href="#" class="stdet-modal-link">YOUTUBE</a>
+        <a href="#" class="stdet-modal-link">SOUNDCLOUD</a>
+        <a href="#" class="stdet-modal-link">DISCORD</a>
+        <a href="#" class="stdet-modal-link">X (TWITTER)</a>
+      </div>
+      <div class="stdet-modal-misc">
+        <a href="#" class="stdet-modal-mlink">FAQ</a>
+        <a href="#" class="stdet-modal-mlink">Privacy Policy</a>
+        <a href="#" class="stdet-modal-mlink">Terms</a>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ============================================================
+       MAIN
+       ============================================================ -->
+  <main class="stdet-page">
+
+    <!-- ── HERO (scroll-driven 3 phases) ── -->
+    <section class="stdet-hero" id="stdetHero">
+      <div class="stdet-sticky" id="stdetSticky">
+
+        <!-- 배경 -->
+        <div class="stdet-bg" id="stdetBg"></div>
+
+        <!-- 진행 바 -->
+        <div class="stdet-progress-bar" id="stdetPBar"></div>
+
+        <!-- 좌측 라벨 -->
+        <div class="stdet-side-label" id="stdetSideLabel">
+          <strong>LP VINYL</strong>
+          <span>OMIX.LP.01</span>
+          <span>2026</span>
+        </div>
+
+        <!-- 이미지 씬 -->
+        <div class="stdet-img-scene" id="stdetImgScene">
+          <div class="stdet-img-card" id="stdetImgCard">
+            <!-- 실제 파일: product-void-mandala-main.jpg -->
+            <div class="stdet-img-ph">
+              <em>🖼</em>
+              <span>product-void-mandala-main.jpg</span>
+            </div>
+            <span class="stdet-img-counter" id="stdetCounter">1 / 4</span>
+          </div>
+        </div>
+
+        <!-- 우측 옵션 패널 (phase 2~3에서 등장) -->
+        <div class="stdet-options" id="stdetOptions">
+          <p class="stdet-opt-eyebrow">OMIX LP.01</p>
+          <h2 class="stdet-opt-title">VOID<br />MANDALA</h2>
+          <p class="stdet-opt-sub">LP VINYL · LIMITED 500</p>
+          <div class="stdet-opt-price-row">
+            <span class="stdet-opt-price">₩45,000</span>
+            <span class="stdet-opt-price-note">배송비 포함</span>
+          </div>
+          <p class="stdet-opt-size-label">SIZE</p>
+          <div class="stdet-opt-sizes">
+            <button class="stdet-size-btn sel" data-sz="S">S</button>
+            <button class="stdet-size-btn" data-sz="M">M</button>
+            <button class="stdet-size-btn" data-sz="L">L</button>
+            <button class="stdet-size-btn" data-sz="XL">XL</button>
+            <button class="stdet-size-btn" data-sz="FREE">FREE</button>
+          </div>
+          <button class="stdet-opt-buy-btn" id="stdetBuyBtn">🛒 &nbsp;ADD TO CART</button>
+          <button class="stdet-opt-wish-btn">♡ &nbsp;WISHLIST에 추가</button>
+          <div class="stdet-opt-specs">
+            <div class="stdet-opt-spec-row"><span class="stdet-opt-spec-k">FORMAT</span><span class="stdet-opt-spec-v">12" LP Vinyl</span></div>
+            <div class="stdet-opt-spec-row"><span class="stdet-opt-spec-k">WEIGHT</span><span class="stdet-opt-spec-v">180g Black Vinyl</span></div>
+            <div class="stdet-opt-spec-row"><span class="stdet-opt-spec-k">EDITION</span><span class="stdet-opt-spec-v">Limited 500</span></div>
+            <div class="stdet-opt-spec-row"><span class="stdet-opt-spec-k">INCLUDES</span><span class="stdet-opt-spec-v">Double Jacket + OBI</span></div>
+            <div class="stdet-opt-spec-row"><span class="stdet-opt-spec-k">TRACKS</span><span class="stdet-opt-spec-v">12 Tracks · 52:18</span></div>
+            <div class="stdet-opt-spec-row"><span class="stdet-opt-spec-k">SHIPPING</span><span class="stdet-opt-spec-v">2–5 영업일</span></div>
+          </div>
+        </div>
+
+        <!-- 스크롤 힌트 -->
+        <div class="stdet-scroll-hint" id="stdetScrollHint">
+          <span>SCROLL</span>
+          <div class="stdet-scroll-arrow"></div>
+        </div>
+
+        <!-- 하단 바 -->
+        <div class="stdet-bar">
+          <a href="store.html" class="stdet-bar-back">← STORE</a>
+          <span class="stdet-bar-name">VOID MANDALA LP · OMIX</span>
+          <span class="stdet-bar-price">₩45,000</span>
+          <button class="stdet-bar-info-btn" id="stdetInfoBtn">INFO <span>+</span></button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ── 가로 스크롤 디테일 컷 ── -->
+    <section class="stdet-cuts">
+      <div class="stdet-cuts-hdr">
+        <span class="stdet-cuts-title">PRODUCT SHOTS</span>
+        <span class="stdet-cuts-count">5 CUTS</span>
+      </div>
+      <div class="stdet-cuts-scroll" id="stdetCutsScroll">
+        <div class="stdet-cut">
+          <div class="stdet-cut-ph"><em>🖼</em><span>product-void-mandala-detail-1.jpg</span></div>
+          <div class="stdet-cut-lbl">FRONT VIEW</div>
+        </div>
+        <div class="stdet-cut">
+          <div class="stdet-cut-ph"><em>🖼</em><span>product-void-mandala-detail-2.jpg</span></div>
+          <div class="stdet-cut-lbl">BACK VIEW</div>
+        </div>
+        <div class="stdet-cut">
+          <div class="stdet-cut-ph"><em>🖼</em><span>product-void-mandala-detail-3.jpg</span></div>
+          <div class="stdet-cut-lbl">LABEL DETAIL</div>
+        </div>
+        <div class="stdet-cut">
+          <div class="stdet-cut-ph"><em>🖼</em><span>product-void-mandala-detail-4.jpg</span></div>
+          <div class="stdet-cut-lbl">INNER SLEEVE</div>
+        </div>
+        <div class="stdet-cut">
+          <div class="stdet-cut-ph"><em>🖼</em><span>product-void-mandala-detail-5.jpg</span></div>
+          <div class="stdet-cut-lbl">TEXTURE CLOSE-UP</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 풀컷 패럴랙스 ── -->
+    <div class="stdet-fullcut">
+      <div class="stdet-fullcut-bg" id="stdetFc1">
+        <div class="stdet-fullcut-ph"><em>🖼</em><span>product-void-mandala-fullcut-1.jpg</span></div>
+      </div>
+      <div class="stdet-fullcut-caption">
+        <span class="stdet-fullcut-num">01</span>
+        <div class="stdet-fullcut-info">
+          <span class="stdet-fullcut-tag">OUTER JACKET</span>
+          <p class="stdet-fullcut-desc">180g 고중량 바이닐<br />더블 자켓 아트워크</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="stdet-fullcut">
+      <div class="stdet-fullcut-bg" id="stdetFc2">
+        <div class="stdet-fullcut-ph"><em>🖼</em><span>product-void-mandala-fullcut-2.jpg</span></div>
+      </div>
+      <div class="stdet-fullcut-caption">
+        <span class="stdet-fullcut-num">02</span>
+        <div class="stdet-fullcut-info">
+          <span class="stdet-fullcut-tag">LABEL DESIGN</span>
+          <p class="stdet-fullcut-desc">레이블 디테일<br />OBI 스트립 포함</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="stdet-fullcut">
+      <div class="stdet-fullcut-bg" id="stdetFc3">
+        <div class="stdet-fullcut-ph"><em>🖼</em><span>product-void-mandala-fullcut-3.jpg</span></div>
+      </div>
+      <div class="stdet-fullcut-caption">
+        <span class="stdet-fullcut-num">03</span>
+        <div class="stdet-fullcut-info">
+          <span class="stdet-fullcut-tag">INNER SLEEVE</span>
+          <p class="stdet-fullcut-desc">가사 인쇄 이너 슬리브<br />크레딧 & 아트워크</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── 관련 상품 ── -->
+    <section class="stdet-related">
+      <div class="stdet-related-hdr">
+        <span class="stdet-related-title">RELATED PRODUCTS</span>
+        <a href="store.html" class="stdet-related-all">전체 보기 →</a>
+      </div>
+      <div class="stdet-related-grid">
+        <a href="store-detail.html" class="stdet-rel-card">
+          <div class="stdet-rel-img"><div class="stdet-rel-ph"><em>🖼</em><span>product-108-sounds-thumb.jpg</span></div></div>
+          <p class="stdet-rel-name">108 SOUNDS VOL.1</p>
+          <p class="stdet-rel-price">₩12,000</p>
+        </a>
+        <a href="store-detail.html" class="stdet-rel-card">
+          <div class="stdet-rel-img"><div class="stdet-rel-ph"><em>🖼</em><span>product-aum-club-thumb.jpg</span></div></div>
+          <p class="stdet-rel-name">AUM CLUB SESSIONS</p>
+          <p class="stdet-rel-price">₩45,000</p>
+        </a>
+        <a href="store-detail.html" class="stdet-rel-card">
+          <div class="stdet-rel-img"><div class="stdet-rel-ph"><em>🖼</em><span>product-hoodie-thumb.jpg</span></div></div>
+          <p class="stdet-rel-name">OMIX HOODIE</p>
+          <p class="stdet-rel-price">₩65,000</p>
+        </a>
+        <a href="store-detail.html" class="stdet-rel-card">
+          <div class="stdet-rel-img"><div class="stdet-rel-ph"><em>🖼</em><span>product-tote-thumb.jpg</span></div></div>
+          <p class="stdet-rel-name">OMIX TOTE BAG</p>
+          <p class="stdet-rel-price">₩28,000</p>
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ══ FOOTER ══ -->
+  <footer class="idx-footer">
+    <div class="idx-footer-brand">
+      <img src="logo.png" alt="OMIX" class="idx-footer-logo" />
+      <p class="idx-footer-copy">© 2026 OMIX Studio.<br>Korean Buddhism × Modern Music.<br>Seoul, Korea.</p>
+    </div>
+    <nav class="idx-footer-links">
+      <a href="chart.html"     class="idx-footer-link">Chart</a>
+      <a href="genre.html"     class="idx-footer-link">Explore</a>
+      <a href="store.html"     class="idx-footer-link">Store</a>
+      <a href="about.html"     class="idx-footer-link">About</a>
+      <a href="my-player.html" class="idx-footer-link">My Player</a>
+    </nav>
+    <div class="idx-footer-sns">
+      <a href="#" class="nav-sns-link" style="font-size:20px"><i class="fab fa-spotify"></i></a>
+      <a href="#" class="nav-sns-link" style="font-size:20px"><i class="fab fa-instagram"></i></a>
+      <a href="#" class="nav-sns-link" style="font-size:20px"><i class="fab fa-youtube"></i></a>
+      <a href="#" class="nav-sns-link" style="font-size:20px"><i class="fab fa-soundcloud"></i></a>
+    </div>
+  </footer>
+
+  <!-- 미니 플레이어 -->
+  <div class="mini-player" id="miniPlayer">
+    <div class="player-track" id="playerTrack">
+      <div class="player-disc spinning" id="playerDisc"><div class="disc-hole"></div></div>
+      <div class="player-info">
+        <p class="player-name">Void Mandala</p>
+        <p class="player-artist">DJ Haein × OMIX Studio</p>
+      </div>
+    </div>
+    <div class="player-controls">
+      <button class="ctrl-btn">⏮</button>
+      <button class="ctrl-btn ctrl-play" id="playPauseBtn">▶</button>
+      <button class="ctrl-btn">⏭</button>
+    </div>
+    <div class="player-progress">
+      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+      <div class="progress-times"><span id="currentTime">0:00</span><span>3:48</span></div>
+    </div>
+    <div class="player-vol"><span>🔊</span><input type="range" class="vol-slider" min="0" max="100" value="70"/></div>
+    <button class="player-like">♡</button>
+  </div>
+
+  <!-- 테마 스위처 -->
+  <div class="theme-switcher" id="themeSwitcher">
+    <button class="theme-toggle" id="themeToggle" aria-label="테마 색상 변경">
+      <span class="theme-toggle-dot" id="themeToggleDot"></span>
+    </button>
+    <div class="theme-palette" id="themePalette">
+      <button class="theme-swatch active" data-color="#F91536" style="background:#F91536"></button>
+      <button class="theme-swatch"        data-color="#A647FF" style="background:#A647FF"></button>
+      <button class="theme-swatch"        data-color="#00D4FF" style="background:#00D4FF"></button>
+      <button class="theme-swatch"        data-color="#39FF14" style="background:#39FF14"></button>
+      <button class="theme-swatch"        data-color="#FFB800" style="background:#FFB800"></button>
+    </div>
+  </div>
+
+  <script src="now-playing-panel.js"></script>
+  <script>
+  (function () {
+
+    /* ── 커서 ── */
+    const cursor = document.getElementById('cursor');
+    const cDot   = document.getElementById('cursorDot');
+    let mx=-100,my=-100,cx=-100,cy=-100;
+    if(cursor&&cDot){
+      document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cDot.style.left=mx+'px';cDot.style.top=my+'px';});
+      (function anim(){cx+=(mx-cx)*0.12;cy+=(my-cy)*0.12;cursor.style.left=cx+'px';cursor.style.top=cy+'px';requestAnimationFrame(anim);})();
+    }
+
+    /* ── NAV ── */
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',window.scrollY>40),{passive:true});
+    const ham = document.getElementById('hamburger');
+    const navL = document.querySelector('.nav-menu');
+    if(ham) ham.addEventListener('click',()=>{ham.classList.toggle('open');navL.classList.toggle('mobile-open');});
+
+    /* ─────────────────────────────────────────────────────
+       SCROLL-DRIVEN 3-PHASE HERO  (총 380vh)
+       Phase 1 (p 0.00 – 0.28) : zoom-in  (scale 0.76 → 1.04)
+       Phase 2 (p 0.28 – 0.52) : split    (이미지 좌측 + 옵션 우측)
+       Phase 3 (p 0.52 – 1.00) : HOLD     (split 고정, 충분히 보다가 아래로)
+    ───────────────────────────────────────────────────── */
+    const hero      = document.getElementById('stdetHero');
+    const scene     = document.getElementById('stdetImgScene');
+    const imgCard   = document.getElementById('stdetImgCard');
+    const options   = document.getElementById('stdetOptions');
+    const pbar      = document.getElementById('stdetPBar');
+    const hint      = document.getElementById('stdetScrollHint');
+    const sideLabel = document.getElementById('stdetSideLabel');
+
+    // 이미지 목록 (가칭 파일명)
+    const IMAGES = [
+      { ph: 'product-void-mandala-main.jpg',  label: '1 / 4' },
+      { ph: 'product-void-mandala-side.jpg',  label: '2 / 4' },
+      { ph: 'product-void-mandala-back.jpg',  label: '3 / 4' },
+      { ph: 'product-void-mandala-label.jpg', label: '4 / 4' },
+    ];
+    const counter = document.getElementById('stdetCounter');
+
+    function lerp(a, b, t) { return a + (b - a) * Math.max(0, Math.min(1, t)); }
+    function invlerp(a, b, v) { return Math.max(0, Math.min(1, (v - a) / (b - a))); }
+    function easeOut(t) { return 1 - Math.pow(1 - t, 3); }
+    function easeInOut(t) { return t < 0.5 ? 2*t*t : 1-(2*(1-t)*(1-t)); }
+
+    let lastP = -1;
+
+    function onScroll() {
+      const rect = hero.getBoundingClientRect();
+      const heroH = hero.offsetHeight;
+      const raw = -rect.top;
+      const p = Math.max(0, Math.min(1, raw / heroH));
+
+      if (Math.abs(p - lastP) < 0.001) return;
+      lastP = p;
+
+      /* 진행 바 */
+      pbar.style.width = (p * 100) + '%';
+
+      /* 스크롤 힌트 숨김 */
+      hint.classList.toggle('hidden', p > 0.08);
+
+      /* ── Phase 1: zoom in (0 → 0.28) ── */
+      const p1 = invlerp(0, 0.28, p);
+      const scale = lerp(0.76, 1.04, easeOut(p1));
+
+      /* ── Phase 2: split (0.28 → 0.52) → Phase 3 hold (0.52 → 1.0) ── */
+      const p2 = invlerp(0.28, 0.52, p);   /* 0→1 transition */
+      const splitT = easeInOut(p2);         /* 0.52 이후 p2=1 고정 → 상태 유지 */
+
+      /* 이미지: 좌측으로 이동하면서 높이 조정 */
+      const imgX   = lerp(0, -25, splitT);   // vw 단위 (scene 이동)
+      const imgScale = lerp(scale, 0.88, splitT);
+
+      scene.style.transform = `translateX(${imgX}vw)`;
+      imgCard.style.transform = `scale(${imgScale})`;
+
+      /* 옵션 패널 */
+      const optO = lerp(0, 1, splitT);
+      const optX = lerp(40, 0, splitT);
+      options.style.opacity = optO;
+      options.style.transform = `translateX(${optX}px)`;
+      options.classList.toggle('active', splitT > 0.3);
+
+      /* 좌측 라벨: phase 2에서 서서히 사라짐 */
+      sideLabel.style.opacity = lerp(1, 0, invlerp(0.28, 0.42, p));
+
+      /* 이미지 카운터 변경 */
+      const imgIdx = Math.min(Math.floor(p * IMAGES.length), IMAGES.length - 1);
+      const imgData = IMAGES[imgIdx];
+      counter.textContent = imgData.label;
+      // 이미지 ph 텍스트도 교체
+      const ph = imgCard.querySelector('.stdet-img-ph span');
+      if (ph) ph.textContent = imgData.ph;
+
+      /* 배경 미세 변화 */
+      const bgA = lerp(0.06, 0.03, splitT);
+      document.getElementById('stdetBg').style.background =
+        `radial-gradient(ellipse 70% 60% at ${lerp(50,30,splitT)}% 50%, rgba(249,21,54,${bgA}) 0%, transparent 70%)`;
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+
+    /* ── 사이즈 버튼 ── */
+    document.querySelectorAll('.stdet-size-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.stdet-size-btn').forEach(b => b.classList.remove('sel'));
+        btn.classList.add('sel');
+      });
+    });
+
+    /* ── ADD TO CART ── */
+    document.getElementById('stdetBuyBtn').addEventListener('click', function() {
+      const orig = this.innerHTML;
+      this.innerHTML = '✓ &nbsp;ADDED!';
+      this.style.background = '#22c55e';
+      setTimeout(() => { this.innerHTML = orig; this.style.background = ''; }, 1800);
+    });
+
+    /* ── INFO 모달 ── */
+    const modal   = document.getElementById('stdetModal');
+    const modalBg = document.getElementById('stdetModalBg');
+    const infoBtn = document.getElementById('stdetInfoBtn');
+    const closeBtn= document.getElementById('stdetModalClose');
+    function openModal()  { modal.classList.add('open'); modalBg.classList.add('open'); modal.setAttribute('aria-hidden','false'); infoBtn.classList.add('active'); }
+    function closeModal() { modal.classList.remove('open'); modalBg.classList.remove('open'); modal.setAttribute('aria-hidden','true'); infoBtn.classList.remove('active'); }
+    infoBtn.addEventListener('click', () => modal.classList.contains('open') ? closeModal() : openModal());
+    closeBtn.addEventListener('click', closeModal);
+    modalBg.addEventListener('click', closeModal);
+    document.addEventListener('keydown', e => { if(e.key==='Escape') closeModal(); });
+
+    /* ── 가로 스크롤 드래그 ── */
+    const scrl = document.getElementById('stdetCutsScroll');
+    let isDown=false,startX=0,sl=0;
+    scrl.addEventListener('mousedown', e=>{isDown=true;startX=e.pageX-scrl.offsetLeft;sl=scrl.scrollLeft;});
+    scrl.addEventListener('mouseleave', ()=>isDown=false);
+    scrl.addEventListener('mouseup', ()=>isDown=false);
+    scrl.addEventListener('mousemove', e=>{if(!isDown)return;e.preventDefault();scrl.scrollLeft=sl-(e.pageX-scrl.offsetLeft-startX)*1.6;});
+
+    /* ── 풀컷 패럴랙스 ── */
+    document.querySelectorAll('.stdet-fullcut').forEach(fc => {
+      const bg = fc.querySelector('.stdet-fullcut-bg');
+      if(!bg) return;
+      function tick() {
+        const r = fc.getBoundingClientRect();
+        const prog = (window.innerHeight - r.top) / (window.innerHeight + r.height);
+        bg.style.transform = `translateY(${(prog - 0.5) * 80}px)`;
+      }
+      window.addEventListener('scroll', tick, {passive:true});
+      tick();
+    });
+
+    /* ── 테마 스위처 ── */
+    (function(){
+      const toggle=document.getElementById('themeToggle');
+      const dot=document.getElementById('themeToggleDot');
+      const palette=document.getElementById('themePalette');
+      const swatches=document.querySelectorAll('.theme-swatch');
+      let open=false;
+      const saved=localStorage.getItem('omix-accent');
+      if(saved)applyColor(saved);
+      toggle.addEventListener('click',()=>{open=!open;palette.classList.toggle('visible',open);toggle.classList.toggle('active',open);});
+      swatches.forEach(sw=>{
+        sw.addEventListener('click',()=>{
+          applyColor(sw.dataset.color);localStorage.setItem('omix-accent',sw.dataset.color);
+          swatches.forEach(s=>s.classList.remove('active'));sw.classList.add('active');dot.style.background=sw.dataset.color;
+          open=false;palette.classList.remove('visible');toggle.classList.remove('active');
+        });
+      });
+      function applyColor(c){document.documentElement.style.setProperty('--red',c);dot.style.background=c;swatches.forEach(sw=>sw.classList.toggle('active',sw.dataset.color===c));}
+      document.addEventListener('click',e=>{if(open&&!document.getElementById('themeSwitcher').contains(e.target)){open=false;palette.classList.remove('visible');toggle.classList.remove('active');}});
+    })();
+
+  })();
+  </script>
+  <script src="page-reveal.js"></script>
+  <script src="transition.js"></script>
+</body>
+</html>

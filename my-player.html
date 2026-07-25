@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OMIX — My Player</title>
+  <link rel="icon" href="symbol.png" type="image/png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,700&family=Stack+Sans+Notch&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <script src="theme.js"></script>
+  <script src="click-sound.js"></script>
+  <script src="transition-head.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/fontawesome.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/brands.min.css" />
+</head>
+<body>
+
+  <!-- [커스텀 커서] -->
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-dot" id="cursorDot"></div>
+
+  <!-- [Grain 노이즈] -->
+  <div class="grain"></div>
+
+  <!-- ================================================
+    [상단 네비게이션 바]
+    My Player 탭이 active 상태
+    ================================================ -->
+  <nav class="nav" id="nav">
+    <ul class="nav-menu">
+      <li><a href="chart.html"     class="nav-link">Chart</a></li>
+      <li><a href="genre.html"     class="nav-link">Explore</a></li>
+      <li><a href="store.html"     class="nav-link">Store</a></li>
+      <li><a href="about.html"     class="nav-link">About</a></li>
+      <li><a href="my-player.html" class="nav-link">My Player</a></li>
+    </ul>
+    <a href="index.html" class="nav-logo-center"><img src="logo.png" alt="OMIX" class="logo-img" /></a>
+    <div class="nav-sns">
+      <a href="#" class="nav-sns-link" aria-label="Spotify"    target="_blank"><i class="fab fa-spotify"></i></a>
+      <a href="#" class="nav-sns-link" aria-label="Instagram"  target="_blank"><i class="fab fa-instagram"></i></a>
+      <a href="#" class="nav-sns-link" aria-label="YouTube"    target="_blank"><i class="fab fa-youtube"></i></a>
+      <a href="#" class="nav-sns-link" aria-label="SoundCloud" target="_blank"><i class="fab fa-soundcloud"></i></a>
+    </div>
+    <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+  </nav>
+
+  <!-- [무한 스크롤 marquee 띠] -->
+  <div class="site-marquee">
+    <div class="marquee-track">
+      <span class="marquee-item-wrap">LISTEN</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">MIX</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">REMIX</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">ARCHIVE</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">BUDDHISM × MUSIC</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">OM MUSIC IMMERSIVE EXPERIENCE</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">108 SOUNDS</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">MY MIX, MY RITUAL</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">LISTEN</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">MIX</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">REMIX</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">ARCHIVE</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">BUDDHISM × MUSIC</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">OM MUSIC IMMERSIVE EXPERIENCE</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">108 SOUNDS</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">MY MIX, MY RITUAL</span><span class="dot-sep">◆</span>
+    </div>
+  </div>
+
+  <!-- ================================================
+    [메인 콘텐츠]
+    my-player-page: nav+marquee 높이 아래부터 시작
+    3열 레이아웃: 좌(현재 재생) | 중(플레이리스트) | 우(라이브러리)
+    ================================================ -->
+  <main class="my-player-page">
+    <div class="my-player-layout">
+
+      <!-- ════════════════════════════════════════
+           좌 패널: 현재 재생 중인 곡 + 확장 컨트롤
+           position: sticky로 스크롤 시 고정
+           ════════════════════════════════════════ -->
+      <div class="panel-now-playing">
+
+        <!-- 에디토리얼 코너 브래킷 (좌 패널 상단) -->
+        <span class="stc-br stc-tl"></span>
+        <span class="stc-br stc-tr"></span>
+
+        <!-- 대형 앨범 아트 래퍼 — stc-br 브래킷 홀더 (overflow:hidden 밖) -->
+        <div class="now-album-art-frame">
+          <span class="stc-br stc-tl"></span>
+          <span class="stc-br stc-tr"></span>
+          <span class="stc-br stc-bl"></span>
+          <span class="stc-br stc-br-pos"></span>
+          <div class="now-album-art playing" id="nowAlbumArt">
+            <div class="now-album-art-inner" id="nowAlbumEmoji"
+                 style="background: linear-gradient(135deg, #1a0408 0%, #300a12 50%, #0a0408 100%);">
+              🎵
+            </div>
+          </div>
+        </div>
+
+        <!-- 곡명 / 아티스트 -->
+        <div class="now-track-info">
+          <p class="now-track-name" id="nowTrackName">Void Mandala</p>
+          <p class="now-track-artist" id="nowTrackArtist">DJ Haein × OMIX Studio</p>
+        </div>
+
+        <!-- 확장 플레이어 컨트롤 -->
+        <div class="now-controls">
+
+          <!-- 프로그레스 바 + 시간 -->
+          <div class="now-progress">
+            <div class="now-progress-bar" id="nowProgressBar">
+              <div class="now-progress-fill" id="nowProgressFill" style="width: 38%"></div>
+            </div>
+            <div class="now-progress-times">
+              <span id="nowCurrentTime">1:26</span>
+              <span id="nowTotalTime">3:48</span>
+            </div>
+          </div>
+
+          <!-- 재생 버튼 행: 이전 / 재생정지 / 다음 -->
+          <div class="now-btns">
+            <!-- 셔플 -->
+            <button class="now-btn" id="shuffleBtn" title="셔플">⇄</button>
+            <!-- 이전 곡 -->
+            <button class="now-btn" id="nowPrevBtn">⏮</button>
+            <!-- 중앙 재생/정지: 크고 흰 원형 버튼 -->
+            <button class="now-btn play-main" id="nowPlayBtn">▶</button>
+            <!-- 다음 곡 -->
+            <button class="now-btn" id="nowNextBtn">⏭</button>
+            <!-- 반복 -->
+            <button class="now-btn" id="repeatBtn" title="반복">↺</button>
+          </div>
+
+          <!-- 좋아요 + 볼륨 -->
+          <div class="now-extras">
+            <!-- 좋아요: ♡ ↔ ♥ -->
+            <button class="now-like" id="nowLike">♡</button>
+            <!-- 볼륨 슬라이더 -->
+            <div class="now-vol">
+              <span>🔊</span>
+              <input type="range" class="vol-slider" id="nowVolSlider" min="0" max="100" value="70" />
+            </div>
+          </div>
+        </div>
+
+        <!-- 청취 통계 칩 3개: 이번 주 / 좋아요 / 재생 -->
+        <div class="now-stats">
+          <div class="now-stat-chip">
+            <div class="now-stat-val" id="statWeek">12</div>
+            <div class="now-stat-key">이번 주</div>
+          </div>
+          <div class="now-stat-chip">
+            <div class="now-stat-val" id="statLikes">34</div>
+            <div class="now-stat-key">좋아요</div>
+          </div>
+          <div class="now-stat-chip">
+            <div class="now-stat-val" id="statPlays">108</div>
+            <div class="now-stat-key">총 재생</div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ════════════════════════════════════════
+           중앙 패널: 현재 플레이리스트 (QUEUE / HISTORY 탭)
+           ════════════════════════════════════════ -->
+      <div class="panel-playlist">
+
+        <!-- 헤더: 플레이리스트 제목 + 곡 수 -->
+        <div class="playlist-header">
+          <!-- 에디토리얼 코너 브래킷 (헤더 상단) -->
+          <span class="stc-br stc-tl"></span>
+          <span class="stc-br stc-tr"></span>
+          <span class="playlist-title">My Playlist</span>
+          <span class="playlist-count" id="playlistCount">12 TRACKS</span>
+        </div>
+
+        <!-- QUEUE / HISTORY 탭 전환
+             my-player.js [4]번 블록에서 탭 처리 -->
+        <div class="playlist-tabs">
+          <button class="playlist-tab active" data-tab="queue">Queue</button>
+          <button class="playlist-tab" data-tab="history">History</button>
+        </div>
+
+        <!-- 트랙 리스트 스크롤 영역 -->
+        <div class="playlist-body" id="playlistBody">
+
+          <!-- ── QUEUE 탭 콘텐츠 ──
+               .current: 현재 재생 중 강조 (레드 배경)
+               data-track으로 JS에서 트랙 식별 -->
+
+          <!-- 트랙 1 (현재 재생 중) -->
+          <div class="playlist-track current" data-track="0">
+            <span class="pt-num">▶</span>
+            <div class="pt-info">
+              <p class="pt-name">Void Mandala</p>
+              <p class="pt-artist">DJ Haein × OMIX Studio</p>
+            </div>
+            <span class="pt-time">3:48</span>
+          </div>
+
+          <!-- 트랙 2 -->
+          <div class="playlist-track" data-track="1">
+            <span class="pt-num">02</span>
+            <div class="pt-info">
+              <p class="pt-name">AUM Drop</p>
+              <p class="pt-artist">OMIX Collective</p>
+            </div>
+            <span class="pt-time">4:12</span>
+          </div>
+
+          <!-- 트랙 3 -->
+          <div class="playlist-track" data-track="2">
+            <span class="pt-num">03</span>
+            <div class="pt-info">
+              <p class="pt-name">Temple Rave</p>
+              <p class="pt-artist">DJ Samsara</p>
+            </div>
+            <span class="pt-time">5:20</span>
+          </div>
+
+          <!-- 트랙 4 -->
+          <div class="playlist-track" data-track="3">
+            <span class="pt-num">04</span>
+            <div class="pt-info">
+              <p class="pt-name">108 Drops</p>
+              <p class="pt-artist">Nirvana Bass × OMIX</p>
+            </div>
+            <span class="pt-time">3:55</span>
+          </div>
+
+          <!-- 트랙 5 -->
+          <div class="playlist-track" data-track="4">
+            <span class="pt-num">05</span>
+            <div class="pt-info">
+              <p class="pt-name">Mindful Groove</p>
+              <p class="pt-artist">DJ Haein</p>
+            </div>
+            <span class="pt-time">6:00</span>
+          </div>
+
+          <!-- 트랙 6 -->
+          <div class="playlist-track" data-track="5">
+            <span class="pt-num">06</span>
+            <div class="pt-info">
+              <p class="pt-name">Beopgo Beat</p>
+              <p class="pt-artist">OMIX Studio</p>
+            </div>
+            <span class="pt-time">4:33</span>
+          </div>
+
+          <!-- 트랙 7 -->
+          <div class="playlist-track" data-track="6">
+            <span class="pt-num">07</span>
+            <div class="pt-info">
+              <p class="pt-name">Lotus Bassline</p>
+              <p class="pt-artist">OMIX Collective</p>
+            </div>
+            <span class="pt-time">5:11</span>
+          </div>
+
+          <!-- 트랙 8 -->
+          <div class="playlist-track" data-track="7">
+            <span class="pt-num">08</span>
+            <div class="pt-info">
+              <p class="pt-name">Dharma Dance</p>
+              <p class="pt-artist">DJ Samsara × Haein</p>
+            </div>
+            <span class="pt-time">4:44</span>
+          </div>
+
+          <!-- 트랙 9 -->
+          <div class="playlist-track" data-track="8">
+            <span class="pt-num">09</span>
+            <div class="pt-info">
+              <p class="pt-name">Nirvana Groove</p>
+              <p class="pt-artist">OMIX Studio</p>
+            </div>
+            <span class="pt-time">4:58</span>
+          </div>
+
+          <!-- 트랙 10 -->
+          <div class="playlist-track" data-track="9">
+            <span class="pt-num">10</span>
+            <div class="pt-info">
+              <p class="pt-name">Karma Club</p>
+              <p class="pt-artist">DJ Haein</p>
+            </div>
+            <span class="pt-time">3:30</span>
+          </div>
+
+          <!-- 트랙 11 -->
+          <div class="playlist-track" data-track="10">
+            <span class="pt-num">11</span>
+            <div class="pt-info">
+              <p class="pt-name">Samsara Loop</p>
+              <p class="pt-artist">Nirvana Bass</p>
+            </div>
+            <span class="pt-time">5:05</span>
+          </div>
+
+          <!-- 트랙 12 -->
+          <div class="playlist-track" data-track="11">
+            <span class="pt-num">12</span>
+            <div class="pt-info">
+              <p class="pt-name">AUM Sessions #7</p>
+              <p class="pt-artist">OMIX Collective</p>
+            </div>
+            <span class="pt-time">4:20</span>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ════════════════════════════════════════
+           우 패널: 라이브러리 (스탯 + 저장 트랙 + 최근 장르)
+           ════════════════════════════════════════ -->
+      <div class="panel-library">
+
+        <!-- ── 이번 주 통계 ── -->
+        <div class="library-section">
+          <p class="lib-section-title">이번 주 통계</p>
+
+          <!-- 재생 시간 -->
+          <div class="lib-stat-card">
+            <span class="lib-stat-icon">⏱</span>
+            <div class="lib-stat-info">
+              <div class="lib-stat-val">3h 42m</div>
+              <div class="lib-stat-label">청취 시간</div>
+            </div>
+          </div>
+
+          <!-- 재생 곡 수 -->
+          <div class="lib-stat-card">
+            <span class="lib-stat-icon">🎵</span>
+            <div class="lib-stat-info">
+              <div class="lib-stat-val">48곡</div>
+              <div class="lib-stat-label">재생 트랙</div>
+            </div>
+          </div>
+
+          <!-- 좋아요 수 -->
+          <div class="lib-stat-card">
+            <span class="lib-stat-icon">♥</span>
+            <div class="lib-stat-info">
+              <div class="lib-stat-val" style="color: var(--red)">12곡</div>
+              <div class="lib-stat-label">좋아요 트랙</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── 저장된 트랙 ── -->
+        <div class="library-section">
+          <p class="lib-section-title">저장된 트랙</p>
+
+          <!-- 저장 트랙 1 -->
+          <div class="saved-track" data-track="0">
+            <div class="saved-track-art" style="background: linear-gradient(135deg, #1a0408, #300a12);">🎵</div>
+            <div class="saved-track-info">
+              <p class="saved-track-name">Void Mandala</p>
+              <p class="saved-track-artist">DJ Haein × OMIX</p>
+            </div>
+            <span class="saved-track-like">♥</span>
+          </div>
+
+          <!-- 저장 트랙 2 -->
+          <div class="saved-track" data-track="1">
+            <div class="saved-track-art" style="background: linear-gradient(135deg, #0d0a1a, #1a0a2e);">🎧</div>
+            <div class="saved-track-info">
+              <p class="saved-track-name">AUM Drop</p>
+              <p class="saved-track-artist">OMIX Collective</p>
+            </div>
+            <span class="saved-track-like">♥</span>
+          </div>
+
+          <!-- 저장 트랙 3 -->
+          <div class="saved-track" data-track="2">
+            <div class="saved-track-art" style="background: linear-gradient(135deg, #0a0a1a, #14082a);">💿</div>
+            <div class="saved-track-info">
+              <p class="saved-track-name">Temple Rave</p>
+              <p class="saved-track-artist">DJ Samsara</p>
+            </div>
+            <span class="saved-track-like">♥</span>
+          </div>
+
+          <!-- 저장 트랙 4 -->
+          <div class="saved-track" data-track="3">
+            <div class="saved-track-art" style="background: linear-gradient(135deg, #0a140a, #0a2010);">🎶</div>
+            <div class="saved-track-info">
+              <p class="saved-track-name">Mindful Groove</p>
+              <p class="saved-track-artist">DJ Haein</p>
+            </div>
+            <span class="saved-track-like">♥</span>
+          </div>
+
+        </div>
+
+        <!-- ── 최근 재생 장르 ── -->
+        <div class="library-section">
+          <p class="lib-section-title">최근 장르</p>
+          <!-- 장르 태그 필 목록: genre-tag 클래스로 색상 지정 -->
+          <div class="genre-pills">
+            <span class="genre-pill genre-tag club">Club</span>
+            <span class="genre-pill genre-tag mindful">Mindful Roots</span>
+            <span class="genre-pill genre-tag dance">Dance</span>
+            <span class="genre-pill genre-tag meditation">Meditation</span>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ── 하단 고정 미니 플레이어 ──
+       My Player 페이지에서는 미니 플레이어도 동기화됨 -->
+  <div class="mini-player" id="miniPlayer">
+    <div class="player-track">
+      <div class="player-disc" id="playerDisc">
+        <div class="disc-hole"></div>
+      </div>
+      <div class="player-info">
+        <p class="player-name" id="playerName">Void Mandala</p>
+        <p class="player-artist" id="playerArtist">DJ Haein × OMIX Studio</p>
+      </div>
+    </div>
+    <div class="player-controls">
+      <button class="ctrl-btn" id="prevBtn">⏮</button>
+      <button class="ctrl-btn ctrl-play" id="playPauseBtn">▶</button>
+      <button class="ctrl-btn" id="nextBtn">⏭</button>
+    </div>
+    <div class="player-progress">
+      <div class="progress-bar" id="progressBar">
+        <div class="progress-fill" id="progressFill" style="width: 38%"></div>
+      </div>
+      <div class="progress-times">
+        <span id="currentTime">1:26</span>
+        <span id="totalTime">3:48</span>
+      </div>
+    </div>
+    <div class="player-vol">
+      <span>🔊</span>
+      <input type="range" class="vol-slider" min="0" max="100" value="70" />
+    </div>
+    <button class="player-like" id="globalLike">♡</button>
+  </div>
+
+  <!-- my-player.js: 커서, nav, 플레이어 컨트롤, 트랙 전환, 탭, 저장 트랙 -->
+  <script src="my-player.js"></script>
+  <script src="now-playing-panel.js"></script>
+
+  <div class="theme-switcher" id="themeSwitcher">
+    <button class="theme-toggle" id="themeToggle" aria-label="테마 색상 변경">
+      <span class="theme-toggle-dot" id="themeToggleDot"></span>
+    </button>
+    <div class="theme-palette" id="themePalette">
+      <button class="theme-swatch active" data-color="#F91536" data-name="RED"    style="background:#F91536" title="OMIX Red"></button>
+      <button class="theme-swatch"        data-color="#A647FF" data-name="PURPLE" style="background:#A647FF" title="Violet"></button>
+      <button class="theme-swatch"        data-color="#00D4FF" data-name="CYAN"   style="background:#00D4FF" title="Cyan"></button>
+      <button class="theme-swatch"        data-color="#39FF14" data-name="GREEN"  style="background:#39FF14" title="Neon Green"></button>
+      <button class="theme-swatch"        data-color="#FFB800" data-name="GOLD"   style="background:#FFB800" title="Gold"></button>
+    </div>
+  </div>
+  <script>
+  (function () {
+    const toggle = document.getElementById('themeToggle');
+    const dot    = document.getElementById('themeToggleDot');
+    const palette = document.getElementById('themePalette');
+    const swatches = document.querySelectorAll('.theme-swatch');
+    let open = false;
+    const saved = localStorage.getItem('omix-accent');
+    if (saved) applyColor(saved);
+    toggle.addEventListener('click', () => {
+      open = !open;
+      palette.classList.toggle('visible', open);
+      toggle.classList.toggle('active', open);
+    });
+    swatches.forEach(sw => {
+      sw.addEventListener('click', () => {
+        const color = sw.dataset.color;
+        applyColor(color);
+        localStorage.setItem('omix-accent', color);
+        swatches.forEach(s => s.classList.remove('active'));
+        sw.classList.add('active');
+        dot.style.background = color;
+        open = false;
+        palette.classList.remove('visible');
+        toggle.classList.remove('active');
+      });
+    });
+    function applyColor(color) {
+      document.documentElement.style.setProperty('--red', color);
+      dot.style.background = color;
+      swatches.forEach(sw => sw.classList.toggle('active', sw.dataset.color === color));
+    }
+    document.addEventListener('click', e => {
+      if (open && !document.getElementById('themeSwitcher').contains(e.target)) {
+        open = false;
+        palette.classList.remove('visible');
+        toggle.classList.remove('active');
+      }
+    });
+  })();
+  </script>
+  <script src="page-reveal.js"></script>
+  <script src="transition.js"></script>
+</body>
+</html>

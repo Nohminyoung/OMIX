@@ -1,0 +1,15 @@
+{
+  "name": "omix-live-sound-archive",
+  "version": "1.0.0",
+  "description": "OMIX 전시 부스 — 라이브 녹음 업로드 & QR 카드 서버",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "multer": "^1.4.5-lts.1",
+    "ws": "^8.16.0"
+  }
+}

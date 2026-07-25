@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OMIX — Explore</title>
+  <link rel="icon" href="symbol.png" type="image/png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,700&family=Stack+Sans+Notch&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <script src="theme.js"></script>
+  <script src="click-sound.js"></script>
+  <script src="transition-head.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/fontawesome.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/brands.min.css" />
+</head>
+<body>
+
+  <div class="cursor"    id="cursor"></div>
+  <div class="cursor-dot" id="cursorDot"></div>
+  <div class="grain"></div>
+
+  <!-- ── NAV ── -->
+  <nav class="nav" id="nav">
+    <ul class="nav-menu">
+      <li><a href="chart.html"     class="nav-link">Chart</a></li>
+      <li><a href="genre.html"     class="nav-link">Explore</a></li>
+      <li><a href="store.html"     class="nav-link">Store</a></li>
+      <li><a href="about.html"     class="nav-link">About</a></li>
+      <li><a href="my-player.html" class="nav-link">My Player</a></li>
+    </ul>
+    <a href="index.html" class="nav-logo-center"><img src="logo.png" alt="OMIX" class="logo-img" /></a>
+    <div class="nav-sns">
+      <a href="#" class="nav-sns-link" aria-label="Spotify"    target="_blank"><i class="fab fa-spotify"></i></a>
+      <a href="#" class="nav-sns-link" aria-label="Instagram"  target="_blank"><i class="fab fa-instagram"></i></a>
+      <a href="#" class="nav-sns-link" aria-label="YouTube"    target="_blank"><i class="fab fa-youtube"></i></a>
+      <a href="#" class="nav-sns-link" aria-label="SoundCloud" target="_blank"><i class="fab fa-soundcloud"></i></a>
+    </div>
+    <button class="hamburger" id="hamburger">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- ── MARQUEE ── -->
+  <div class="site-marquee">
+    <div class="marquee-track">
+      <span class="marquee-item-wrap">LISTEN</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">MIX</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">REMIX</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">ARCHIVE</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">BUDDHISM × MUSIC</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">OM MUSIC IMMERSIVE EXPERIENCE</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">108 SOUNDS</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">MY MIX, MY RITUAL</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">LISTEN</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">MIX</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">REMIX</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">ARCHIVE</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">BUDDHISM × MUSIC</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">OM MUSIC IMMERSIVE EXPERIENCE</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">108 SOUNDS</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">MY MIX, MY RITUAL</span><span class="dot-sep">◆</span>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════
+       GENRE SELECT PAGE
+       참고 이미지: 대형 LP 판이 아래에서 올라오고,
+       상단 원호 위에 장르 레이블이 분포,
+       드래그/스크롤로 LP를 회전시켜 장르 선택
+       ══════════════════════════════════════════════════ -->
+  <main class="genre-main">
+
+    <!-- CHOOSE A GENRE 제목 -->
+    <div class="genre-heading">
+      <!-- 에디토리얼 코너 브래킷 -->
+      <span class="stc-br stc-tl"></span>
+      <span class="stc-br stc-tr"></span>
+      <span class="stc-br stc-bl"></span>
+      <span class="stc-br stc-br-pos"></span>
+      <h1 class="genre-heading-title">CHOOSE A GENRE</h1>
+    </div>
+
+    <!-- LP 스테이지: overflow hidden → 레코드 하단 잘림 -->
+    <div class="lp-stage" id="lpStage">
+
+      <!-- 회전하는 LP 디스크 (visual only, JS로 위치/크기 설정) -->
+      <div class="lp-disc" id="lpDisc">
+        <!-- 중앙 레이블 링 -->
+        <div class="lp-label-ring">
+          <div class="lp-label-inner">
+            <span class="lp-label-omix">OMIX</span>
+          </div>
+        </div>
+        <!-- 중앙 구멍 -->
+        <div class="lp-hole"></div>
+      </div>
+
+      <!-- 장르 레이블 레이어: JS가 각 아이템 위치 설정 -->
+      <div class="genre-labels-layer" id="genreLabelsLayer"></div>
+
+      <!-- 12시 방향 선택 지시자 -->
+      <div class="lp-needle" id="lpNeedle"></div>
+
+      <!-- 중앙 인포 박스: 현재 선택 장르 + MORE 링크 -->
+      <div class="lp-center-info" id="lpCenterInfo">
+        <!-- 에디토리얼 코너 브래킷 -->
+        <span class="stc-br stc-tl"></span>
+        <span class="stc-br stc-tr"></span>
+        <span class="stc-br stc-bl"></span>
+        <span class="stc-br stc-br-pos"></span>
+        <p class="sel-genre-label">SELECT GENRE</p>
+        <p class="sel-genre-name" id="selGenreName">—</p>
+        <a class="sel-more-link" id="selMoreLink" href="chart.html">
+          MORE
+        </a>
+      </div>
+
+      <!-- 이벤트 텍스트 (하단 원호 따라 돌아가는 소문자 텍스트 — 장식) -->
+      <svg class="lp-arc-text" id="lpArcText" viewBox="0 0 600 600" aria-hidden="true">
+        <defs>
+          <path id="arcPath" d="M 60,300 A 240,240 0 0,1 540,300" />
+        </defs>
+        <text class="arc-text-el" font-size="11" letter-spacing="6" fill="rgba(255,255,255,0.18)">
+          <textPath href="#arcPath" startOffset="0%">
+            BUDDHISM × MUSIC · 108 SOUNDS · OMIX STUDIO · AUM CLUB · MINDFUL ROOTS ·
+          </textPath>
+        </text>
+      </svg>
+
+    </div>
+  </main>
+
+  <!-- ── MINI PLAYER ── -->
+  <div class="mini-player" id="miniPlayer">
+    <div class="player-track">
+      <div class="player-disc" id="playerDisc">
+        <div class="disc-hole"></div>
+      </div>
+      <div class="player-info">
+        <p class="player-name"   id="playerName">Void Mandala</p>
+        <p class="player-artist" id="playerArtist">DJ Haein × OMIX Studio</p>
+      </div>
+    </div>
+    <div class="player-controls">
+      <button class="ctrl-btn">⏮</button>
+      <button class="ctrl-btn ctrl-play" id="playPauseBtn">▶</button>
+      <button class="ctrl-btn">⏭</button>
+    </div>
+    <div class="player-progress">
+      <div class="progress-bar" id="progressBar">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+      <div class="progress-times">
+        <span id="currentTime">0:00</span>
+        <span>3:48</span>
+      </div>
+    </div>
+    <div class="player-vol">
+      <span>🔊</span>
+      <input type="range" class="vol-slider" min="0" max="100" value="70" />
+    </div>
+    <button class="player-like" id="globalLike">♡</button>
+  </div>
+
+  <script src="genre.js"></script>
+  <script src="now-playing-panel.js"></script>
+
+  <div class="theme-switcher" id="themeSwitcher">
+    <button class="theme-toggle" id="themeToggle" aria-label="테마 색상 변경">
+      <span class="theme-toggle-dot" id="themeToggleDot"></span>
+    </button>
+    <div class="theme-palette" id="themePalette">
+      <button class="theme-swatch active" data-color="#F91536" data-name="RED"    style="background:#F91536" title="OMIX Red"></button>
+      <button class="theme-swatch"        data-color="#A647FF" data-name="PURPLE" style="background:#A647FF" title="Violet"></button>
+      <button class="theme-swatch"        data-color="#00D4FF" data-name="CYAN"   style="background:#00D4FF" title="Cyan"></button>
+      <button class="theme-swatch"        data-color="#39FF14" data-name="GREEN"  style="background:#39FF14" title="Neon Green"></button>
+      <button class="theme-swatch"        data-color="#FFB800" data-name="GOLD"   style="background:#FFB800" title="Gold"></button>
+    </div>
+  </div>
+  <script>
+  (function () {
+    const toggle = document.getElementById('themeToggle');
+    const dot    = document.getElementById('themeToggleDot');
+    const palette = document.getElementById('themePalette');
+    const swatches = document.querySelectorAll('.theme-swatch');
+    let open = false;
+    const saved = localStorage.getItem('omix-accent');
+    if (saved) applyColor(saved);
+    toggle.addEventListener('click', () => {
+      open = !open;
+      palette.classList.toggle('visible', open);
+      toggle.classList.toggle('active', open);
+    });
+    swatches.forEach(sw => {
+      sw.addEventListener('click', () => {
+        const color = sw.dataset.color;
+        applyColor(color);
+        localStorage.setItem('omix-accent', color);
+        swatches.forEach(s => s.classList.remove('active'));
+        sw.classList.add('active');
+        dot.style.background = color;
+        open = false;
+        palette.classList.remove('visible');
+        toggle.classList.remove('active');
+      });
+    });
+    function applyColor(color) {
+      document.documentElement.style.setProperty('--red', color);
+      dot.style.background = color;
+      swatches.forEach(sw => sw.classList.toggle('active', sw.dataset.color === color));
+    }
+    document.addEventListener('click', e => {
+      if (open && !document.getElementById('themeSwitcher').contains(e.target)) {
+        open = false;
+        palette.classList.remove('visible');
+        toggle.classList.remove('active');
+      }
+    });
+  })();
+  </script>
+  <script src="page-reveal.js"></script>
+  <script src="transition.js"></script>
+</body>
+</html>

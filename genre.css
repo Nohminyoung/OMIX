@@ -1,0 +1,336 @@
+/* =====================================================
+   OMIX — genre.css  (LP 장르 선택 페이지)
+   ===================================================== */
+
+
+/* ── 전체 레이아웃 ── */
+.genre-main {
+  position: fixed;
+  inset: 0;
+  top: calc(var(--nav-h) + var(--marquee-h));
+  bottom: var(--player-h);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+
+/* =====================================================
+   [1] CHOOSE A GENRE 제목
+   ===================================================== */
+.genre-heading {
+  flex-shrink: 0;
+  padding: 36px 40px 20px;
+  text-align: center;
+  position: relative;
+  z-index: 10;
+}
+
+.genre-heading-title {
+  font-size: clamp(22px, 4.5vw, 52px);
+  font-weight: 300;
+  letter-spacing: 0.45em;
+  text-transform: uppercase;
+  color: var(--white);
+  line-height: 1;
+}
+
+
+/* =====================================================
+   [2] LP 스테이지 (overflow hidden → 레코드 하단 잘림)
+   ===================================================== */
+.lp-stage {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  cursor: grab;
+}
+.lp-stage:active { cursor: grabbing; }
+
+
+/* =====================================================
+   [3] LP 디스크 — 비닐 레코드 비주얼
+   JS가 크기(width/height)와 위치(left/top)를 설정
+   transform: rotate(Xdeg) 으로 회전
+   ===================================================== */
+.lp-disc {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  will-change: transform;
+
+  /* ── 비닐 질감 (겹쳐지는 그라디언트) ──
+     1) 중앙 레이블 영역 (짙은 레드 원)
+     2) conic 무지개빛 광택
+     3) repeating-radial: LP 홈(groove) 줄무늬
+  ── */
+  background:
+    /* 중앙 레이블: 짙은 레드 원 */
+    radial-gradient(circle at 50% 50%,
+      #1c0404 0%, #110202 6%,
+      rgba(249,21,54,0.2) 6.5%, rgba(249,21,54,0.08) 7.2%,
+      transparent 8%
+    ),
+    /* 광택 — 회전 시 이리데슨트 효과 */
+    conic-gradient(from 15deg,
+      transparent          0deg,
+      rgba(249,21,54,0.09) 40deg,
+      transparent          90deg,
+      rgba(166,71,255,0.06) 150deg,
+      transparent          200deg,
+      rgba(249,21,54,0.07) 260deg,
+      transparent          310deg,
+      rgba(100,80,200,0.04) 340deg,
+      transparent          360deg
+    ),
+    /* LP 홈: 미세한 반복 원 */
+    repeating-radial-gradient(
+      circle at 50% 50%,
+      #0d0d0d 0%,
+      #161616 0.42%,
+      #0d0d0d 0.84%
+    );
+
+  /* 테두리: 은은한 rim */
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.05),
+    inset 0 0 0 1px rgba(255,255,255,0.03);
+}
+
+
+/* ── 중앙 레이블 링 ── */
+.lp-label-ring {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 13%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, #200606 0%, #0e0101 100%);
+  border: 1px solid rgba(249,21,54,0.22);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lp-label-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 1px solid rgba(249,21,54,0.15);
+}
+
+.lp-label-omix {
+  font-size: clamp(4px, 0.8%, 9px);
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  color: rgba(249,21,54,0.5);
+  text-transform: uppercase;
+}
+
+/* ── 중앙 구멍 ── */
+.lp-hole {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 2%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: #08080a;
+  border: 1px solid rgba(255,255,255,0.12);
+  z-index: 2;
+}
+
+
+/* =====================================================
+   [4] 장르 레이블 레이어 (JS로 배치)
+   ===================================================== */
+.genre-labels-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 20;
+}
+
+/* 개별 장르 아이템 */
+.genre-item {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  pointer-events: auto;
+  cursor: pointer;
+  user-select: none;
+  /* JS가 left / top / opacity / transform을 제어 */
+  transition: opacity 0.35s ease;
+}
+
+/* 장르 이름 텍스트 */
+.genre-item-text {
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  color: rgba(255,255,255,0.5);
+  white-space: nowrap;
+  transition: color 0.35s, font-weight 0.25s, font-size 0.25s;
+}
+
+/* 아이템 하단의 작은 점 (arc 위에 얹힘) */
+.genre-item-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.35);
+  flex-shrink: 0;
+  transition: background 0.3s, width 0.3s, height 0.3s, box-shadow 0.3s;
+}
+
+/* ── 선택된(active) 장르 ── */
+.genre-item.active .genre-item-text {
+  color: var(--white);
+  font-weight: 600;
+  font-size: 15px;
+}
+.genre-item.active .genre-item-dot {
+  width: 7px;
+  height: 7px;
+  background: var(--green);
+  box-shadow: 0 0 10px rgba(249,21,54,0.7);
+}
+
+
+/* =====================================================
+   [5] 12시 방향 선택 지시자 (needle)
+   ===================================================== */
+.lp-needle {
+  position: absolute;
+  width: 1px;
+  /* height, left, top: JS 설정 */
+  background: linear-gradient(to bottom, var(--green) 0%, rgba(249,21,54,0.3) 60%, transparent 100%);
+  z-index: 25;
+  pointer-events: none;
+  transform: translateX(-50%);
+}
+
+/* 12시 위치 원형 포인트 */
+.lp-needle::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 12px rgba(249,21,54,0.8);
+}
+
+
+/* =====================================================
+   [6] 중앙 인포 박스 (SELECT GENRE / MORE)
+   ===================================================== */
+.lp-center-info {
+  position: absolute;
+  /* left / top: JS 설정 */
+  transform: translate(-50%, -50%);
+  text-align: center;
+  z-index: 30;
+  pointer-events: none;
+}
+
+.sel-genre-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  color: rgba(255,255,255,0.3);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.sel-genre-name {
+  font-size: clamp(14px, 2vw, 20px);
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: rgba(255,255,255,0.85);
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  min-height: 1.3em;
+  transition: opacity 0.25s;
+}
+
+.sel-more-link {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.25em;
+  color: rgba(255,255,255,0.35);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-color: rgba(255,255,255,0.2);
+  pointer-events: auto;
+  cursor: pointer;
+  transition: color 0.2s, text-decoration-color 0.2s;
+}
+.sel-more-link:hover {
+  color: rgba(255,255,255,0.75);
+  text-decoration-color: rgba(255,255,255,0.5);
+}
+
+
+/* =====================================================
+   [7] 하단 원호 텍스트 SVG (장식)
+   ===================================================== */
+.lp-arc-text {
+  position: absolute;
+  /* left / top / width / height: JS 설정 */
+  pointer-events: none;
+  z-index: 8;
+  user-select: none;
+}
+.arc-text-el {
+  font-family: var(--font);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+}
+
+
+/* =====================================================
+   [8] 스크롤 힌트 (첫 진입 시 표시)
+   ===================================================== */
+.lp-drag-hint {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  color: rgba(255,255,255,0.25);
+  text-transform: uppercase;
+  z-index: 30;
+  pointer-events: none;
+  animation: hintFade 3.5s ease-in-out forwards;
+}
+@keyframes hintFade {
+  0%   { opacity: 0; transform: translateX(-50%) translateY(6px); }
+  20%  { opacity: 1; transform: translateX(-50%) translateY(0); }
+  75%  { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+
+/* =====================================================
+   [9] 반응형
+   ===================================================== */
+@media (max-width: 640px) {
+  .genre-heading { padding: 24px 20px 12px; }
+  .genre-heading-title { letter-spacing: 0.25em; }
+  .genre-item-text { font-size: 12px; }
+}

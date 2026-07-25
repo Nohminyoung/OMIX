@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OMIX — Song Detail</title>
+  <link rel="icon" href="symbol.png" type="image/png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <script src="theme.js"></script>
+  <script src="click-sound.js"></script>
+  <style>
+
+    /* =====================================================
+       SONG DETAIL — gb-sonic 패턴 × OMIX 디자인 시스템
+       ===================================================== */
+
+    body { overflow-x: hidden; }
+
+    .sd-page {
+      padding-top: calc(var(--nav-h) + var(--marquee-h));
+      padding-bottom: var(--player-h);
+      min-height: 100vh;
+    }
+
+    /* ── INTRO 섹션 ── */
+    .sd-intro {
+      min-height: calc(100vh - var(--nav-h) - var(--marquee-h));
+      padding: 80px 6vw;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* 배경 그레인 그라디언트 */
+    .sd-intro::before {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 60% 70% at 80% 50%, rgba(249,21,54,0.07) 0%, transparent 65%),
+        radial-gradient(ellipse 40% 50% at 20% 80%, rgba(166,71,255,0.05) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .sd-intro-kicker {
+      font-size: 11px; font-weight: 700;
+      letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 24px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .sd-intro-kicker::before {
+      content: '';
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--red);
+      animation: blink 2s ease-in-out infinite;
+    }
+
+    .sd-intro-title {
+      font-size: clamp(56px, 10vw, 148px);
+      font-weight: 900;
+      line-height: 0.9;
+      letter-spacing: -0.05em;
+      text-transform: uppercase;
+      color: var(--white);
+      margin: 0 0 28px;
+      position: relative;
+    }
+
+    .sd-intro-title em {
+      font-style: italic;
+      color: var(--red);
+    }
+
+    .sd-intro-desc {
+      max-width: 520px;
+      font-size: 15px; font-weight: 400;
+      line-height: 1.75;
+      color: var(--gray-2);
+      margin-bottom: 0;
+      position: relative;
+    }
+
+    .sd-intro-meta {
+      display: flex; align-items: center; gap: 20px;
+      margin-top: 36px;
+      position: relative;
+    }
+
+    .sd-intro-tag {
+      font-size: 10px; font-weight: 700;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      padding: 7px 16px;
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      color: var(--gray-2);
+    }
+
+    .sd-motion-btn {
+      font-size: 10px; font-weight: 700;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      padding: 7px 16px;
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      color: var(--gray-2);
+      background: transparent;
+      cursor: none;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .sd-motion-btn:hover { color: var(--white); border-color: rgba(255,255,255,0.3); }
+
+    .sd-intro-scroll {
+      position: absolute;
+      bottom: 40px; right: 6vw;
+      font-size: 9px; font-weight: 700;
+      letter-spacing: 0.25em; text-transform: uppercase;
+      color: var(--gray-3);
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+      writing-mode: vertical-rl;
+    }
+    .sd-intro-scroll::after {
+      content: '↓';
+      writing-mode: horizontal-tb;
+      font-size: 16px;
+      animation: bounce 2s ease-in-out infinite;
+    }
+
+    /* ── SONIC STORY 섹션 ── */
+    .sd-story {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4vw;
+      padding: 0 6vw calc(var(--player-h) + 120px);
+    }
+
+    /* 좌: sticky 플레이어 패널 */
+    .sd-sticky {
+      position: sticky;
+      top: calc(var(--nav-h) + var(--marquee-h));
+      height: calc(100vh - var(--nav-h) - var(--marquee-h));
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 0;
+      padding: 40px 0;
+    }
+
+    /* LP 커버 / 오빗 */
+    .sd-cover {
+      position: relative;
+      width: min(32vw, 380px);
+      aspect-ratio: 1;
+      margin-bottom: 40px;
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+    }
+
+    /* 점선 오빗 링 */
+    .sd-orbit {
+      position: absolute;
+      inset: 8%;
+      border: 1px dashed rgba(249,21,54,0.5);
+      border-radius: 50%;
+      animation: sdOrbitSpin 14s linear infinite;
+    }
+    @keyframes sdOrbitSpin { to { transform: rotate(360deg); } }
+
+    /* 오빗 위 작은 점 */
+    .sd-orbit::after {
+      content: '';
+      position: absolute;
+      top: -4px; left: 50%;
+      transform: translateX(-50%);
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--red);
+      box-shadow: 0 0 10px rgba(249,21,54,0.8);
+    }
+
+    /* 중앙 LP 디스크 */
+    .sd-disc {
+      width: 44%;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background:
+        repeating-radial-gradient(circle at center, #1e1e1e 0px, #1e1e1e 1.5px, #0d0d0d 1.5px, #0d0d0d 3px);
+      display: grid;
+      place-items: center;
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.06), 0 20px 60px rgba(0,0,0,0.8);
+      position: relative;
+    }
+
+    /* 디스크 중앙 레이블 */
+    .sd-disc-label {
+      width: 48%;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: radial-gradient(circle at 40% 35%, #ff2a46, #8a0010);
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 0 20px rgba(249,21,54,0.5);
+    }
+    .sd-disc-index {
+      font-size: clamp(14px, 2.5vw, 28px);
+      font-weight: 900;
+      color: var(--white);
+      letter-spacing: -0.02em;
+    }
+
+    /* 재생 중 디스크 회전 */
+    .sd-disc.playing {
+      animation: sdDiscSpin 5s linear infinite;
+    }
+    @keyframes sdDiscSpin { to { transform: rotate(360deg); } }
+
+    /* 디스크 구멍 */
+    .sd-disc-hole {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 8%; aspect-ratio: 1;
+      border-radius: 50%;
+      background: var(--bg);
+      border: 1px solid rgba(255,255,255,0.12);
+      z-index: 2;
+    }
+
+    /* 우: 플레이어 정보 */
+    .sd-player {
+      flex: 1;
+    }
+    .sd-player-type {
+      font-size: 10px; font-weight: 700;
+      letter-spacing: 0.28em; text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 10px;
+    }
+    .sd-player-title {
+      font-size: clamp(28px, 3.5vw, 56px);
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      line-height: 0.95;
+      text-transform: uppercase;
+      color: var(--white);
+      margin-bottom: 8px;
+    }
+    .sd-player-artist {
+      font-size: 12px; font-weight: 500;
+      letter-spacing: 0.08em;
+      color: var(--gray-2);
+      margin-bottom: 28px;
+    }
+
+    /* 재생 버튼 */
+    .sd-play-btn {
+      width: 96px; height: 96px;
+      border-radius: 50%;
+      border: none;
+      background: var(--white);
+      color: var(--bg);
+      font-size: 11px; font-weight: 900;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      cursor: none;
+      transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .sd-play-btn:hover {
+      background: var(--red);
+      color: var(--white);
+      transform: scale(1.07);
+      box-shadow: 0 0 30px rgba(249,21,54,0.4);
+    }
+    .sd-play-btn.playing {
+      background: var(--red);
+      color: var(--white);
+    }
+
+    /* 프로그레스 바 */
+    .sd-progress-wrap {
+      width: 100%;
+      margin-top: 28px;
+    }
+    .sd-progress-bar {
+      width: 100%;
+      height: 2px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .sd-progress-fill {
+      display: block;
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, var(--red), #ff6b35);
+      border-radius: 2px;
+      transition: width 0.2s linear;
+    }
+    .sd-progress-times {
+      display: flex; justify-content: space-between;
+      margin-top: 6px;
+      font-size: 10px; font-weight: 600;
+      color: var(--gray-3);
+      letter-spacing: 0.08em;
+    }
+
+    /* ── 스크롤 카드들 ── */
+    .sd-steps {
+      padding-top: 15vh;
+    }
+
+    .sd-card {
+      min-height: 80vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      opacity: 0.2;
+      transform: translateY(32px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 60px;
+      margin-bottom: 20px;
+    }
+    .sd-card:last-of-type { border-bottom: none; }
+
+    .sd-card.is-active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .sd-card-badge {
+      font-size: 10px; font-weight: 700;
+      letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 20px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .sd-card-badge::before {
+      content: '';
+      width: 18px; height: 1px;
+      background: var(--red);
+    }
+
+    .sd-card-title {
+      font-size: clamp(36px, 5.5vw, 88px);
+      font-weight: 900;
+      line-height: 0.92;
+      letter-spacing: -0.04em;
+      text-transform: uppercase;
+      color: var(--white);
+      margin-bottom: 24px;
+    }
+
+    .sd-card-desc {
+      max-width: 480px;
+      font-size: 15px; font-weight: 400;
+      line-height: 1.75;
+      color: var(--gray-2);
+    }
+
+    /* CTA 카드 */
+    .sd-cta {
+      min-height: 50vh;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      padding-top: 40px;
+    }
+
+    .sd-cta-btn {
+      padding: 14px 28px;
+      border-radius: 100px;
+      font-size: 11px; font-weight: 800;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      cursor: none;
+      transition: all 0.2s;
+    }
+    .sd-cta-btn-primary {
+      background: var(--red);
+      border: 1px solid var(--red);
+      color: var(--white);
+    }
+    .sd-cta-btn-primary:hover { background: var(--red-dk); border-color: var(--red-dk); }
+    .sd-cta-btn-ghost {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--gray-2);
+    }
+    .sd-cta-btn-ghost:hover { color: var(--white); border-color: rgba(255,255,255,0.3); }
+
+    /* ── Reduce Motion ── */
+    .sd-reduce-motion * {
+      animation: none !important;
+      transition: none !important;
+    }
+
+    /* ── 반응형 ── */
+    @media (max-width: 900px) {
+      .sd-story {
+        grid-template-columns: 1fr;
+        padding: 0 6vw 120px;
+      }
+      .sd-sticky {
+        position: relative;
+        height: auto;
+        padding-bottom: 40px;
+      }
+      .sd-cover {
+        width: 70vw;
+      }
+      .sd-card { min-height: 60vh; }
+    }
+
+  </style>
+  <script src="transition-head.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/fontawesome.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/brands.min.css" />
+</head>
+<body>
+
+  <div class="cursor"     id="cursor"></div>
+  <div class="cursor-dot" id="cursorDot"></div>
+  <div class="grain"></div>
+
+  <!-- NAV -->
+  <nav class="nav" id="nav">
+    <ul class="nav-menu">
+      <li><a href="chart.html"     class="nav-link">Chart</a></li>
+      <li><a href="genre.html"     class="nav-link">Explore</a></li>
+      <li><a href="store.html"     class="nav-link">Store</a></li>
+      <li><a href="about.html"     class="nav-link">About</a></li>
+      <li><a href="my-player.html" class="nav-link">My Player</a></li>
+    </ul>
+    <a href="index.html" class="nav-logo-center"><img src="logo.png" alt="OMIX" class="logo-img" /></a>
+    <div class="nav-sns">
+      <a href="#" class="nav-sns-link" aria-label="Spotify"    target="_blank"><i class="fab fa-spotify"></i></a>
+      <a href="#" class="nav-sns-link" aria-label="Instagram"  target="_blank"><i class="fab fa-instagram"></i></a>
+      <a href="#" class="nav-sns-link" aria-label="YouTube"    target="_blank"><i class="fab fa-youtube"></i></a>
+      <a href="#" class="nav-sns-link" aria-label="SoundCloud" target="_blank"><i class="fab fa-soundcloud"></i></a>
+    </div>
+    <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+  </nav>
+
+  <!-- MARQUEE -->
+  <div class="site-marquee">
+    <div class="marquee-track">
+      <span class="marquee-item-wrap">LISTEN</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">MIX</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">REMIX</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">ARCHIVE</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">BUDDHISM × MUSIC</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">OM MUSIC IMMERSIVE EXPERIENCE</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">108 SOUNDS</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">MY MIX, MY RITUAL</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">LISTEN</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">MIX</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">REMIX</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">ARCHIVE</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">BUDDHISM × MUSIC</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">OM MUSIC IMMERSIVE EXPERIENCE</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">108 SOUNDS</span><span class="dot-sep">◆</span>
+      <span class="marquee-item-wrap">MY MIX, MY RITUAL</span><span class="dot-sep">◆</span>
+    </div>
+  </div>
+
+  <main class="sd-page" id="sdPage">
+
+    <!-- ══════════════════════════════════════
+         INTRO — 풀스크린 타이틀
+    ══════════════════════════════════════ -->
+    <section class="sd-intro">
+      <p class="sd-intro-kicker">SCROLL TO LISTEN</p>
+
+      <h1 class="sd-intro-title" id="sdIntroTitle">
+        Void<br><em>Mandala</em>
+      </h1>
+
+      <p class="sd-intro-desc" id="sdIntroDesc">
+        이 곡이 만들어진 불교 사운드의 연결을 따라가보세요.<br>
+        목탁, 범종, 염불이 현대 음악으로 변환되는 과정을 경험합니다.
+      </p>
+
+      <div class="sd-intro-meta">
+        <span class="sd-intro-tag" id="sdIntroGenre">CLUB</span>
+        <span class="sd-intro-tag" id="sdIntroDur">3:48</span>
+        <button class="sd-motion-btn" id="sdMotionBtn" type="button">Reduce Motion</button>
+      </div>
+
+      <span class="sd-intro-scroll">SCROLL</span>
+    </section>
+
+    <!-- ══════════════════════════════════════
+         SONIC STORY — sticky 플레이어 + 스크롤 카드
+    ══════════════════════════════════════ -->
+    <section class="sd-story">
+
+      <!-- 좌: sticky 플레이어 -->
+      <div class="sd-sticky">
+
+        <!-- LP 커버 -->
+        <div class="sd-cover">
+          <div class="sd-orbit"></div>
+          <div class="sd-disc" id="sdDisc">
+            <div class="sd-disc-label">
+              <span class="sd-disc-index" id="sdDiscIndex">01</span>
+            </div>
+            <div class="sd-disc-hole"></div>
+          </div>
+        </div>
+
+        <!-- 플레이어 정보 -->
+        <div class="sd-player">
+          <p  class="sd-player-type"   id="sdPlayerType">Main Track</p>
+          <h2 class="sd-player-title"  id="sdPlayerTitle">Void Mandala</h2>
+          <p  class="sd-player-artist" id="sdPlayerArtist">DJ Haein × OMIX Studio</p>
+
+          <button class="sd-play-btn" id="sdPlayBtn" type="button">PLAY</button>
+
+          <div class="sd-progress-wrap">
+            <div class="sd-progress-bar">
+              <span class="sd-progress-fill" id="sdProgressFill"></span>
+            </div>
+            <div class="sd-progress-times">
+              <span id="sdCurrentTime">0:00</span>
+              <span id="sdTotalTime">3:48</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- 우: 스크롤 카드들 -->
+      <div class="sd-steps" id="sdSteps">
+        <!-- JS로 카드 동적 생성 -->
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ══ FOOTER ══ -->
+  <footer class="idx-footer">
+    <div class="idx-footer-brand">
+      <img src="logo.png" alt="OMIX" class="idx-footer-logo" />
+      <p class="idx-footer-copy">© 2026 OMIX Studio.<br>Korean Buddhism × Modern Music.<br>Seoul, Korea.</p>
+    </div>
+    <nav class="idx-footer-links">
+      <a href="chart.html"     class="idx-footer-link">Chart</a>
+      <a href="genre.html"     class="idx-footer-link">Explore</a>
+      <a href="store.html"     class="idx-footer-link">Store</a>
+      <a href="about.html"     class="idx-footer-link">About</a>
+      <a href="my-player.html" class="idx-footer-link">My Player</a>
+    </nav>
+    <div class="idx-footer-sns">
+      <a href="#" class="nav-sns-link" style="font-size:20px"><i class="fab fa-spotify"></i></a>
+      <a href="#" class="nav-sns-link" style="font-size:20px"><i class="fab fa-instagram"></i></a>
+      <a href="#" class="nav-sns-link" style="font-size:20px"><i class="fab fa-youtube"></i></a>
+      <a href="#" class="nav-sns-link" style="font-size:20px"><i class="fab fa-soundcloud"></i></a>
+    </div>
+  </footer>
+
+  <!-- 미니 플레이어 -->
+  <div class="mini-player" id="miniPlayer">
+    <div class="player-track">
+      <div class="player-disc" id="playerDisc"><div class="disc-hole"></div></div>
+      <div class="player-info">
+        <p class="player-name"   id="playerName">—</p>
+        <p class="player-artist" id="playerArtist">—</p>
+      </div>
+    </div>
+    <div class="player-controls">
+      <button class="ctrl-btn">⏮</button>
+      <button class="ctrl-btn ctrl-play" id="playPauseBtn">▶</button>
+      <button class="ctrl-btn">⏭</button>
+    </div>
+    <div class="player-progress">
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill" style="width:0%"></div>
+      </div>
+      <div class="progress-times">
+        <span id="currentTime">0:00</span>
+        <span id="totalTime">3:48</span>
+      </div>
+    </div>
+    <div class="player-vol">
+      <span>🔊</span>
+      <input type="range" class="vol-slider" min="0" max="100" value="70" />
+    </div>
+    <button class="player-like" id="sdLikeBtn">♡</button>
+  </div>
+
+  <script>
+  /* ── 커스텀 커서 ── */
+  (function(){
+    const cursor=document.getElementById('cursor'),dot=document.getElementById('cursorDot');
+    let mx=-100,my=-100,cx=-100,cy=-100;
+    document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;dot.style.left=mx+'px';dot.style.top=my+'px';});
+    (function loop(){cx+=(mx-cx)*0.12;cy+=(my-cy)*0.12;cursor.style.left=cx+'px';cursor.style.top=cy+'px';requestAnimationFrame(loop);})();
+  })();
+
+  /* ── Nav 스크롤 ── */
+  const navEl=document.getElementById('nav');
+  window.addEventListener('scroll',()=>navEl.classList.toggle('scrolled',window.scrollY>40));
+
+  /* ── 햄버거 ── */
+  const hamburger=document.getElementById('hamburger'),navLinks=document.querySelector('.nav-menu');
+  if(hamburger){hamburger.addEventListener('click',()=>{hamburger.classList.toggle('open');if(navLinks)navLinks.classList.toggle('mobile-open');});}
+
+  /* ── 트랙 데이터 ── */
+  const ALL_TRACKS = [
+    { idx:0, title:'Void Mandala',    artist:'DJ Haein × OMIX Studio',  genre:'CLUB',       dur:'3:48', sec:228,
+      desc:'목탁, 범종, 염불 샘플을 Club 비트 위에 조합한 메인 트랙입니다.',
+      cards:[
+        { index:'01', type:'Main Track',    title:'Void Mandala',  artist:'DJ Haein × OMIX Studio',    desc:'목탁, 범종, 염불 샘플을 Drill 비트 위에 조합한 메인 트랙입니다.' },
+        { index:'02', type:'Sound Source',  title:'Moktak Rhythm', artist:'Traditional Percussion',    desc:'목탁의 반복적인 타격음은 곡의 중심 박자와 리듬 패턴으로 사용됩니다.' },
+        { index:'03', type:'Sound Source',  title:'Bell Drop',     artist:'Temple Bell',               desc:'범종의 긴 울림은 드롭 구간에서 공간감과 긴장감을 만드는 사운드로 확장됩니다.' },
+        { index:'04', type:'Vocal Sample',  title:'Chant Chop',    artist:'Buddhist Chant',            desc:'염불 보컬을 짧게 자른 샘플은 훅처럼 반복되며 곡의 인상을 만듭니다.' },
+        { index:'05', type:'Structure',     title:'Mandala Loop',  artist:'OMIX Studio',               desc:'만다라의 순환 구조는 반복과 변주를 통해 음악의 형식으로 변환됩니다.' },
+      ]
+    },
+    { idx:1, title:'108 Bells',       artist:'Samsara Sound',            genre:'MINDFUL',    dur:'4:21', sec:261,
+      desc:'108개의 종소리에서 영감을 받은 미니멀 웨이브 트랙.',
+      cards:[
+        { index:'01', type:'Main Track',    title:'108 Bells',     artist:'Samsara Sound',             desc:'108개의 종소리를 레이어링해 만든 미니멀 앰비언트 트랙입니다.' },
+        { index:'02', type:'Sound Source',  title:'Temple Bell',   artist:'Traditional',               desc:'실제 범종 녹음이 루프와 피치 시프트를 거쳐 리듬 요소로 변환됩니다.' },
+        { index:'03', type:'Structure',     title:'108 Count',     artist:'OMIX Studio',               desc:'108이라는 숫자는 반복의 구조와 곡의 전체 러닝타임에 모두 반영됩니다.' },
+      ]
+    },
+    { idx:2, title:'Lotus Drop',      artist:'OMIX Collective',          genre:'DANCE',      dur:'5:02', sec:302,
+      desc:'연꽃의 피어남을 4/4박의 드랍으로 표현한 댄스 트랙.',
+      cards:[
+        { index:'01', type:'Main Track',    title:'Lotus Drop',    artist:'OMIX Collective',           desc:'연꽃이 피는 과정을 4/4박 빌드업과 드롭으로 표현한 댄스 트랙입니다.' },
+        { index:'02', type:'Sound Source',  title:'Water Texture', artist:'Field Recording',           desc:'연못 수면의 물결 소리가 퍼커션 레이어로 재가공됩니다.' },
+        { index:'03', type:'Sound Source',  title:'Petal Synth',   artist:'OMIX Studio',               desc:'연꽃 이미지에서 추출한 색채가 신스 파형 설계의 기초가 됩니다.' },
+        { index:'04', type:'Structure',     title:'Bloom Arc',     artist:'OMIX Collective',           desc:'곡은 새벽→개화→만개의 3단 구조로 진행됩니다.' },
+      ]
+    },
+    { idx:3, title:'Temple Bass',     artist:'DJ Haein',                 genre:'CLUB',       dur:'3:55', sec:235,
+      desc:'사찰의 목어 소리를 베이스라인으로 변환한 클럽 트랙.',
+      cards:[
+        { index:'01', type:'Main Track',    title:'Temple Bass',   artist:'DJ Haein',                  desc:'목어의 타격음 패턴을 서브베이스로 변환한 클럽 하우스 트랙입니다.' },
+        { index:'02', type:'Sound Source',  title:'Mok-eo',        artist:'Traditional',               desc:'목어(木魚)는 물고기 모양의 불교 타악기로 수행의 깨어있음을 상징합니다.' },
+        { index:'03', type:'Structure',     title:'Bass Journey',  artist:'DJ Haein',                  desc:'저주파에서 고주파로 상승하는 구조는 각성의 여정을 음악으로 표현합니다.' },
+      ]
+    },
+    { idx:4, title:'Nirvana Beat',    artist:'Zero Point × Dharma',      genre:'MEDITATION', dur:'6:15', sec:375,
+      desc:'열반의 고요함을 비트로 담아낸 6분 메디테이션 트랙.',
+      cards:[
+        { index:'01', type:'Main Track',    title:'Nirvana Beat',  artist:'Zero Point × Dharma',       desc:'극도로 느린 BPM 위에 티베트 싱잉볼과 팅샤를 레이어한 메디테이션 트랙.' },
+        { index:'02', type:'Sound Source',  title:'Singing Bowl',  artist:'Himalayan Bowl',            desc:'싱잉볼의 배음 구조가 드론 패드와 섞여 공명 효과를 만들어냅니다.' },
+        { index:'03', type:'Structure',     title:'Zero Point',    artist:'Zero Point',                desc:'곡의 중심은 침묵에 있습니다. 소리와 소리 사이의 공간이 핵심 요소입니다.' },
+      ]
+    },
+    { idx:5, title:'Dharma Flow',     artist:'Studio OMIX',              genre:'MINDFUL',    dur:'4:44', sec:284,
+      desc:'다르마의 흐름을 리퀴드 베이스라인으로 표현.',
+      cards:[
+        { index:'01', type:'Main Track',    title:'Dharma Flow',   artist:'Studio OMIX',               desc:'강물처럼 흐르는 다르마를 리퀴드 드럼앤베이스 스타일로 표현합니다.' },
+        { index:'02', type:'Sound Source',  title:'River Chant',   artist:'Field Recording',           desc:'강가에서 녹음된 스님들의 경문 소리가 보컬 레이어가 됩니다.' },
+        { index:'03', type:'Structure',     title:'Flow State',    artist:'Studio OMIX',               desc:'끊임없이 변화하면서도 동일한 흐름을 유지하는 구조적 역설을 담습니다.' },
+      ]
+    },
+    { idx:6, title:'Sacred Groove',   artist:'Haein × Karma',            genre:'DANCE',      dur:'5:18', sec:318,
+      cards:[
+        { index:'01', type:'Main Track',    title:'Sacred Groove', artist:'Haein × Karma',             desc:'신성함과 그루브가 충돌하는 지점에서 탄생한 댄스 트랙입니다.' },
+        { index:'02', type:'Sound Source',  title:'Beopgo',        artist:'Korean Temple',             desc:'법고(法鼓)의 역동적인 타격 패턴이 드럼 그루브의 기반이 됩니다.' },
+        { index:'03', type:'Structure',     title:'Sacred Arc',    artist:'Haein × Karma',             desc:'신성→해방→귀환의 서사가 음악 구조에 반영됩니다.' },
+      ],
+      genre:'DANCE', dur:'5:18', desc:'법고의 역동적인 타격을 댄스 그루브로 변환한 트랙.'
+    },
+    { idx:7, title:'Bodhi Bass',      artist:'DJ Sangha',                genre:'CLUB',       dur:'3:39', sec:219,
+      desc:'보리수 아래 깨달음의 순간을 베이스 드롭으로.',
+      cards:[
+        { index:'01', type:'Main Track',    title:'Bodhi Bass',    artist:'DJ Sangha',                 desc:'보리수 아래 깨달음의 순간을 베이스 드롭 하나로 압축했습니다.' },
+        { index:'02', type:'Sound Source',  title:'Wind Leaves',   artist:'Field Recording',           desc:'보리수 나뭇잎 사이 바람 소리가 필터링되어 하이햇 텍스처가 됩니다.' },
+        { index:'03', type:'Structure',     title:'Enlighten Arc', artist:'DJ Sangha',                 desc:'고요→긴장→해방의 3단 구조가 깨달음의 과정을 음악으로 재현합니다.' },
+      ]
+    },
+    { idx:8, title:'Breath of Sutra', artist:'Mindwave',                 genre:'MEDITATION', dur:'7:02', sec:422,
+      desc:'반야심경의 리듬과 호흡을 7분 앰비언트로 풀어낸 트랙.',
+      cards:[
+        { index:'01', type:'Main Track',    title:'Breath of Sutra',artist:'Mindwave',                 desc:'반야심경의 리듬과 호흡 패턴을 7분 앰비언트로 풀어낸 트랙입니다.' },
+        { index:'02', type:'Sound Source',  title:'Heart Sutra',   artist:'Buddhist Chant',            desc:'반야심경 독송 소리가 스펙트럼 분석을 거쳐 음정화됩니다.' },
+        { index:'03', type:'Structure',     title:'Breath Cycle',  artist:'Mindwave',                  desc:'7분이라는 러닝타임 자체가 명상 호흡 주기를 기반으로 설계됩니다.' },
+      ]
+    },
+    { idx:9, title:'Crystal Stupa',   artist:'OMIX ft. Zen',             genre:'MINDFUL',    dur:'4:55', sec:295,
+      desc:'수정 사리탑의 기하학적 구조에서 영감받은 미니멀 트랙.',
+      cards:[
+        { index:'01', type:'Main Track',    title:'Crystal Stupa', artist:'OMIX ft. Zen',              desc:'수정 사리탑의 기하학적 구조를 음악의 형식으로 변환한 미니멀 트랙입니다.' },
+        { index:'02', type:'Sound Source',  title:'Crystal Tone',  artist:'Crystal Bowl',              desc:'크리스탈 볼의 순수한 사인파 배음이 멜로디 라인을 구성합니다.' },
+        { index:'03', type:'Structure',     title:'Sacred Geometry',artist:'OMIX ft. Zen',             desc:'스투파의 층별 비례 구조가 곡의 섹션 분할과 BPM 변화에 반영됩니다.' },
+      ]
+    },
+    { idx:10, title:'Void Mandala',   artist:'DJ Haein × OMIX Studio',   genre:'CLUB',       dur:'3:48', sec:228,
+      desc:'목탁, 범종, 염불 샘플을 Club 비트 위에 조합한 메인 트랙입니다.',
+      cards:[
+        { index:'01', type:'Main Track',    title:'Void Mandala',  artist:'DJ Haein × OMIX Studio',    desc:'목탁, 범종, 염불 샘플을 Drill 비트 위에 조합한 메인 트랙입니다.' },
+        { index:'02', type:'Sound Source',  title:'Moktak Rhythm', artist:'Traditional Percussion',    desc:'목탁의 반복적인 타격음은 곡의 중심 박자와 리듬 패턴으로 사용됩니다.' },
+        { index:'03', type:'Sound Source',  title:'Bell Drop',     artist:'Temple Bell',               desc:'범종의 긴 울림은 드롭 구간에서 공간감과 긴장감을 만드는 사운드로 확장됩니다.' },
+      ]
+    },
+    { idx:11, title:'AUM Drop',       artist:'OMIX Collective',          genre:'CLUB',       dur:'4:12', sec:252,
+      desc:'AUM 진동수를 베이스라인으로 변환한 클럽 트랙.',
+      cards:[
+        { index:'01', type:'Main Track',    title:'AUM Drop',      artist:'OMIX Collective',           desc:'AUM의 진동수(136.1 Hz)를 루트 주파수로 설계한 클럽 트랙입니다.' },
+        { index:'02', type:'Sound Source',  title:'AUM Vibration', artist:'Chant Lab',                 desc:'AUM 발음의 포먼트 분석 결과가 신스 파형 설계에 사용됩니다.' },
+        { index:'03', type:'Structure',     title:'Sacred Hz',     artist:'OMIX Collective',           desc:'136.1 Hz는 옴(OM)의 주파수로, 우주의 기본 진동과 일치한다고 알려져 있습니다.' },
+      ]
+    },
+  ];
+
+  /* ── URL 파라미터에서 트랙 인덱스 읽기 ── */
+  const params = new URLSearchParams(location.search);
+  const trackIdx = Math.max(0, Math.min(ALL_TRACKS.length - 1, parseInt(params.get('track') || '0')));
+  const track = ALL_TRACKS[trackIdx];
+
+  /* ── 페이지 타이틀 & 마키 업데이트 ── */
+  document.title = `OMIX — ${track.title}`;
+  document.getElementById('mqTitle').textContent  = track.title.toUpperCase();
+  document.getElementById('mqTitle2').textContent = track.title.toUpperCase();
+
+  /* ── 인트로 섹션 업데이트 ── */
+  const words = track.title.split(' ');
+  const introTitleEl = document.getElementById('sdIntroTitle');
+  if (words.length >= 2) {
+    introTitleEl.innerHTML = words.slice(0, Math.ceil(words.length / 2)).join(' ') +
+      '<br><em>' + words.slice(Math.ceil(words.length / 2)).join(' ') + '</em>';
+  } else {
+    introTitleEl.innerHTML = '<em>' + track.title + '</em>';
+  }
+  document.getElementById('sdIntroDesc').innerHTML =
+    (track.desc || '') + '<br>불교 사운드가 현대 음악으로 변환되는 과정을 경험합니다.';
+  document.getElementById('sdIntroGenre').textContent = track.genre || 'OMIX';
+  document.getElementById('sdIntroDur').textContent   = track.dur;
+
+  /* ── 미니 플레이어 업데이트 ── */
+  document.getElementById('playerName').textContent   = track.title;
+  document.getElementById('playerArtist').textContent = track.artist;
+  document.getElementById('totalTime').textContent    = track.dur;
+
+  /* ── 카드 동적 생성 ── */
+  const cards = track.cards || [
+    { index:'01', type:'Main Track', title:track.title, artist:track.artist, desc:track.desc || '' }
+  ];
+
+  const stepsEl = document.getElementById('sdSteps');
+
+  cards.forEach((c, i) => {
+    const art = document.createElement('article');
+    art.className = 'sd-card' + (i === 0 ? ' is-active' : '');
+    art.dataset.index = i;
+    art.innerHTML = `
+      <span class="sd-card-badge">${c.index} / ${c.type}</span>
+      <h3 class="sd-card-title">${c.title}</h3>
+      <p class="sd-card-desc">${c.desc}</p>
+    `;
+    stepsEl.appendChild(art);
+  });
+
+  /* CTA */
+  const ctaEl = document.createElement('div');
+  ctaEl.className = 'sd-cta';
+  ctaEl.innerHTML = `
+    <button class="sd-cta-btn sd-cta-btn-primary" type="button">LISTEN FULL TRACK</button>
+    <button class="sd-cta-btn sd-cta-btn-ghost"   type="button" onclick="history.back()">← BACK</button>
+  `;
+  stepsEl.appendChild(ctaEl);
+
+  /* ── IntersectionObserver: 카드 활성화 + sticky 패널 동기화 ── */
+  const discIndexEl    = document.getElementById('sdDiscIndex');
+  const playerTypeEl   = document.getElementById('sdPlayerType');
+  const playerTitleEl  = document.getElementById('sdPlayerTitle');
+  const playerArtistEl = document.getElementById('sdPlayerArtist');
+  const progressFillEl = document.getElementById('sdProgressFill');
+  const discEl         = document.getElementById('sdDisc');
+
+  let sdActiveIdx = 0;
+
+  function setActive(index) {
+    const item = cards[index];
+    if (!item) return;
+    sdActiveIdx = index;
+
+    /* sticky 패널 업데이트 */
+    discIndexEl.textContent    = item.index;
+    playerTypeEl.textContent   = item.type;
+    playerTitleEl.textContent  = item.title;
+    playerArtistEl.textContent = item.artist;
+
+    /* 프로그레스 바 */
+    const pct = ((index + 1) / cards.length) * 100;
+    progressFillEl.style.width = pct + '%';
+
+    /* 카드 active 클래스 */
+    document.querySelectorAll('.sd-card').forEach(card => {
+      card.classList.toggle('is-active', Number(card.dataset.index) === index);
+    });
+  }
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      setActive(Number(entry.target.dataset.index));
+    });
+  }, { threshold: 0.5 });
+
+  document.querySelectorAll('.sd-card').forEach(card => observer.observe(card));
+  setActive(0);
+
+  /* ── 재생/정지 ── */
+  const sdPlayBtn   = document.getElementById('sdPlayBtn');
+  const miniPlayBtn = document.getElementById('playPauseBtn');
+  const miniDisc    = document.getElementById('playerDisc');
+
+  let sdPlaying = false, sdProg = 0, sdTimer;
+
+  function formatTime(pct, totalSec) {
+    const s = Math.floor(totalSec * pct / 100);
+    return Math.floor(s/60) + ':' + String(s%60).padStart(2,'0');
+  }
+
+  function togglePlay() {
+    sdPlaying = !sdPlaying;
+    const label = sdPlaying ? 'PAUSE' : 'PLAY';
+    sdPlayBtn.textContent   = label;
+    miniPlayBtn.textContent = sdPlaying ? '⏸' : '▶';
+
+    sdPlayBtn.classList.toggle('playing', sdPlaying);
+    discEl.classList.toggle('playing', sdPlaying);
+    if (miniDisc) miniDisc.classList.toggle('spinning', sdPlaying);
+
+    if (sdPlaying) {
+      sdTimer = setInterval(() => {
+        sdProg = Math.min(sdProg + 0.05, 100);
+        document.getElementById('sdCurrentTime').textContent = formatTime(sdProg, track.sec);
+        document.getElementById('currentTime').textContent   = formatTime(sdProg, track.sec);
+        document.getElementById('progressFill').style.width  = sdProg + '%';
+        if (sdProg >= 100) {
+          clearInterval(sdTimer); sdPlaying = false;
+          sdPlayBtn.textContent = 'PLAY'; miniPlayBtn.textContent = '▶';
+          sdPlayBtn.classList.remove('playing'); discEl.classList.remove('playing');
+          if(miniDisc) miniDisc.classList.remove('spinning');
+        }
+      }, 100);
+    } else {
+      clearInterval(sdTimer);
+    }
+  }
+
+  sdPlayBtn.addEventListener('click', togglePlay);
+  miniPlayBtn.addEventListener('click', togglePlay);
+
+  document.getElementById('sdTotalTime').textContent = track.dur;
+
+  /* ── Reduce Motion 토글 ── */
+  const motionBtn  = document.getElementById('sdMotionBtn');
+  const pageEl     = document.getElementById('sdPage');
+  motionBtn.addEventListener('click', () => {
+    document.body.classList.toggle('sd-reduce-motion');
+    const reduced = document.body.classList.contains('sd-reduce-motion');
+    motionBtn.textContent = reduced ? 'Enable Motion' : 'Reduce Motion';
+  });
+
+  /* ── 좋아요 ── */
+  const likeBtn = document.getElementById('sdLikeBtn');
+  if (likeBtn) {
+    likeBtn.addEventListener('click', () => {
+      const liked = likeBtn.textContent === '♡';
+      likeBtn.textContent = liked ? '♥' : '♡';
+      likeBtn.style.color = liked ? 'var(--red)' : '';
+    });
+  }
+  </script>
+  <script src="now-playing-panel.js"></script>
+  <script src="page-reveal.js"></script>
+  <script src="transition.js"></script>
+</body>
+</html>

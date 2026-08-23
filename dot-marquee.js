@@ -112,7 +112,7 @@
   function measure() {
     cellSize = cellSizeForWidth();
     const containerWidth = TRACK.clientWidth || window.innerWidth;
-    viewportCols = Math.min(board.cols, Math.ceil(containerWidth / cellSize) + 1);
+    viewportCols = Math.ceil(containerWidth / cellSize) + 1;
     const dpr = window.devicePixelRatio || 1;
     const w = viewportCols * cellSize, h = ROWS * cellSize;
     canvas.width = Math.round(w * dpr);

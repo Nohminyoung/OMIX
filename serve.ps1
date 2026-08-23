@@ -21,6 +21,8 @@ while ($listener.IsListening) {
         '.png'  { 'image/png' }
         '.jpg'  { 'image/jpeg' }
         '.svg'  { 'image/svg+xml' }
+        '.webm' { 'video/webm' }
+        '.mp3'  { 'audio/mpeg' }
         default { 'application/octet-stream' }
       }
       $res.ContentLength64 = $bytes.Length

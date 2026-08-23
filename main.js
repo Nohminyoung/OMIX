@@ -40,6 +40,8 @@
     window.removeEventListener('scroll', dismiss);
     window.removeEventListener('wheel', dismiss);
     guide.removeEventListener('click', dismiss);
+    /* 색상 커스텀 가이드가 닫히는 시점에, 히어로의 LP판·로고 등장 시퀀스를 시작시킨다 */
+    window.dispatchEvent(new CustomEvent('omix:guide-dismissed'));
   }
 
   guide.addEventListener('click', dismiss);
@@ -219,6 +221,18 @@ if (progressBar && bgAudio) {
     const rect = progressBar.getBoundingClientRect();
     const pct  = Math.min(Math.max((e.clientX - rect.left) / rect.width, 0), 1);
     bgAudio.currentTime = pct * bgAudio.duration;
+  });
+}
+
+
+/* =====================================================
+   [5b] 볼륨 슬라이더 → 실제 오디오 볼륨 조절
+   ===================================================== */
+const volSlider = document.querySelector('.vol-slider');
+if (volSlider && bgAudio) {
+  bgAudio.volume = volSlider.value / 100;
+  volSlider.addEventListener('input', () => {
+    bgAudio.volume = volSlider.value / 100;
   });
 }
 

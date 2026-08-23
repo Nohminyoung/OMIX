@@ -4,14 +4,13 @@
   if (!stage) return;
 
   const TRACKS = [
-    { name: 'Void Mandala',   num: '01', dur: '3:48' },
-    { name: 'Lotus Fire',     num: '02', dur: '5:12' },
-    { name: '108 BPM',        num: '03', dur: '4:06' },
-    { name: 'Dharma Drop',    num: '04', dur: '6:33' },
-    { name: 'AUM Club',       num: '05', dur: '7:01' },
-    { name: 'Mindful Roots',  num: '06', dur: '4:44' },
-    { name: 'Monk Sequence',  num: '07', dur: '5:28' },
-    { name: 'Temple Bass',    num: '08', dur: '3:55' }
+    { name: 'Han Groove Riot',     num: '01', dur: '2:57', audio: 'music/Han%20Groove%20Riot.mp3' },
+    { name: 'Karma Game',          num: '02', dur: '5:00', audio: 'music/Karma%20Game.mp3' },
+    { name: 'Mix Attack',          num: '03', dur: '2:56', audio: 'music/Mix%20Attack.mp3' },
+    { name: 'No Score, Just Soul', num: '04', dur: '5:01', audio: 'music/No%20Score,%20Just%20Soul.mp3' },
+    { name: 'Temple Echo Loop',    num: '05', dur: '4:09', audio: 'music/Temple%20Echo%20Loop.mp3' },
+    { name: 'Silent Thunder',      num: '06', dur: '2:46', audio: 'music/Silent%20Thunder.mp3' },
+    { name: 'Dharma Lights',       num: '07', dur: '1:55', audio: 'music/Dharma%20Lights.mp3' }
   ];
 
   function buildItem(t, i) {
@@ -20,6 +19,7 @@
     item.dataset.name = t.name;
     item.dataset.num = t.num;
     item.dataset.dur = t.dur;
+    item.dataset.audio = t.audio;
     const img = 'index_cd' + ((i % 3) + 1) + '.jpg';
     item.innerHTML =
       '<div class="idx-case-wrap">' +
@@ -39,8 +39,36 @@
   const arrowR = document.getElementById('lpArrowR');
   const eyebrowEl = document.getElementById('lpEyebrow');
   const nameEl = document.getElementById('lpName');
+  const playBtn = document.getElementById('lpPlayBtn');
 
   let current = 0;
+  let audioEl = null;
+
+  function stopAudio() {
+    if (audioEl) audioEl.pause();
+    if (playBtn) playBtn.innerHTML = '▶&nbsp;&nbsp;Play';
+  }
+
+  function togglePlay() {
+    const src = items[current].dataset.audio;
+    if (!src) return;
+    if (!audioEl) {
+      audioEl = new Audio();
+      audioEl.addEventListener('ended', () => {
+        if (playBtn) playBtn.innerHTML = '▶&nbsp;&nbsp;Play';
+      });
+    }
+    if (!audioEl.paused && audioEl.src.endsWith(src)) {
+      audioEl.pause();
+      if (playBtn) playBtn.innerHTML = '▶&nbsp;&nbsp;Play';
+      return;
+    }
+    if (!audioEl.src.endsWith(src)) audioEl.src = src;
+    audioEl.play();
+    if (playBtn) playBtn.innerHTML = '❚❚&nbsp;&nbsp;Pause';
+  }
+
+  if (playBtn) playBtn.addEventListener('click', togglePlay);
 
   function render() {
     const n = items.length;
@@ -62,6 +90,7 @@
 
   function go(delta) {
     current = (current + delta + items.length) % items.length;
+    stopAudio();
     render();
   }
 
@@ -72,6 +101,7 @@
     item.addEventListener('click', () => {
       if (i === current) return;
       current = i;
+      stopAudio();
       render();
     });
   });

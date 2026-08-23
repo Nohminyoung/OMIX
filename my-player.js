@@ -46,19 +46,22 @@ if (nav) {
    플레이리스트 트랙 목록 — 이름, 아티스트, 시간, 이모지, 배경색
    ===================================================== */
 const TRACKS = [
-  { name: 'Void Mandala',    artist: 'DJ Haein × OMIX Studio',  time: '3:48', sec: 228, emoji: '🎵', bg: 'linear-gradient(135deg, #1a0408 0%, #300a12 50%, #0a0408 100%)' },
-  { name: 'AUM Drop',        artist: 'OMIX Collective',          time: '4:12', sec: 252, emoji: '🎧', bg: 'linear-gradient(135deg, #0d0a1a 0%, #1a0a2e 50%, #0d0a1a 100%)' },
-  { name: 'Temple Rave',     artist: 'DJ Samsara',               time: '5:20', sec: 320, emoji: '💿', bg: 'linear-gradient(135deg, #0a0a1a 0%, #14082a 50%, #0a0a1a 100%)' },
-  { name: '108 Drops',       artist: 'Nirvana Bass × OMIX',      time: '3:55', sec: 235, emoji: '🔴', bg: 'linear-gradient(135deg, #1a0408 0%, #2a0810 50%, #1a0408 100%)' },
-  { name: 'Mindful Groove',  artist: 'DJ Haein',                 time: '6:00', sec: 360, emoji: '🎶', bg: 'linear-gradient(135deg, #0a140a 0%, #0a2010 50%, #0a140a 100%)' },
-  { name: 'Beopgo Beat',     artist: 'OMIX Studio',              time: '4:33', sec: 273, emoji: '🥁', bg: 'linear-gradient(135deg, #1a0808 0%, #2a0a0a 50%, #1a0808 100%)' },
-  { name: 'Lotus Bassline',  artist: 'OMIX Collective',          time: '5:11', sec: 311, emoji: '🪷', bg: 'linear-gradient(135deg, #0a0a1a 0%, #1a1028 50%, #0a0a1a 100%)' },
-  { name: 'Dharma Dance',    artist: 'DJ Samsara × Haein',       time: '4:44', sec: 284, emoji: '🌀', bg: 'linear-gradient(135deg, #0a0a0a 0%, #1a1218 50%, #0a0a0a 100%)' },
-  { name: 'Nirvana Groove',  artist: 'OMIX Studio',              time: '4:58', sec: 298, emoji: '✨', bg: 'linear-gradient(135deg, #0c0a1a 0%, #1a1230 50%, #0c0a1a 100%)' },
-  { name: 'Karma Club',      artist: 'DJ Haein',                 time: '3:30', sec: 210, emoji: '🎴', bg: 'linear-gradient(135deg, #1a0808 0%, #280a0a 50%, #1a0808 100%)' },
-  { name: 'Samsara Loop',    artist: 'Nirvana Bass',             time: '5:05', sec: 305, emoji: '🔄', bg: 'linear-gradient(135deg, #0a0a14 0%, #10101e 50%, #0a0a14 100%)' },
-  { name: 'AUM Sessions #7', artist: 'OMIX Collective',          time: '4:20', sec: 260, emoji: '🎙️', bg: 'linear-gradient(135deg, #0d0a1a 0%, #18082e 50%, #0d0a1a 100%)' },
+  { name: 'Han Groove Riot',      artist: 'OMIX Studio', time: '2:57', sec: 177, emoji: '🎵', bg: 'linear-gradient(135deg, #1a0408 0%, #300a12 50%, #0a0408 100%)', audioSrc: 'music/Han%20Groove%20Riot.mp3',      cover: 'covers/Han%20Groove%20Riot.jpg' },
+  { name: 'Karma Game',           artist: 'OMIX Studio', time: '5:00', sec: 300, emoji: '🎧', bg: 'linear-gradient(135deg, #0d0a1a 0%, #1a0a2e 50%, #0d0a1a 100%)', audioSrc: 'music/Karma%20Game.mp3',           cover: 'covers/Karma%20Game.jpg' },
+  { name: 'Mix Attack',           artist: 'OMIX Studio', time: '2:56', sec: 176, emoji: '💿', bg: 'linear-gradient(135deg, #0a0a1a 0%, #14082a 50%, #0a0a1a 100%)', audioSrc: 'music/Mix%20Attack.mp3',           cover: 'covers/Mix%20Attack.jpg' },
+  { name: 'No Score, Just Soul',  artist: 'OMIX Studio', time: '5:01', sec: 301, emoji: '🔴', bg: 'linear-gradient(135deg, #1a0408 0%, #2a0810 50%, #1a0408 100%)', audioSrc: 'music/No%20Score,%20Just%20Soul.mp3', cover: 'covers/No%20Score,%20Just%20Soul.jpg' },
+  { name: 'Temple Echo Loop',     artist: 'OMIX Studio', time: '4:09', sec: 249, emoji: '🎶', bg: 'linear-gradient(135deg, #0a140a 0%, #0a2010 50%, #0a140a 100%)', audioSrc: 'music/Temple%20Echo%20Loop.mp3',   cover: 'covers/Temple%20Echo%20Loop.jpg' },
+  { name: '공즉',                 artist: 'OMIX Studio', time: '2:53', sec: 173, emoji: '🥁', bg: 'linear-gradient(135deg, #1a0808 0%, #2a0a0a 50%, #1a0808 100%)', audioSrc: 'music/공즉.mp3',                    cover: 'covers/공즉.jpg' },
+  { name: '무명등',               artist: 'OMIX Studio', time: '2:55', sec: 175, emoji: '🪷', bg: 'linear-gradient(135deg, #0a0a1a 0%, #1a1028 50%, #0a0a1a 100%)', audioSrc: 'music/무명등.mp3',                  cover: 'covers/무명등.jpg' },
+  { name: '사계윤회',             artist: 'OMIX Studio', time: '2:30', sec: 150, emoji: '🌀', bg: 'linear-gradient(135deg, #0a0a0a 0%, #1a1218 50%, #0a0a0a 100%)', audioSrc: 'music/사계윤회.mp3',                cover: 'covers/사계윤회.jpg' },
+  { name: '업보 Bounce',          artist: 'OMIX Studio', time: '3:14', sec: 194, emoji: '✨', bg: 'linear-gradient(135deg, #0c0a1a 0%, #1a1230 50%, #0c0a1a 100%)', audioSrc: 'music/업보%20Bounce.mp3',           cover: 'covers/업보%20Bounce.jpg' },
+  { name: '파도에 맡겨',          artist: 'OMIX Studio', time: '4:09', sec: 249, emoji: '🎴', bg: 'linear-gradient(135deg, #1a0808 0%, #280a0a 50%, #1a0808 100%)', audioSrc: 'music/파도에%20맡겨.mp3',           cover: 'covers/파도에%20맡겨.jpg' },
 ];
+
+/* 실제 오디오 재생 담당 */
+const audioEl = new Audio();
+audioEl.preload = 'auto';
+audioEl.volume = 0.7;
 
 
 /* =====================================================
@@ -67,10 +70,9 @@ const TRACKS = [
    ===================================================== */
 let currentIdx  = 0;    /* 현재 재생 트랙 인덱스 */
 let isPlaying   = false;
-let progress    = 38;   /* 기본 38% 위치에서 시작 */
+let progress    = 0;
 let isShuffle   = false;
 let isRepeat    = false;
-let timer;
 
 
 /* =====================================================
@@ -78,6 +80,7 @@ let timer;
    ===================================================== */
 /* 좌 패널 */
 const nowAlbumArt    = document.getElementById('nowAlbumArt');
+const nowAlbumImg    = document.getElementById('nowAlbumImg');
 const nowAlbumEmoji  = document.getElementById('nowAlbumEmoji');
 const nowTrackName   = document.getElementById('nowTrackName');
 const nowTrackArtist = document.getElementById('nowTrackArtist');
@@ -105,9 +108,10 @@ const playerArtist   = document.getElementById('playerArtist');
 /* =====================================================
    [6] 트랙 로드 — 현재 트랙 정보를 좌 패널과 미니 플레이어에 반영
    ===================================================== */
-function loadTrack(idx) {
+function loadTrack(idx, autoplay) {
   const t = TRACKS[idx];
   if (!t) return;
+  currentIdx = idx;
 
   /* 좌 패널 업데이트 */
   if (nowTrackName)   nowTrackName.textContent   = t.name;
@@ -117,11 +121,25 @@ function loadTrack(idx) {
     nowAlbumEmoji.textContent = t.emoji;
     nowAlbumEmoji.style.background = t.bg;
   }
+  /* 트랙별 커버 이미지 — covers/ 폴더에 파일이 있으면 보여주고, 없으면(404) 이모지로 폴백 */
+  if (nowAlbumImg) {
+    if (t.cover) {
+      nowAlbumImg.style.display = 'none';
+      nowAlbumImg.onerror = () => { nowAlbumImg.style.display = 'none'; };
+      nowAlbumImg.onload  = () => { nowAlbumImg.style.display = 'block'; };
+      nowAlbumImg.src = t.cover;
+    } else {
+      nowAlbumImg.style.display = 'none';
+    }
+  }
 
   /* 하단 미니 플레이어 업데이트 */
   if (playerName)   playerName.textContent   = t.name;
   if (playerArtist) playerArtist.textContent = t.artist;
   if (totalTimeEl)  totalTimeEl.textContent  = t.time;
+
+  /* 실제 오디오 소스 교체 */
+  audioEl.src = t.audioSrc;
 
   /* 진행률 초기화 */
   progress = 0;
@@ -132,6 +150,13 @@ function loadTrack(idx) {
     row.classList.toggle('current', i === idx);
     row.querySelector('.pt-num').textContent = i === idx ? '▶' : String(i + 1).padStart(2, '0');
   });
+
+  if (autoplay) {
+    audioEl.play().catch(() => {});
+    setPlayingUI(true);
+  } else {
+    setPlayingUI(false);
+  }
 }
 
 
@@ -145,25 +170,39 @@ function formatTime(pct, totalSec) {
 }
 
 function updateProgressUI() {
-  const t = TRACKS[currentIdx];
-  const timeStr = formatTime(progress, t.sec);
-
   /* 좌 패널 */
   if (nowProgressFill) nowProgressFill.style.width = progress + '%';
-  if (nowCurrentTime)  nowCurrentTime.textContent  = timeStr;
+  if (nowCurrentTime)  nowCurrentTime.textContent  = formatTime(progress, audioEl.duration || TRACKS[currentIdx].sec);
 
   /* 미니 플레이어 */
   if (progressFill)   progressFill.style.width  = progress + '%';
-  if (currentTimeEl)  currentTimeEl.textContent = timeStr;
+  if (currentTimeEl)  currentTimeEl.textContent = formatTime(progress, audioEl.duration || TRACKS[currentIdx].sec);
 }
+
+/* 실제 재생 시간에 맞춰 진행률 동기화 */
+audioEl.addEventListener('timeupdate', () => {
+  if (!audioEl.duration) return;
+  progress = (audioEl.currentTime / audioEl.duration) * 100;
+  updateProgressUI();
+});
+
+/* 트랙 종료: 반복 모드면 같은 곡 재재생, 아니면 다음 곡 */
+audioEl.addEventListener('ended', () => {
+  if (isRepeat) {
+    audioEl.currentTime = 0;
+    audioEl.play().catch(() => {});
+  } else {
+    nextTrack();
+  }
+});
 
 
 /* =====================================================
    [8] 재생 / 정지 토글
    좌 패널 버튼과 미니 플레이어 버튼 모두에서 같은 상태 참조
    ===================================================== */
-function togglePlay() {
-  isPlaying = !isPlaying;
+function setPlayingUI(playing) {
+  isPlaying = playing;
 
   /* 버튼 텍스트 동기화 */
   if (nowPlayBtn)  nowPlayBtn.textContent  = isPlaying ? '⏸' : '▶';
@@ -173,24 +212,16 @@ function togglePlay() {
   if (playerDisc) playerDisc.classList.toggle('spinning', isPlaying);
   /* 앨범아트 글로우 */
   if (nowAlbumArt) nowAlbumArt.classList.toggle('playing', isPlaying);
+}
 
-  if (isPlaying) {
-    timer = setInterval(() => {
-      progress = Math.min(progress + 0.05, 100);
-      updateProgressUI();
-
-      if (progress >= 100) {
-        clearInterval(timer);
-        /* 트랙 종료: 반복 모드면 같은 곡, 아니면 다음 곡 */
-        if (isRepeat) {
-          progress = 0; updateProgressUI();
-        } else {
-          nextTrack();
-        }
-      }
-    }, 100);
+function togglePlay() {
+  if (!audioEl.src) loadTrack(currentIdx);
+  if (audioEl.paused) {
+    audioEl.play().catch(() => {});
+    setPlayingUI(true);
   } else {
-    clearInterval(timer);
+    audioEl.pause();
+    setPlayingUI(false);
   }
 }
 
@@ -205,31 +236,22 @@ if (miniPlayBtn) miniPlayBtn.addEventListener('click', togglePlay);
    셔플 모드면 랜덤 인덱스, 아니면 순차
    ===================================================== */
 function nextTrack() {
-  clearInterval(timer); isPlaying = false;
-  if (nowPlayBtn)  nowPlayBtn.textContent  = '▶';
-  if (miniPlayBtn) miniPlayBtn.textContent = '▶';
-  if (playerDisc)  playerDisc.classList.remove('spinning');
-
+  const wasPlaying = isPlaying;
+  let next;
   if (isShuffle) {
     /* 셔플: 현재 트랙 제외 랜덤 선택 */
-    let next;
     do { next = Math.floor(Math.random() * TRACKS.length); }
     while (next === currentIdx && TRACKS.length > 1);
-    currentIdx = next;
   } else {
-    currentIdx = (currentIdx + 1) % TRACKS.length;
+    next = (currentIdx + 1) % TRACKS.length;
   }
-  loadTrack(currentIdx);
+  loadTrack(next, wasPlaying);
 }
 
 function prevTrack() {
-  clearInterval(timer); isPlaying = false;
-  if (nowPlayBtn)  nowPlayBtn.textContent  = '▶';
-  if (miniPlayBtn) miniPlayBtn.textContent = '▶';
-  if (playerDisc)  playerDisc.classList.remove('spinning');
-
-  currentIdx = (currentIdx - 1 + TRACKS.length) % TRACKS.length;
-  loadTrack(currentIdx);
+  const wasPlaying = isPlaying;
+  const prev = (currentIdx - 1 + TRACKS.length) % TRACKS.length;
+  loadTrack(prev, wasPlaying);
 }
 
 if (nowPrevBtn)  nowPrevBtn.addEventListener('click', prevTrack);
@@ -260,41 +282,45 @@ if (repeatBtn) {
    [11] 프로그레스 바 클릭 → 재생 위치 이동
    좌 패널과 미니 플레이어 각각 리스너 등록
    ===================================================== */
+function seekTo(pct) {
+  progress = pct;
+  if (audioEl.duration) audioEl.currentTime = (pct / 100) * audioEl.duration;
+  updateProgressUI();
+}
+
 if (nowProgressBar) {
   nowProgressBar.addEventListener('click', e => {
     const rect = nowProgressBar.getBoundingClientRect();
-    progress = ((e.clientX - rect.left) / rect.width) * 100;
-    updateProgressUI();
+    seekTo(((e.clientX - rect.left) / rect.width) * 100);
   });
 }
 const miniProgressBar = document.getElementById('progressBar');
 if (miniProgressBar) {
   miniProgressBar.addEventListener('click', e => {
     const rect = miniProgressBar.getBoundingClientRect();
-    progress = ((e.clientX - rect.left) / rect.width) * 100;
-    updateProgressUI();
+    seekTo(((e.clientX - rect.left) / rect.width) * 100);
   });
 }
 
 
 /* =====================================================
-   [12] 플레이리스트 트랙 클릭 → 해당 트랙으로 이동
+   [12] 플레이리스트 트랙 클릭 → 해당 트랙 바로 재생
    ===================================================== */
 document.querySelectorAll('.playlist-track').forEach((row, i) => {
   row.addEventListener('click', () => {
-    window.location.href = `song-detail.html?track=${i}`;
+    loadTrack(i, true);
   });
 });
 
 
 /* =====================================================
-   [13] 저장 트랙 클릭 → 해당 트랙 재생
+   [13] 저장 트랙 클릭 → 해당 트랙 바로 재생
    ===================================================== */
 document.querySelectorAll('.saved-track').forEach(el => {
   el.addEventListener('click', () => {
     const idx = parseInt(el.dataset.track, 10);
     if (isNaN(idx)) return;
-    window.location.href = `song-detail.html?track=${idx}`;
+    loadTrack(idx, true);
   });
 });
 

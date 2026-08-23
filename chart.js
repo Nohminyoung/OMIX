@@ -74,45 +74,54 @@ const GENRE_LABEL = {
   ambient:'AMBIENT', healing:'HEALING', electronic:'ELECTRONIC', world:'WORLD'
 };
 
-/* 섹션 표시 순서 */
-const GENRE_ORDER = ['club','mindful','dance','meditation','ambient','healing','electronic','world'];
-
 /* 순위 변동 데이터 (양수=상승, 0=유지, 음수=하락) */
 const TRENDS = [3,0,-1,2,0,1,-2,0,4,-1,2,0,-3,1,0,-1,2,0,1,-2,3,0,-1];
 
 /* 전체 트랙 */
 const ALL_TRACKS = [
-  { rank:1,  title:'Void Mandala',      artist:'DJ Haein × OMIX Studio', genre:'club',       dur:'3:48', plays:'1.2M', g:0 },
-  { rank:2,  title:'108 Bells',         artist:'Samsara Sound',           genre:'mindful',    dur:'4:21', plays:'987K', g:1 },
-  { rank:3,  title:'Lotus Drop',        artist:'OMIX Collective',         genre:'dance',      dur:'5:02', plays:'876K', g:2 },
-  { rank:4,  title:'Temple Bass',       artist:'DJ Haein',                genre:'club',       dur:'3:55', plays:'754K', g:3 },
-  { rank:5,  title:'Nirvana Beat',      artist:'Zero Point × Dharma',     genre:'meditation', dur:'6:15', plays:'612K', g:4 },
-  { rank:6,  title:'Dharma Flow',       artist:'Studio OMIX',             genre:'mindful',    dur:'4:44', plays:'541K', g:5 },
-  { rank:7,  title:'Sacred Groove',     artist:'Haein × Karma',           genre:'dance',      dur:'5:18', plays:'489K', g:6 },
-  { rank:8,  title:'Bodhi Bass',        artist:'DJ Sangha',               genre:'club',       dur:'3:39', plays:'423K', g:7 },
-  { rank:9,  title:'Breath of Sutra',   artist:'Mindwave',                genre:'meditation', dur:'7:02', plays:'387K', g:8 },
-  { rank:10, title:'Crystal Stupa',     artist:'OMIX ft. Zen',            genre:'mindful',    dur:'4:55', plays:'341K', g:9 },
-  { rank:11, title:'Karma Kicks',       artist:'DJ Haein',                genre:'club',       dur:'3:22', plays:'312K', g:0 },
-  { rank:12, title:'Sangha Sessions',   artist:'Collective OM',           genre:'dance',      dur:'5:40', plays:'287K', g:1 },
-  { rank:13, title:'Empty Sky',         artist:'Zero Point',              genre:'meditation', dur:'8:10', plays:'254K', g:2 },
-  { rank:14, title:'Mandala Drops',     artist:'Studio OMIX',             genre:'mindful',    dur:'4:31', plays:'231K', g:3 },
-  { rank:15, title:'Five Skandhas',     artist:'OMIX Collective',         genre:'dance',      dur:'5:55', plays:'214K', g:4 },
-  { rank:16, title:'Bell Tower',        artist:'Samsara Sound',           genre:'mindful',    dur:'3:48', plays:'198K', g:5 },
-  { rank:17, title:'Red Lotus',         artist:'DJ Haein × Studio',       genre:'club',       dur:'4:07', plays:'178K', g:6 },
-  { rank:18, title:'Night Dharma',      artist:'Karma Wave',              genre:'meditation', dur:'6:30', plays:'162K', g:7 },
-  { rank:19, title:'Seven Factors',     artist:'OMIX Studio',             genre:'dance',      dur:'5:12', plays:'148K', g:8 },
-  { rank:20, title:'Return to Source',  artist:'DJ Haein',                genre:'mindful',    dur:'4:58', plays:'134K', g:9 },
-  { rank:21, title:'Om Bassline',       artist:'Dharma Drop',             genre:'club',       dur:'3:31', plays:'122K', g:2 },
-  { rank:22, title:'Wheel of Sound',    artist:'Zero Point',              genre:'dance',      dur:'5:03', plays:'114K', g:1 },
-  { rank:23, title:'Koan Reverb',       artist:'OMIX ft. Seon',           genre:'meditation', dur:'9:00', plays:'98K',  g:0 },
-  { rank:24, title:'Deep Stillness',    artist:'OMIX Ambient',            genre:'ambient',    dur:'8:22', plays:'87K',  g:1 },
-  { rank:25, title:'Cloud Temple',      artist:'Sky Monk',                genre:'ambient',    dur:'9:15', plays:'79K',  g:5 },
-  { rank:26, title:'Morning Chant',     artist:'Healing Waves',           genre:'healing',    dur:'5:45', plays:'72K',  g:3 },
-  { rank:27, title:'Five Elements',     artist:'Sound Garden',            genre:'healing',    dur:'4:55', plays:'65K',  g:7 },
-  { rank:28, title:'Binary Dharma',     artist:'DJ Circuit',              genre:'electronic', dur:'4:10', plays:'58K',  g:6 },
-  { rank:29, title:'Pulse Sutra',       artist:'Electronic Dharma',       genre:'electronic', dur:'3:58', plays:'51K',  g:4 },
-  { rank:30, title:'Gamelan Mandala',   artist:'OMIX × Bali Collective',  genre:'world',      dur:'7:12', plays:'44K',  g:9 },
-  { rank:31, title:'Sacred Patterns',   artist:'World Collective',        genre:'world',      dur:'6:33', plays:'38K',  g:2 },
+  { rank:1,  title:'Han Groove Riot',   artist:'OMIX Studio',             genre:'dance',      dur:'2:57', plays:'32K',  g:0, audioSrc:'music/Han%20Groove%20Riot.mp3', detailIdx:14 },
+  { rank:2,  title:'Karma Game',        artist:'OMIX Studio',             genre:'electronic', dur:'5:00', plays:'29K',  g:1, audioSrc:'music/Karma%20Game.mp3', detailIdx:15 },
+  { rank:3,  title:'Mix Attack',        artist:'OMIX Studio',             genre:'club',       dur:'2:56', plays:'26K',  g:2, audioSrc:'music/Mix%20Attack.mp3', detailIdx:16 },
+  { rank:4,  title:'No Score, Just Soul', artist:'OMIX Studio',           genre:'healing',    dur:'5:01', plays:'23K',  g:3, audioSrc:'music/No%20Score,%20Just%20Soul.mp3', detailIdx:17 },
+  { rank:5,  title:'Temple Echo Loop',  artist:'OMIX Studio',             genre:'ambient',    dur:'4:09', plays:'20K',  g:4, audioSrc:'music/Temple%20Echo%20Loop.mp3', detailIdx:18 },
+  { rank:6,  title:'공즉',              artist:'OMIX Studio',             genre:'meditation', dur:'2:53', plays:'17K',  g:5, audioSrc:'music/공즉.mp3', detailIdx:19 },
+  { rank:7,  title:'무명등',            artist:'OMIX Studio',             genre:'mindful',    dur:'2:55', plays:'14K',  g:6, audioSrc:'music/무명등.mp3', detailIdx:20 },
+  { rank:8,  title:'사계윤회',          artist:'OMIX Studio',             genre:'world',      dur:'2:30', plays:'11K',  g:7, audioSrc:'music/사계윤회.mp3', detailIdx:21 },
+  { rank:9,  title:'업보 Bounce',       artist:'OMIX Studio',             genre:'dance',      dur:'3:14', plays:'8K',   g:8, audioSrc:'music/업보%20Bounce.mp3', detailIdx:22 },
+  { rank:10, title:'파도에 맡겨',       artist:'OMIX Studio',             genre:'healing',    dur:'4:09', plays:'5K',   g:9, audioSrc:'music/파도에%20맡겨.mp3', detailIdx:23 },
+  { rank:11, title:'Silent Thunder',    artist:'DJ Haein × OMIX Studio',  genre:'club',       dur:'2:46', plays:'1.8M', g:4, audioSrc:'music/Silent%20Thunder.mp3', detailIdx:12 },
+  { rank:12, title:'Dharma Lights',     artist:'DJ Haein × OMIX Studio',  genre:'dance',      dur:'1:55', plays:'1.4M', g:2, audioSrc:'music/Dharma%20Lights.mp3',  detailIdx:13 },
+  { rank:13, title:'Void Mandala',      artist:'DJ Haein × OMIX Studio', genre:'club',       dur:'3:48', plays:'1.2M', g:0, detailIdx:0 },
+  { rank:14, title:'108 Bells',         artist:'Samsara Sound',           genre:'mindful',    dur:'4:21', plays:'987K', g:1, detailIdx:1 },
+  { rank:15, title:'Lotus Drop',        artist:'OMIX Collective',         genre:'dance',      dur:'5:02', plays:'876K', g:2, detailIdx:2 },
+  { rank:16, title:'Temple Bass',       artist:'DJ Haein',                genre:'club',       dur:'3:55', plays:'754K', g:3, detailIdx:3 },
+  { rank:17, title:'Nirvana Beat',      artist:'Zero Point × Dharma',     genre:'meditation', dur:'6:15', plays:'612K', g:4, detailIdx:4 },
+  { rank:18, title:'Dharma Flow',       artist:'Studio OMIX',             genre:'mindful',    dur:'4:44', plays:'541K', g:5, detailIdx:5 },
+  { rank:19, title:'Sacred Groove',     artist:'Haein × Karma',           genre:'dance',      dur:'5:18', plays:'489K', g:6, detailIdx:6 },
+  { rank:20, title:'Bodhi Bass',        artist:'DJ Sangha',               genre:'club',       dur:'3:39', plays:'423K', g:7, detailIdx:7 },
+  { rank:21, title:'Breath of Sutra',   artist:'Mindwave',                genre:'meditation', dur:'7:02', plays:'387K', g:8, detailIdx:8 },
+  { rank:22, title:'Crystal Stupa',     artist:'OMIX ft. Zen',            genre:'mindful',    dur:'4:55', plays:'341K', g:9, detailIdx:9 },
+  { rank:23, title:'Karma Kicks',       artist:'DJ Haein',                genre:'club',       dur:'3:22', plays:'312K', g:0 },
+  { rank:24, title:'Sangha Sessions',   artist:'Collective OM',           genre:'dance',      dur:'5:40', plays:'287K', g:1 },
+  { rank:25, title:'Empty Sky',         artist:'Zero Point',              genre:'meditation', dur:'8:10', plays:'254K', g:2 },
+  { rank:26, title:'Mandala Drops',     artist:'Studio OMIX',             genre:'mindful',    dur:'4:31', plays:'231K', g:3 },
+  { rank:27, title:'Five Skandhas',     artist:'OMIX Collective',         genre:'dance',      dur:'5:55', plays:'214K', g:4 },
+  { rank:28, title:'Bell Tower',        artist:'Samsara Sound',           genre:'mindful',    dur:'3:48', plays:'198K', g:5 },
+  { rank:29, title:'Red Lotus',         artist:'DJ Haein × Studio',       genre:'club',       dur:'4:07', plays:'178K', g:6 },
+  { rank:30, title:'Night Dharma',      artist:'Karma Wave',              genre:'meditation', dur:'6:30', plays:'162K', g:7 },
+  { rank:31, title:'Seven Factors',     artist:'OMIX Studio',             genre:'dance',      dur:'5:12', plays:'148K', g:8 },
+  { rank:32, title:'Return to Source',  artist:'DJ Haein',                genre:'mindful',    dur:'4:58', plays:'134K', g:9 },
+  { rank:33, title:'Om Bassline',       artist:'Dharma Drop',             genre:'club',       dur:'3:31', plays:'122K', g:2 },
+  { rank:34, title:'Wheel of Sound',    artist:'Zero Point',              genre:'dance',      dur:'5:03', plays:'114K', g:1 },
+  { rank:35, title:'Koan Reverb',       artist:'OMIX ft. Seon',           genre:'meditation', dur:'9:00', plays:'98K',  g:0 },
+  { rank:36, title:'Deep Stillness',    artist:'OMIX Ambient',            genre:'ambient',    dur:'8:22', plays:'87K',  g:1 },
+  { rank:37, title:'Cloud Temple',      artist:'Sky Monk',                genre:'ambient',    dur:'9:15', plays:'79K',  g:5 },
+  { rank:38, title:'Morning Chant',     artist:'Healing Waves',           genre:'healing',    dur:'5:45', plays:'72K',  g:3 },
+  { rank:39, title:'Five Elements',     artist:'Sound Garden',            genre:'healing',    dur:'4:55', plays:'65K',  g:7 },
+  { rank:40, title:'Binary Dharma',     artist:'DJ Circuit',              genre:'electronic', dur:'4:10', plays:'58K',  g:6 },
+  { rank:41, title:'Pulse Sutra',       artist:'Electronic Dharma',       genre:'electronic', dur:'3:58', plays:'51K',  g:4 },
+  { rank:42, title:'Gamelan Mandala',   artist:'OMIX × Bali Collective',  genre:'world',      dur:'7:12', plays:'44K',  g:9 },
+  { rank:43, title:'Sacred Patterns',   artist:'World Collective',        genre:'world',      dur:'6:33', plays:'38K',  g:2 },
 ];
 
 /* 현재 필터·정렬 상태 */
@@ -197,9 +206,9 @@ function buildStrip() {
     card.addEventListener('click', (e) => {
       /* Ctrl/Cmd+click or middle-click → open in new tab */
       if (e.ctrlKey || e.metaKey || e.button === 1) {
-        window.open(`song-detail.html?track=${t.rank - 1}`, '_blank');
+        window.open(`song-detail.html?track=${t.detailIdx ?? (t.rank - 1)}`, '_blank');
       } else {
-        window.location.href = `song-detail.html?track=${t.rank - 1}`;
+        window.location.href = `song-detail.html?track=${t.detailIdx ?? (t.rank - 1)}`;
       }
     });
     stripEl.appendChild(card);
@@ -256,24 +265,12 @@ function buildRow(t, i) {
       return;
     }
     if (e.ctrlKey || e.metaKey || e.button === 1) {
-      window.open(`song-detail.html?track=${t.rank - 1}`, '_blank');
+      window.open(`song-detail.html?track=${t.detailIdx ?? (t.rank - 1)}`, '_blank');
     } else {
-      window.location.href = `song-detail.html?track=${t.rank - 1}`;
+      window.location.href = `song-detail.html?track=${t.detailIdx ?? (t.rank - 1)}`;
     }
   });
   return row;
-}
-
-/* 장르 섹션 헤더 생성 */
-function buildSectionHeader(genre, count) {
-  const div = document.createElement('div');
-  div.className = 'genre-section-header';
-  div.id = `genre-section-${genre}`;
-  div.innerHTML = `
-    <span class="genre-tag ${genre}">${GENRE_LABEL[genre]}</span>
-    <span class="genre-section-count">${count} TRACKS</span>
-    <div class="genre-section-line"></div>`;
-  return div;
 }
 
 function buildList() {
@@ -283,22 +280,8 @@ function buildList() {
 
   if (countEl) countEl.textContent = tracks.length + ' TRACKS';
 
-  if (activeGenre === 'all') {
-    /* ALL: 장르 순서대로 섹션 분할 */
-    GENRE_ORDER.forEach(genre => {
-      const items = tracks
-        .map((t, i) => ({ t, i }))
-        .filter(({ t }) => t.genre === genre);
-      if (!items.length) return;
-
-      listEl.appendChild(buildSectionHeader(genre, items.length));
-      items.forEach(({ t, i }) => listEl.appendChild(buildRow(t, i)));
-    });
-  } else {
-    /* 특정 장르: 섹션 헤더 하나 + 해당 트랙들 */
-    listEl.appendChild(buildSectionHeader(activeGenre, tracks.length));
-    tracks.forEach((t, i) => listEl.appendChild(buildRow(t, i)));
-  }
+  /* 장르로 섹션을 나누지 않고, 활성 정렬 기준(순위/재생수/길이) 순서 그대로 한 줄로 표시 */
+  tracks.forEach((t, i) => listEl.appendChild(buildRow(t, i)));
 }
 
 
@@ -402,6 +385,60 @@ let isPlaying = false;
 let progress  = 0;
 let totalSec  = 228;
 let playerTimer;
+let currentAudio = null;   /* audioSrc가 있는 트랙일 때 실제 재생을 담당하는 Audio 인스턴스 */
+let volumeLevel  = 0.7;    /* 볼륨 슬라이더 값(0~1) — 실제 오디오 트랙에 적용 */
+
+/* audioSrc가 있는 트랙: 실제 파일 재생 + 진행바를 재생 시간에 동기화 */
+function startRealAudio(t) {
+  const audio = new Audio(t.audioSrc);
+  audio.volume = volumeLevel;
+  currentAudio = audio;
+  audio.addEventListener('loadedmetadata', () => {
+    totalSec = audio.duration;
+    if (totalTimeEl) totalTimeEl.textContent = fmtTime(100, totalSec);
+  });
+  audio.addEventListener('timeupdate', () => {
+    if (!audio.duration) return;
+    progress = audio.currentTime / audio.duration * 100;
+    if (progressFill)  progressFill.style.width  = progress + '%';
+    if (currentTimeEl) currentTimeEl.textContent = fmtTime(progress, audio.duration);
+    syncLyrics(progress);
+  });
+  audio.addEventListener('ended', () => {
+    isPlaying = false;
+    if (playPauseBtn) playPauseBtn.textContent = '▶';
+    if (playerDisc)   playerDisc.classList.remove('spinning');
+  });
+  audio.play().catch(() => {});
+}
+
+/* audioSrc가 없는 트랙: 기존 방식대로 진행바만 타이머로 흉내 */
+function startFakeSim(t) {
+  const [m, s] = t.dur.split(':').map(Number);
+  totalSec = m * 60 + s;
+  if (totalTimeEl) totalTimeEl.textContent = t.dur;
+  playerTimer = setInterval(() => {
+    progress = Math.min(progress + 0.05, 100);
+    if (progressFill)  progressFill.style.width  = progress + '%';
+    if (currentTimeEl) currentTimeEl.textContent = fmtTime(progress, totalSec);
+    syncLyrics(progress);
+    if (progress >= 100) {
+      clearInterval(playerTimer);
+      isPlaying = false;
+      if (playPauseBtn) playPauseBtn.textContent = '▶';
+      if (playerDisc)   playerDisc.classList.remove('spinning');
+    }
+  }, 100);
+}
+
+/* 트랙 전환 시 이전 재생 수단(진짜 오디오 or 가짜 타이머) 정리 */
+function stopPlayback() {
+  clearInterval(playerTimer);
+  if (currentAudio) {
+    currentAudio.pause();
+    currentAudio = null;
+  }
+}
 
 function fmtTime(pct, sec) {
   const s = Math.floor(sec * pct / 100);
@@ -410,30 +447,19 @@ function fmtTime(pct, sec) {
 
 /* 패널 플레이리스트에서 직접 호출 — ALL_TRACKS 기준 */
 function playTrackDirect(t, allIdx) {
-  clearInterval(playerTimer);
+  stopPlayback();
   playingIdx = -1;   /* 필터 기반 idx 초기화 */
   isPlaying  = true;
   progress   = 0;
   if (playerNameEl)   playerNameEl.textContent   = t.title;
   if (playerArtistEl) playerArtistEl.textContent = t.artist;
-  const [m, s] = t.dur.split(':').map(Number);
-  totalSec = m * 60 + s;
-  if (totalTimeEl)   totalTimeEl.textContent   = t.dur;
   if (playPauseBtn)  playPauseBtn.textContent  = '⏸';
   if (playerDisc)    playerDisc.classList.add('spinning');
   if (progressFill)  progressFill.style.width  = '0%';
   if (currentTimeEl) currentTimeEl.textContent = '0:00';
-  playerTimer = setInterval(() => {
-    progress = Math.min(progress + 0.05, 100);
-    if (progressFill)  progressFill.style.width  = progress + '%';
-    if (currentTimeEl) currentTimeEl.textContent = fmtTime(progress, totalSec);
-    syncLyrics(progress);
-    if (progress >= 100) {
-      clearInterval(playerTimer); isPlaying = false;
-      if (playPauseBtn) playPauseBtn.textContent = '▶';
-      if (playerDisc)   playerDisc.classList.remove('spinning');
-    }
-  }, 100);
+
+  if (t.audioSrc) startRealAudio(t);
+  else startFakeSim(t);
 }
 
 function playTrack(idx) {
@@ -448,7 +474,7 @@ function playTrack(idx) {
   }
 
   /* 새 트랙 재생 */
-  clearInterval(playerTimer);
+  stopPlayback();
   playingIdx = idx;
   isPlaying  = true;
   progress   = 0;
@@ -461,41 +487,32 @@ function playTrack(idx) {
     refreshPanelActive(idx);
     showPanelLyrics(t);
   }
-  const [m, s] = t.dur.split(':').map(Number);
-  totalSec = m * 60 + s;
-  if (totalTimeEl)   totalTimeEl.textContent   = t.dur;
   if (playPauseBtn)  playPauseBtn.textContent  = '⏸';
   if (playerDisc)    playerDisc.classList.add('spinning');
   if (progressFill)  progressFill.style.width  = '0%';
   if (currentTimeEl) currentTimeEl.textContent = '0:00';
 
-  /* 진행 타이머 */
-  playerTimer = setInterval(() => {
-    progress = Math.min(progress + 0.05, 100);
-    if (progressFill)  progressFill.style.width  = progress + '%';
-    if (currentTimeEl) currentTimeEl.textContent = fmtTime(progress, totalSec);
-    syncLyrics(progress);   /* 패널 열려 있으면 가사 자동 싱크 */
-    if (progress >= 100) {
-      clearInterval(playerTimer);
-      isPlaying = false;
-      if (playPauseBtn) playPauseBtn.textContent = '▶';
-      if (playerDisc)   playerDisc.classList.remove('spinning');
-    }
-  }, 100);
+  if (t.audioSrc) startRealAudio(t);
+  else startFakeSim(t);
 
   /* 스트립과 리스트 재렌더 (현재 재생 강조 반영) */
   render();
-
-  /* 스트립에서 해당 카드로 스크롤 */
-  const card = stripEl?.querySelector(`[data-idx="${idx}"]`);
-  card?.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
 }
 
 function togglePlay() {
   isPlaying = !isPlaying;
   if (playPauseBtn) playPauseBtn.textContent = isPlaying ? '⏸' : '▶';
 
-  if (isPlaying) {
+  if (currentAudio) {
+    /* 실제 오디오 재생 중인 트랙: 그대로 일시정지/재개 */
+    if (isPlaying) {
+      currentAudio.play().catch(() => {});
+      if (playerDisc) playerDisc.classList.add('spinning');
+    } else {
+      currentAudio.pause();
+      if (playerDisc) playerDisc.classList.remove('spinning');
+    }
+  } else if (isPlaying) {
     if (playerDisc) playerDisc.classList.add('spinning');
     playerTimer = setInterval(() => {
       progress = Math.min(progress + 0.05, 100);
@@ -537,6 +554,16 @@ if (progressBar) {
     progress = ((e.clientX - rect.left) / rect.width) * 100;
     if (progressFill)  progressFill.style.width  = progress + '%';
     if (currentTimeEl) currentTimeEl.textContent = fmtTime(progress, totalSec);
+  });
+}
+
+/* 볼륨 슬라이더 — 실제 재생 중인 오디오 볼륨을 조절 */
+const volSlider = document.querySelector('.vol-slider');
+if (volSlider) {
+  volSlider.value = Math.round(volumeLevel * 100);
+  volSlider.addEventListener('input', () => {
+    volumeLevel = volSlider.value / 100;
+    if (currentAudio) currentAudio.volume = volumeLevel;
   });
 }
 
@@ -657,7 +684,9 @@ const DEFAULT_LYRICS = [
    [16] 전체 패널 — DOM 참조
    ===================================================== */
 const fullPanel        = document.getElementById('fullPanel');
+const fullPanelBody    = document.getElementById('fullPanelBody');
 const fullPanelClose   = document.getElementById('fullPanelClose');
+const panelMobileTabs  = document.getElementById('panelMobileTabs');
 const panelTrackList   = document.getElementById('panelTrackList');
 const panelLyricsTitle  = document.getElementById('panelLyricsTitle');
 const panelLyricsArtist = document.getElementById('panelLyricsArtist');
@@ -666,6 +695,22 @@ const playerTrackEl    = document.getElementById('playerTrack');
 
 let panelOpen    = false;
 let panelTrackIdx = -1;   /* 패널에서 현재 선택된 트랙 인덱스 */
+
+/* ── 모바일 탭 전환 (플레이리스트 / 가사 중 하나씩 표시) ── */
+function setPanelMobileView(view) {
+  if (!fullPanelBody) return;
+  fullPanelBody.dataset.mobileView = view;
+  if (panelMobileTabs) {
+    panelMobileTabs.querySelectorAll('.panel-mobile-tab').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.view === view);
+    });
+  }
+}
+if (panelMobileTabs) {
+  panelMobileTabs.querySelectorAll('.panel-mobile-tab').forEach(btn => {
+    btn.addEventListener('click', () => setPanelMobileView(btn.dataset.view));
+  });
+}
 
 
 /* ── 플레이리스트 빌드 ──
@@ -697,6 +742,7 @@ function buildPanelPlaylist() {
       playTrackDirect(t, i);
       refreshPanelActive(i);
       showPanelLyrics(t);
+      setPanelMobileView('lyrics'); /* 모바일: 트랙 선택 시 가사 탭으로 자동 전환 */
     });
 
     panelTrackList.appendChild(item);
@@ -712,13 +758,26 @@ function refreshPanelActive(idx) {
   panelTrackIdx = idx;
 }
 
-/* ── 가사 표시 (우측 패널) ── */
+/* ── 가사 표시 (우측 패널) ──
+   우선순위: LYRICS_DATA(직접 pct를 지정한 곡) → now-playing-panel.js의
+   TRACKS.lyrics(가사 상세 패널에 이미 입력해둔 텍스트, 줄 수 기준으로
+   자동으로 pct를 균등 배분) → DEFAULT_LYRICS(둘 다 없을 때) */
+function lyricsFromNowPlayingPanel(title) {
+  const npTrack = (window.NP_TRACKS || []).find(t => t.title === title);
+  if (!npTrack || !npTrack.lyrics) return null;
+  if (npTrack.lyrics.indexOf('가사를 여기에 입력하세요') >= 0) return null; /* 아직 미입력 */
+
+  const rawLines = npTrack.lyrics.split('\n');
+  const n = rawLines.length;
+  return rawLines.map((line, i) => ({ pct: Math.round(i / n * 96), line }));
+}
+
 function showPanelLyrics(track) {
   if (!panelLyricsScroll) return;
   if (panelLyricsTitle)  panelLyricsTitle.textContent  = track.title;
   if (panelLyricsArtist) panelLyricsArtist.textContent = track.artist;
 
-  const lines = LYRICS_DATA[track.title] || DEFAULT_LYRICS;
+  const lines = LYRICS_DATA[track.title] || lyricsFromNowPlayingPanel(track.title) || DEFAULT_LYRICS;
   panelLyricsScroll.innerHTML = lines
     .map(l => `<p class="lyrics-line" data-pct="${l.pct}">${l.line}</p>`)
     .join('');
@@ -753,6 +812,7 @@ function openPanel() {
     const t = ALL_TRACKS[playingIdx] || ALL_TRACKS[0];
     showPanelLyrics(t);
   }
+  setPanelMobileView('playlist'); /* 모바일: 패널을 열 때는 항상 플레이리스트 탭부터 */
   fullPanel.classList.add('open');
   panelOpen = true;
 }

@@ -119,6 +119,13 @@ if (bpmDown) bpmDown.addEventListener('click', () => updateBpm(currentBpm - 4));
 if (bpmUp)   bpmUp.addEventListener('click',   () => updateBpm(currentBpm + 4));
 
 
+/* 재생 상태 — 아래 [5] 파형 루프와 [7] 미니 플레이어가 공유한다.
+   [5] 의 drawWave() 가 즉시 실행되므로 선언이 [7] 에 있으면
+   TDZ(ReferenceError: Cannot access 'isPlaying' before initialization)로
+   파형 애니메이션이 첫 프레임에서 죽는다. → 여기서 먼저 선언한다. */
+let isPlaying = false;
+
+
 /* =====================================================
    [5] 파형 시각화 캔버스
    requestAnimationFrame 루프로 실시간 파형 그리기
@@ -204,7 +211,7 @@ const playerDisc    = document.getElementById('playerDisc');
 const progressFill  = document.getElementById('progressFill');
 const currentTimeEl = document.getElementById('currentTime');
 
-let isPlaying = false;
+/* isPlaying 은 [5] 파형 섹션 위에서 미리 선언했다 */
 let progress  = 0;
 let timer;
 

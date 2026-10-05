@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OMIX — Admin</title>
+  <link rel="icon" href="symbol.png" type="image/png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,700&family=Stack+Sans+Notch&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="shop.css" />
+  <script src="theme.js"></script>
+  <script src="scroll-top.js" defer></script>
+  <script src="cursor.js" defer></script>
+  <script src="nav-mobile.js" defer></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/fontawesome.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/brands.min.css" />
+</head>
+<body class="page-shop">
+
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-dot" id="cursorDot"></div>
+
+  <!-- ══ NAV ══ -->
+  <nav class="nav" id="nav">
+    <ul class="nav-menu">
+      <li><a href="store.html"  class="nav-link">Store</a></li>
+      <li class="nav-cart-item"><a href="cart.html" class="nav-link nav-cart-link">CART <span class="cart-badge">0</span></a></li>
+      <li><a href="admin.html"  class="nav-link" style="color:var(--red)">Admin</a></li>
+    </ul>
+    <a href="index.html" class="nav-logo-center"><img src="logo.png" alt="OMIX" class="logo-img" /></a>
+    <div class="nav-sns">
+      <a href="cart.html" class="nav-link nav-cart-link">
+        CART <span class="cart-badge" id="cartBadge">0</span>
+      </a>
+    </div>
+    <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+  </nav>
+
+  <!-- ══ 데모 고지 ══ -->
+  <div class="shop-demo-bar">
+    <b>DEMO</b>
+    <span>판매자 화면 목업입니다. 로그인·권한 관리가 없으며 실제 주문 데이터가 아닙니다.</span>
+  </div>
+
+  <main class="shop-wrap wide">
+
+    <header class="shop-head">
+      <p class="shop-eyebrow">SELLER</p>
+      <h1 class="shop-title">ORDER ADMIN</h1>
+      <p class="shop-sub">접수된 주문을 확인하고 송장번호를 입력해 배송 상태를 갱신합니다.</p>
+    </header>
+
+    <!-- 한계 고지 -->
+    <div class="adm-warn">
+      <span>⚠</span>
+      <span>
+        <b>이 화면은 지금 브라우저의 localStorage 만 읽습니다.</b>
+        고객이 다른 기기에서 넣은 주문은 여기에 절대 나타나지 않습니다.
+        실제 판매에 쓰려면 <code>products.js</code> 의 <code>saveOrder()</code> 를 서버 API 호출로 바꾸고,
+        이 화면도 서버에서 목록을 받아오도록 바꿔야 합니다.
+      </span>
+    </div>
+
+    <!-- 통계 -->
+    <div class="adm-stats" id="admStats"></div>
+
+    <!-- 툴바 -->
+    <div class="adm-toolbar">
+      <select class="shop-select" id="filterStatus" style="width:auto;min-width:150px">
+        <option value="">전체 상태</option>
+      </select>
+      <input class="shop-input" type="search" id="filterQuery" placeholder="주문번호 · 주문자명 검색" style="width:auto;min-width:230px" />
+      <span class="spacer"></span>
+      <button type="button" class="shop-btn ghost sm" id="seedBtn">샘플 주문 3건 생성</button>
+      <button type="button" class="shop-btn ghost sm" id="wipeBtn">전체 삭제</button>
+    </div>
+
+    <!-- 목록 -->
+    <div class="adm-table-wrap" id="admWrap"></div>
+
+  </main>
+
+  <script src="products.js"></script>
+  <script>
+  (function () {
+    'use strict';
+
+    const S   = window.OmixShop;
+    const $   = id => document.getElementById(id);
+    const wrap = $('admWrap');
+
+    function esc(s) {
+      return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+      }[c]));
+    }
+
+    function fmtDate(iso) {
+      const d = new Date(iso);
+      return String(d.getMonth() + 1).padStart(2, '0') + '/' +
+             String(d.getDate()).padStart(2, '0') + ' ' +
+             String(d.getHours()).padStart(2, '0') + ':' +
+             String(d.getMinutes()).padStart(2, '0');
+    }
+
+    /* 상태 필터 옵션 채우기 */
+    S.STATUS.forEach(s => {
+      const o = document.createElement('option');
+      o.value = s; o.textContent = s;
+      $('filterStatus').appendChild(o);
+    });
+
+    /* 펼쳐진 주문번호 */
+    let openNo = null;
+
+    /* =====================================================
+       통계
+       ===================================================== */
+    function renderStats(all) {
+      const count = s => all.filter(o => o.status === s).length;
+      /* 취소를 뺀 주문의 결제 예정·완료 금액 합 */
+      const revenue = all
+        .filter(o => o.status !== '취소')
+        .reduce((sum, o) => sum + o.amount.total, 0);
+
+      const cards = [
+        { k: '신규 · 입금대기', v: count('입금대기'), red: true },
+        { k: '발송 대기',       v: count('결제완료') + count('배송준비중') },
+        { k: '배송중',          v: count('배송중') },
+        { k: '전체 주문',       v: all.length },
+        { k: '주문 금액 합계',  v: S.won(revenue) }
+      ];
+
+      $('admStats').innerHTML = cards.map(c =>
+        '<div class="adm-stat">' +
+          '<p class="adm-stat-k">' + c.k + '</p>' +
+          '<p class="adm-stat-v' + (c.red ? ' red' : '') + '">' + c.v + '</p>' +
+        '</div>'
+      ).join('');
+    }
+
+    /* =====================================================
+       상세 펼침 영역
+       ===================================================== */
+    function detailHTML(o) {
+      const items = o.items.map(it =>
+        '<div class="done-line">' +
+          '<span class="done-line-name">' + esc(it.name) +
+            (it.opt ? ' <em>(' + esc(it.opt) + ')</em>' : '') +
+            ' <em>× ' + it.qty + '</em></span>' +
+          '<span class="done-line-val">' + S.won(it.lineTotal) + '</span>' +
+        '</div>'
+      ).join('');
+
+      const sp = o.shipping || {};
+      const shipBlock = sp.needed
+        ? '<div class="kv-row"><dt>받는 분</dt><dd>' + esc(sp.receiver) + '</dd></div>' +
+          '<div class="kv-row"><dt>연락처</dt><dd>' + esc(sp.phone) + '</dd></div>' +
+          '<div class="kv-row"><dt>주소</dt><dd>(' + esc(sp.zip) + ') ' + esc(sp.addr1) + ' ' + esc(sp.addr2) + '</dd></div>' +
+          '<div class="kv-row"><dt>배송 메모</dt><dd>' + (sp.memo ? esc(sp.memo) : '—') + '</dd></div>'
+        : '<div class="kv-row"><dt>배송</dt><dd>디지털 상품 — 배송 없음</dd></div>';
+
+      const courierOpts = S.COURIERS.map(c =>
+        '<option' + (o.courier === c ? ' selected' : '') + '>' + c + '</option>'
+      ).join('');
+
+      return '' +
+      '<div class="adm-detail">' +
+
+        '<div>' +
+          '<h4>주문 상품</h4>' +
+          items +
+          '<div class="sum-row" style="margin-top:12px;padding-top:10px;border-top:1px solid var(--border)">' +
+            '<span>상품금액</span><span>' + S.won(o.amount.goods) + '</span></div>' +
+          '<div class="sum-row"><span>배송비</span><span>' +
+            (o.amount.shipping ? S.won(o.amount.shipping) : (sp.needed ? '무료' : '해당 없음')) + '</span></div>' +
+          '<div class="sum-row" style="color:var(--white)"><span>결제금액</span><span>' +
+            S.won(o.amount.total) + '</span></div>' +
+        '</div>' +
+
+        '<div>' +
+          '<h4>주문자 · 결제</h4>' +
+          '<dl>' +
+            '<div class="kv-row"><dt>이름</dt><dd>' + esc(o.orderer.name) + '</dd></div>' +
+            '<div class="kv-row"><dt>연락처</dt><dd>' + esc(o.orderer.phone) + '</dd></div>' +
+            '<div class="kv-row"><dt>이메일</dt><dd>' + esc(o.orderer.email) + '</dd></div>' +
+            '<div class="kv-row"><dt>결제수단</dt><dd>' + esc(o.payment.method) + '</dd></div>' +
+            '<div class="kv-row"><dt>입금자명</dt><dd>' + esc(o.payment.depositor) + '</dd></div>' +
+          '</dl>' +
+        '</div>' +
+
+        '<div>' +
+          '<h4>배송지</h4>' +
+          '<dl>' + shipBlock + '</dl>' +
+
+          (sp.needed ?
+          '<h4 style="margin-top:22px">송장 등록</h4>' +
+          '<div class="adm-ship-form">' +
+            '<div>' +
+              '<label class="shop-label">택배사</label>' +
+              '<select class="shop-select" data-f="courier">' + courierOpts + '</select>' +
+            '</div>' +
+            '<div>' +
+              '<label class="shop-label">송장번호</label>' +
+              '<input class="shop-input" data-f="tracking" value="' + esc(o.trackingNo) + '" placeholder="숫자만 입력" />' +
+            '</div>' +
+            '<button type="button" class="shop-btn sm" data-act="ship">발송 처리</button>' +
+          '</div>' +
+          '<p style="margin-top:9px;font-size:10.5px;color:var(--gray-3);line-height:1.6">' +
+            '저장하면 주문 상태가 <b style="color:#00D4FF">배송중</b> 으로 바뀌고, 고객 화면에서 송장 조회가 가능해집니다.</p>'
+          : '') +
+        '</div>' +
+
+      '</div>';
+    }
+
+    /* =====================================================
+       목록 렌더
+       ===================================================== */
+    function render() {
+      const all = S.orders.all();
+      renderStats(all);
+
+      const fs = $('filterStatus').value;
+      const fq = $('filterQuery').value.trim().toLowerCase();
+
+      const list = all.filter(o => {
+        if (fs && o.status !== fs) return false;
+        if (fq) {
+          const hay = (o.orderNo + ' ' + o.orderer.name).toLowerCase();
+          if (hay.indexOf(fq) === -1) return false;
+        }
+        return true;
+      });
+
+      if (!all.length) {
+        wrap.innerHTML =
+        '<div class="adm-empty">' +
+          '<p>아직 접수된 주문이 없습니다.</p>' +
+          '<a href="store.html" class="shop-btn ghost">스토어에서 주문 넣어보기</a>' +
+        '</div>';
+        return;
+      }
+      if (!list.length) {
+        wrap.innerHTML = '<div class="adm-empty"><p>조건에 맞는 주문이 없습니다.</p></div>';
+        return;
+      }
+
+      const rows = list.map(o => {
+        const first = o.items[0];
+        const more  = o.items.length > 1 ? ' 외 ' + (o.items.length - 1) + '건' : '';
+        const statusOpts = S.STATUS.map(s =>
+          '<option' + (o.status === s ? ' selected' : '') + '>' + s + '</option>'
+        ).join('');
+        const track = o.trackingNo
+          ? esc(o.courier) + '<br /><span style="color:var(--gray-3)">' + esc(o.trackingNo) + '</span>'
+          : '<span style="color:var(--gray-3)">—</span>';
+
+        return '' +
+        '<tr class="row-main" data-no="' + esc(o.orderNo) + '">' +
+          '<td class="adm-no">' + esc(o.orderNo) + '</td>' +
+          '<td class="adm-date">' + fmtDate(o.createdAt) + '</td>' +
+          '<td>' + esc(o.orderer.name) + '<br /><span style="color:var(--gray-3)">' + esc(o.orderer.phone) + '</span></td>' +
+          '<td>' + esc(first.name) + more + '</td>' +
+          '<td class="adm-amount">' + S.won(o.amount.total) + '</td>' +
+          '<td><span class="adm-pill" data-s="' + esc(o.status) + '">' + esc(o.status) + '</span></td>' +
+          '<td>' + track + '</td>' +
+          '<td onclick="event.stopPropagation()">' +
+            '<select class="shop-select" data-act="status" data-no="' + esc(o.orderNo) + '" style="padding:7px 9px;font-size:11px">' +
+              statusOpts +
+            '</select>' +
+          '</td>' +
+        '</tr>' +
+        (openNo === o.orderNo
+          ? '<tr class="adm-detail-row" data-detail="' + esc(o.orderNo) + '"><td colspan="8">' + detailHTML(o) + '</td></tr>'
+          : '');
+      }).join('');
+
+      wrap.innerHTML =
+      '<table class="adm-table">' +
+        '<thead><tr>' +
+          '<th>주문번호</th><th>주문일</th><th>주문자</th><th>상품</th>' +
+          '<th>결제금액</th><th>상태</th><th>송장</th><th>상태 변경</th>' +
+        '</tr></thead>' +
+        '<tbody>' + rows + '</tbody>' +
+      '</table>';
+    }
+
+    /* =====================================================
+       이벤트
+       ===================================================== */
+    wrap.addEventListener('click', e => {
+      /* 발송 처리 */
+      const shipBtn = e.target.closest('[data-act="ship"]');
+      if (shipBtn) {
+        const box     = shipBtn.closest('.adm-detail');
+        const courier = box.querySelector('[data-f="courier"]').value;
+        const tracking = box.querySelector('[data-f="tracking"]').value.trim();
+        if (!tracking) {
+          alert('송장번호를 입력해 주세요.');
+          return;
+        }
+        S.orders.update(openNo, { courier: courier, trackingNo: tracking, status: '배송중' });
+        render();
+        return;
+      }
+
+      /* 행 클릭 → 상세 토글 */
+      const row = e.target.closest('.row-main');
+      if (row) {
+        openNo = (openNo === row.dataset.no) ? null : row.dataset.no;
+        render();
+      }
+    });
+
+    /* 상태 변경 */
+    wrap.addEventListener('change', e => {
+      const sel = e.target.closest('[data-act="status"]');
+      if (!sel) return;
+      S.orders.update(sel.dataset.no, { status: sel.value });
+      render();
+    });
+
+    $('filterStatus').addEventListener('change', render);
+    $('filterQuery').addEventListener('input', render);
+
+    /* 전체 삭제 */
+    $('wipeBtn').addEventListener('click', () => {
+      if (!S.orders.all().length) return;
+      if (!confirm('저장된 주문을 모두 삭제할까요? 되돌릴 수 없습니다.')) return;
+      S.orders.clear();
+      openNo = null;
+      render();
+    });
+
+    /* =====================================================
+       샘플 주문 — 빈 화면으로는 시연이 안 되므로
+       ===================================================== */
+    $('seedBtn').addEventListener('click', async () => {
+      const samples = [
+        { name: '김도연', phone: '010-2345-6789', email: 'doyeon@example.com',
+          zip: '06236', addr1: '서울 강남구 테헤란로 152', addr2: '10층 1005호',
+          memo: '부재 시 경비실에 맡겨주세요',
+          picks: [['omix-poster-mandala', 'A2', 1]], status: '입금대기' },
+        { name: '박서준', phone: '010-8765-4321', email: 'seojun@example.com',
+          zip: '04524', addr1: '서울 중구 세종대로 110', addr2: '3동 402호',
+          memo: '',
+          picks: [['omix-tee-logo', 'L', 1], ['omix-sticker-pack', '', 2]], status: '결제완료' },
+        { name: '이하늘', phone: '010-1111-2222', email: 'haneul@example.com',
+          zip: '48058', addr1: '부산 해운대구 해운대해변로 264', addr2: '201호',
+          memo: '배송 전 연락 주세요',
+          picks: [['omix-keycap-artisan', 'RED', 1], ['omix-keyring-symbol', 'BLACK', 1]], status: '배송준비중' }
+      ];
+
+      for (let i = 0; i < samples.length; i++) {
+        const s = samples[i];
+        const items = s.picks.map(([id, opt, qty]) => {
+          const p = S.get(id);
+          return {
+            id: p.id, name: p.name, opt: opt, qty: qty,
+            price: p.price, lineTotal: p.price * qty, typeLabel: p.typeLabel,
+            type: p.type
+          };
+        });
+        const amt = S.amounts(items);
+
+        await S.saveOrder({
+          orderNo: S.genOrderNo(),
+          /* 하루씩 앞당겨 목록에 시간차가 보이도록 */
+          createdAt: new Date(Date.now() - i * 86400000 - 3600000).toISOString(),
+          status: s.status,
+          items: items.map(it => ({
+            id: it.id, name: it.name, opt: it.opt, qty: it.qty,
+            price: it.price, lineTotal: it.lineTotal, typeLabel: it.typeLabel
+          })),
+          amount: amt,
+          orderer: { name: s.name, phone: s.phone, email: s.email },
+          shipping: S.needsShipping(items)
+            ? { needed: true, receiver: s.name, phone: s.phone,
+                zip: s.zip, addr1: s.addr1, addr2: s.addr2, memo: s.memo }
+            : { needed: false },
+          payment: { method: '무통장입금', depositor: s.name,
+                     bank: S.POLICY.bank.name + ' ' + S.POLICY.bank.account },
+          courier: '',
+          trackingNo: ''
+        });
+      }
+      render();
+    });
+
+    render();
+  })();
+  </script>
+
+</body>
+</html>

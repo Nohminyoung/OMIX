@@ -1,0 +1,791 @@
+/* =====================================================
+   OMIX — shop.css
+   커머스 흐름 전용 스타일
+   페이지: cart / checkout / order-complete / admin
+
+   style.css 의 디자인 토큰(--red, --bg, --gray-2 …)을 그대로 쓴다.
+   이 파일은 style.css 다음에 로드되어야 한다.
+   ===================================================== */
+
+
+/* =====================================================
+   [1] 레이아웃 골격
+   nav(88px)는 fixed. 결제 흐름에서는 마퀴를 쓰지 않으므로
+   본문 상단 여백은 nav 높이만 확보한다.
+   ===================================================== */
+body.page-shop {
+  background: var(--bg);
+  padding-top: var(--nav-h);
+  min-height: 100vh;
+}
+
+.shop-wrap {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 48px 32px 120px;
+}
+.shop-wrap.narrow { max-width: 760px; }
+.shop-wrap.wide   { max-width: 1440px; }
+
+
+/* =====================================================
+   [2] 데모 고지 바
+   실제 주문이 아님을 항상 보이게 한다.
+   ===================================================== */
+.shop-demo-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 9px 16px;
+  background: rgba(249, 21, 54, 0.09);
+  border-bottom: 1px solid rgba(249, 21, 54, 0.3);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: #ff8a9c;
+  text-align: center;
+}
+.shop-demo-bar b {
+  display: inline-block;
+  padding: 2px 6px;
+  border-radius: 3px;
+  background: var(--red);
+  color: #fff;
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+}
+
+
+/* =====================================================
+   [3] 페이지 헤더 + 스텝 인디케이터
+   ===================================================== */
+.shop-head { margin-bottom: 40px; }
+
+.shop-eyebrow {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.28em;
+  color: var(--red);
+  margin-bottom: 12px;
+}
+.shop-title {
+  font-size: clamp(34px, 5vw, 58px);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  line-height: 0.95;
+  color: var(--white);
+}
+.shop-sub {
+  margin-top: 12px;
+  font-size: 13px;
+  color: var(--gray-2);
+  line-height: 1.6;
+}
+
+.shop-steps {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 28px;
+  flex-wrap: wrap;
+}
+.shop-step {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--gray-3);
+}
+.shop-step i {
+  font-style: normal;
+  width: 20px; height: 20px;
+  display: grid; place-items: center;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  font-size: 9px;
+}
+.shop-step.on   { color: var(--red); }
+.shop-step.done { color: var(--gray-2); }
+.shop-step-sep {
+  width: 22px; height: 1px;
+  background: var(--gray-3);
+  opacity: 0.5;
+}
+
+
+/* =====================================================
+   [4] 카드 / 폼 공통
+   ===================================================== */
+.shop-card {
+  background: var(--bg-main);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 26px 26px 28px;
+  margin-bottom: 18px;
+}
+.shop-card-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  color: var(--white);
+  padding-bottom: 16px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.shop-field { margin-bottom: 16px; }
+.shop-field:last-child { margin-bottom: 0; }
+
+.shop-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--gray-2);
+  margin-bottom: 7px;
+}
+.shop-label .req { color: var(--red); margin-left: 3px; }
+
+.shop-input,
+.shop-select,
+.shop-textarea {
+  width: 100%;
+  padding: 12px 14px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--white);
+  font-family: var(--font);
+  font-size: 13px;
+  /* 사이트 전체가 커스텀 커서를 쓰므로(style.css body{cursor:none})
+     입력창의 기본 I빔도 숨긴다. 안 그러면 폼 위에서만 커서가 바뀐다. */
+  cursor: none;
+  transition: border-color 0.2s, background 0.2s;
+}
+.shop-input::placeholder,
+.shop-textarea::placeholder { color: var(--gray-3); }
+
+.shop-input:focus,
+.shop-select:focus,
+.shop-textarea:focus {
+  outline: none;
+  border-color: var(--red);
+  background: rgba(249, 21, 54, 0.04);
+}
+.shop-input:disabled,
+.shop-select:disabled { opacity: 0.45; cursor: none; }
+
+.shop-input.invalid,
+.shop-select.invalid { border-color: var(--red); }
+
+.shop-textarea { resize: vertical; min-height: 76px; }
+
+.shop-err {
+  display: none;
+  margin-top: 6px;
+  font-size: 11px;
+  color: var(--red);
+}
+.shop-err.show { display: block; }
+
+/* 2열 / 우편번호 행 */
+.shop-row-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.shop-row-zip {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+}
+
+.shop-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  font-size: 12px;
+  color: var(--gray-2);
+  cursor: none;
+  line-height: 1.5;
+}
+.shop-check input { accent-color: var(--red); margin-top: 2px; flex-shrink: 0; }
+.shop-check b { color: var(--white); font-weight: 600; }
+
+
+/* =====================================================
+   [5] 버튼
+   ===================================================== */
+.shop-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 13px 24px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: var(--red);
+  color: #fff;
+  font-family: var(--font);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  cursor: none;
+  transition: background 0.2s, transform 0.15s, opacity 0.2s;
+}
+.shop-btn:hover { background: var(--red-dk); transform: translateY(-1px); }
+.shop-btn:disabled {
+  background: var(--gray-3);
+  cursor: none;
+  transform: none;
+  opacity: 0.6;
+}
+.shop-btn.ghost {
+  background: transparent;
+  border-color: rgba(255,255,255,0.18);
+  color: var(--gray-1);
+}
+.shop-btn.ghost:hover { background: rgba(255,255,255,0.06); border-color: var(--white); }
+.shop-btn.sm { padding: 9px 14px; font-size: 11px; }
+.shop-btn.block { width: 100%; }
+
+
+/* =====================================================
+   [6] 장바구니 / 주문서 2단 레이아웃
+   ===================================================== */
+.shop-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 24px;
+  align-items: start;
+}
+
+
+/* ── 상품 줄 ── */
+.cart-line {
+  display: grid;
+  grid-template-columns: 84px minmax(0, 1fr) auto auto auto;
+  gap: 18px;
+  align-items: center;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--border);
+}
+.cart-line:last-child { border-bottom: none; padding-bottom: 0; }
+
+.cart-art {
+  width: 84px; height: 84px;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  position: relative;
+  overflow: hidden;
+}
+.cart-art span {
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  color: rgba(255,255,255,0.5);
+}
+
+.cart-info { min-width: 0; }
+.cart-info-label {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: var(--gray-3);
+  margin-bottom: 5px;
+}
+.cart-info-name {
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: var(--white);
+  margin-bottom: 5px;
+}
+.cart-info-meta { font-size: 11px; color: var(--gray-2); }
+.cart-info-meta em {
+  font-style: normal;
+  color: var(--gray-1);
+  padding: 1px 6px;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  margin-right: 6px;
+}
+
+/* 수량 스테퍼 */
+.cart-qty {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  overflow: hidden;
+}
+.cart-qty button {
+  width: 30px; height: 32px;
+  background: transparent;
+  border: none;
+  color: var(--gray-2);
+  font-size: 14px;
+  cursor: none;
+  transition: background 0.15s, color 0.15s;
+}
+.cart-qty button:hover { background: rgba(255,255,255,0.07); color: var(--white); }
+.cart-qty input {
+  width: 40px; height: 32px;
+  background: transparent;
+  border: none;
+  border-left: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  color: var(--white);
+  font-family: var(--font);
+  font-size: 13px;
+  font-weight: 700;
+  text-align: center;
+  cursor: none;
+}
+.cart-qty input:focus { outline: none; background: rgba(255,255,255,0.05); }
+
+.cart-line-total {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--white);
+  min-width: 92px;
+  text-align: right;
+}
+.cart-del {
+  width: 30px; height: 30px;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--gray-3);
+  font-size: 14px;
+  cursor: none;
+  transition: color 0.2s, border-color 0.2s;
+}
+.cart-del:hover { color: var(--red); border-color: var(--red); }
+
+
+/* ── 빈 장바구니 ── */
+.cart-empty {
+  padding: 90px 20px;
+  text-align: center;
+}
+.cart-empty-icon { font-size: 44px; opacity: 0.25; margin-bottom: 18px; }
+.cart-empty-msg {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--gray-1);
+  margin-bottom: 8px;
+}
+.cart-empty-sub {
+  font-size: 12px;
+  color: var(--gray-2);
+  margin-bottom: 26px;
+}
+
+
+/* =====================================================
+   [7] 금액 요약 박스
+   ===================================================== */
+.sum-box {
+  position: sticky;
+  top: calc(var(--nav-h) + 24px);
+  background: var(--bg-main);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+}
+.sum-title {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  color: var(--white);
+  padding-bottom: 16px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+.sum-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  font-size: 13px;
+  color: var(--gray-2);
+  margin-bottom: 11px;
+}
+.sum-row span:last-child { color: var(--gray-1); font-weight: 600; }
+.sum-row.free span:last-child { color: #39FF14; }
+.sum-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  padding-top: 16px;
+  margin-top: 16px;
+  border-top: 1px solid var(--border);
+}
+.sum-total-label {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: var(--white);
+}
+.sum-total-value {
+  font-size: 26px;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  color: var(--red);
+}
+.sum-note {
+  margin-top: 14px;
+  font-size: 11px;
+  line-height: 1.6;
+  color: var(--gray-3);
+}
+.sum-actions { margin-top: 20px; display: grid; gap: 9px; }
+
+
+/* =====================================================
+   [8] 주문서 — 결제수단
+   ===================================================== */
+.pay-opts { display: grid; gap: 10px; }
+.pay-opt {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 14px 16px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  cursor: none;
+  transition: border-color 0.2s, background 0.2s;
+}
+.pay-opt:hover { border-color: rgba(255,255,255,0.22); }
+.pay-opt input { accent-color: var(--red); }
+.pay-opt.sel { border-color: var(--red); background: rgba(249,21,54,0.05); }
+.pay-opt-name { font-size: 13px; font-weight: 700; color: var(--white); }
+.pay-opt-desc { font-size: 11px; color: var(--gray-2); margin-top: 3px; }
+.pay-opt.off { opacity: 0.4; cursor: none; }
+.pay-opt.off:hover { border-color: var(--border); }
+.pay-opt-tag {
+  margin-left: auto;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: var(--gray-3);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 3px 6px;
+}
+
+.bank-box {
+  margin-top: 14px;
+  padding: 16px;
+  background: var(--bg);
+  border: 1px dashed rgba(255,255,255,0.16);
+  border-radius: 8px;
+}
+.bank-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 12px;
+  margin-bottom: 8px;
+}
+.bank-row:last-child { margin-bottom: 0; }
+.bank-row span:first-child { color: var(--gray-3); }
+.bank-row span:last-child { color: var(--white); font-weight: 700; }
+
+
+/* =====================================================
+   [9] 주문완료
+   ===================================================== */
+.done-hero { text-align: center; padding: 60px 0 44px; }
+.done-mark {
+  width: 66px; height: 66px;
+  margin: 0 auto 26px;
+  border-radius: 50%;
+  display: grid; place-items: center;
+  background: rgba(249,21,54,0.12);
+  border: 1px solid var(--red);
+  color: var(--red);
+  font-size: 28px;
+}
+.done-title {
+  font-size: clamp(28px, 4.5vw, 44px);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  color: var(--white);
+  margin-bottom: 12px;
+}
+.done-sub { font-size: 13px; color: var(--gray-2); line-height: 1.7; }
+
+.done-no {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 26px;
+  padding: 13px 22px;
+  background: var(--bg-main);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+.done-no small {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--gray-3);
+}
+.done-no strong {
+  font-size: 17px;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  color: var(--red);
+}
+
+/* 진행 단계 */
+.done-flow {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin: 34px 0 8px;
+}
+.done-flow-step {
+  padding: 16px 12px;
+  background: var(--bg-main);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  text-align: center;
+}
+.done-flow-step.on { border-color: var(--red); background: rgba(249,21,54,0.06); }
+.done-flow-num {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  color: var(--gray-3);
+  margin-bottom: 8px;
+}
+.done-flow-step.on .done-flow-num { color: var(--red); }
+.done-flow-name { font-size: 12px; font-weight: 700; color: var(--gray-1); }
+.done-flow-desc { font-size: 10px; color: var(--gray-3); margin-top: 5px; line-height: 1.5; }
+
+.done-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 34px;
+  flex-wrap: wrap;
+}
+
+/* 주문 상세 요약 테이블 */
+.done-lines { margin-top: 4px; }
+.done-line {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 11px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 12px;
+}
+.done-line:last-child { border-bottom: none; }
+.done-line-name { color: var(--gray-1); }
+.done-line-name em { font-style: normal; color: var(--gray-3); }
+.done-line-val { color: var(--white); font-weight: 700; white-space: nowrap; }
+
+.kv-row {
+  display: grid;
+  grid-template-columns: 92px 1fr;
+  gap: 12px;
+  padding: 9px 0;
+  font-size: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.kv-row:last-child { border-bottom: none; }
+.kv-row dt { color: var(--gray-3); }
+.kv-row dd { color: var(--gray-1); line-height: 1.6; }
+
+
+/* =====================================================
+   [10] 관리자
+   ===================================================== */
+.adm-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+.adm-toolbar .spacer { flex: 1; }
+
+.adm-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(148px, 1fr));
+  gap: 12px;
+  margin-bottom: 24px;
+}
+.adm-stat {
+  background: var(--bg-main);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+}
+.adm-stat-k {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--gray-3);
+  margin-bottom: 9px;
+}
+.adm-stat-v {
+  font-size: 24px;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  color: var(--white);
+}
+.adm-stat-v.red { color: var(--red); }
+
+.adm-table-wrap {
+  background: var(--bg-main);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow-x: auto;
+}
+.adm-table {
+  width: 100%;
+  min-width: 940px;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+.adm-table th {
+  padding: 14px 16px;
+  text-align: left;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  color: var(--gray-3);
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+.adm-table td {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  color: var(--gray-1);
+  vertical-align: middle;
+}
+.adm-table tbody tr:last-child td { border-bottom: none; }
+.adm-table tbody tr.row-main { cursor: none; transition: background 0.15s; }
+.adm-table tbody tr.row-main:hover { background: rgba(255,255,255,0.03); }
+.adm-no { font-weight: 800; color: var(--white); white-space: nowrap; }
+.adm-date { color: var(--gray-3); white-space: nowrap; }
+.adm-amount { font-weight: 800; color: var(--white); white-space: nowrap; }
+
+/* 상태 뱃지 */
+.adm-pill {
+  display: inline-block;
+  padding: 4px 9px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  border: 1px solid;
+}
+.adm-pill[data-s="입금대기"]   { color:#FFB800; border-color:rgba(255,184,0,0.4);  background:rgba(255,184,0,0.09); }
+.adm-pill[data-s="결제완료"]   { color:#F91536; border-color:rgba(249,21,54,0.4);  background:rgba(249,21,54,0.09); }
+.adm-pill[data-s="배송준비중"] { color:#A647FF; border-color:rgba(166,71,255,0.4); background:rgba(166,71,255,0.09); }
+.adm-pill[data-s="배송중"]     { color:#00D4FF; border-color:rgba(0,212,255,0.4);  background:rgba(0,212,255,0.09); }
+.adm-pill[data-s="배송완료"]   { color:#39FF14; border-color:rgba(57,255,20,0.35); background:rgba(57,255,20,0.08); }
+.adm-pill[data-s="취소"]       { color:var(--gray-3); border-color:var(--border);  background:transparent; }
+
+/* 펼침 행 */
+.adm-detail-row > td { padding: 0; background: var(--bg); }
+.adm-detail {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 24px;
+  padding: 22px 16px 26px;
+  border-bottom: 1px solid var(--border);
+}
+.adm-detail h4 {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  color: var(--red);
+  margin-bottom: 12px;
+}
+/* 상세 칼럼 폭이 좁아 버튼을 옆에 두면 글자가 잘린다 — 아래 줄 전체 폭으로 */
+.adm-ship-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  align-items: end;
+}
+.adm-ship-form > button { grid-column: 1 / -1; margin-top: 2px; }
+.adm-empty {
+  padding: 70px 20px;
+  text-align: center;
+  color: var(--gray-2);
+  font-size: 13px;
+}
+.adm-empty p { margin-bottom: 20px; }
+
+.adm-warn {
+  display: flex;
+  gap: 10px;
+  padding: 14px 16px;
+  margin-bottom: 22px;
+  background: rgba(255,184,0,0.07);
+  border: 1px solid rgba(255,184,0,0.28);
+  border-radius: 8px;
+  font-size: 11.5px;
+  line-height: 1.65;
+  color: #ffd479;
+}
+.adm-warn b { color: #FFB800; }
+
+
+/* =====================================================
+   [11] 반응형
+   ===================================================== */
+@media (max-width: 980px) {
+  .shop-layout { grid-template-columns: 1fr; }
+  .sum-box { position: static; }
+  .done-flow { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* 모바일 CART(햄버거 메뉴 안)와 드롭다운 스타일은
+   style.css [26] / [26-1] 에서 전 페이지 공통으로 처리한다.
+   여기서는 결제 흐름 페이지에만 필요한 두 가지를 보정한다. */
+@media (max-width: 640px) {
+  body.page-shop .nav { padding: 0 18px; }
+
+  /* 기본값은 nav + 마퀴(36px) 아래를 기준으로 삼는데
+     결제 흐름 페이지에는 마퀴가 없어 그만큼 떠 보인다. */
+  body.page-shop .nav-menu.mobile-open { top: var(--nav-h); }
+}
+
+@media (max-width: 720px) {
+  .shop-wrap { padding: 32px 18px 90px; }
+  .cart-line {
+    grid-template-columns: 64px minmax(0, 1fr) auto;
+    grid-template-areas:
+      "art info del"
+      "art qty total";
+    gap: 10px 14px;
+  }
+  .cart-art  { grid-area: art; width: 64px; height: 64px; }
+  .cart-info { grid-area: info; }
+  .cart-qty  { grid-area: qty; }
+  .cart-line-total { grid-area: total; min-width: 0; }
+  .cart-del  { grid-area: del; }
+  .shop-row-2 { grid-template-columns: 1fr; }
+  .adm-ship-form { grid-template-columns: 1fr; }
+}

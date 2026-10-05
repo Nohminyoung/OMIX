@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OMIX — Cart</title>
+  <link rel="icon" href="symbol.png" type="image/png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,700&family=Stack+Sans+Notch&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="shop.css" />
+  <script src="theme.js"></script>
+  <script src="scroll-top.js" defer></script>
+  <script src="cursor.js" defer></script>
+  <script src="nav-mobile.js" defer></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/fontawesome.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/brands.min.css" />
+</head>
+<body class="page-shop">
+
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-dot" id="cursorDot"></div>
+
+  <!-- ══ NAV ══ -->
+  <nav class="nav" id="nav">
+    <ul class="nav-menu">
+      <li><a href="chart.html"     class="nav-link">Chart</a></li>
+      <li><a href="genre.html"     class="nav-link">Explore</a></li>
+      <li><a href="store.html"     class="nav-link">Store</a></li>
+      <li><a href="about.html"     class="nav-link">About</a></li>
+      <li><a href="my-player.html" class="nav-link">My Player</a></li>
+      <li class="nav-cart-item"><a href="cart.html" class="nav-link nav-cart-link">CART <span class="cart-badge">0</span></a></li>
+    </ul>
+    <a href="index.html" class="nav-logo-center"><img src="logo.png" alt="OMIX" class="logo-img" /></a>
+    <div class="nav-sns">
+      <a href="cart.html" class="nav-link nav-cart-link">
+        CART <span class="cart-badge" id="cartBadge">0</span>
+      </a>
+    </div>
+    <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+  </nav>
+
+  <!-- ══ 데모 고지 ══ -->
+  <div class="shop-demo-bar">
+    <b>DEMO</b>
+    <span>화면 구성 시연용입니다. 실제 주문은 접수되지 않으며, 입력값은 이 브라우저에만 저장됩니다.</span>
+  </div>
+
+  <main class="shop-wrap">
+
+    <!-- ── 헤더 ── -->
+    <header class="shop-head">
+      <p class="shop-eyebrow">STEP 01</p>
+      <h1 class="shop-title">CART</h1>
+      <p class="shop-sub">담은 상품을 확인하고 수량을 조정하세요.</p>
+
+      <div class="shop-steps">
+        <div class="shop-step on"><i>1</i> CART</div>
+        <div class="shop-step-sep"></div>
+        <div class="shop-step"><i>2</i> ORDER</div>
+        <div class="shop-step-sep"></div>
+        <div class="shop-step"><i>3</i> COMPLETE</div>
+      </div>
+    </header>
+
+    <!-- ── 본문 (JS 렌더) ── -->
+    <div id="cartBody"></div>
+
+  </main>
+
+  <!-- ══ FOOTER ══ -->
+  <footer class="idx-footer">
+    <div class="idx-footer-brand">
+      <img src="logo.png" alt="OMIX" class="idx-footer-logo" />
+      <p class="idx-footer-copy">© 2026 OMIX Studio.<br>Korean Buddhism × Modern Music.<br>Cheongju, Korea.</p>
+    </div>
+    <nav class="idx-footer-links">
+      <a href="chart.html"     class="idx-footer-link">Chart</a>
+      <a href="genre.html"     class="idx-footer-link">Explore</a>
+      <a href="store.html"     class="idx-footer-link">Store</a>
+      <a href="about.html"     class="idx-footer-link">About</a>
+      <a href="my-player.html" class="idx-footer-link">My Player</a>
+    </nav>
+  </footer>
+
+  <script src="products.js"></script>
+  <script>
+  (function () {
+    'use strict';
+
+    const body = document.getElementById('cartBody');
+    const S    = window.OmixShop;
+
+    /* localStorage 값이 그대로 innerHTML 로 들어가지 않도록 */
+    function esc(s) {
+      return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+      }[c]));
+    }
+
+    /* ── 상품 한 줄 ── */
+    function lineHTML(it) {
+      const optTag = it.opt ? '<em>' + esc(it.opt) + '</em>' : '';
+      return '' +
+      '<div class="cart-line" data-id="' + esc(it.id) + '" data-opt="' + esc(it.opt) + '">' +
+        '<div class="cart-art" style="background:' + it.art + '"><span>' + esc(it.typeLabel) + '</span></div>' +
+        '<div class="cart-info">' +
+          '<p class="cart-info-label">' + esc(it.label) + '</p>' +
+          '<p class="cart-info-name">' + esc(it.name) + '</p>' +
+          '<p class="cart-info-meta">' + optTag + S.won(it.price) + ' / 개</p>' +
+        '</div>' +
+        '<div class="cart-qty">' +
+          '<button type="button" data-act="dec" aria-label="수량 감소">−</button>' +
+          '<input type="text" inputmode="numeric" value="' + it.qty + '" data-act="qty" aria-label="수량" />' +
+          '<button type="button" data-act="inc" aria-label="수량 증가">+</button>' +
+        '</div>' +
+        '<div class="cart-line-total">' + S.won(it.lineTotal) + '</div>' +
+        '<button type="button" class="cart-del" data-act="del" aria-label="삭제">×</button>' +
+      '</div>';
+    }
+
+    /* ── 금액 요약 ── */
+    function sumHTML(items) {
+      const amt      = S.amounts(items);
+      const needShip = S.needsShipping(items);
+      const left     = S.POLICY.freeThreshold - amt.goods;
+
+      let shipRow;
+      if (!needShip) {
+        shipRow = '<div class="sum-row"><span>배송비</span><span>해당 없음</span></div>';
+      } else if (amt.shipping === 0) {
+        shipRow = '<div class="sum-row free"><span>배송비</span><span>무료</span></div>';
+      } else {
+        shipRow = '<div class="sum-row"><span>배송비</span><span>' + S.won(amt.shipping) + '</span></div>';
+      }
+
+      let note;
+      if (!needShip) {
+        note = '디지털 상품만 담겨 있어 배송 절차가 없습니다.';
+      } else if (amt.shipping > 0) {
+        note = S.won(left) + ' 더 담으면 무료배송입니다.';
+      } else {
+        note = S.won(S.POLICY.freeThreshold) + ' 이상 구매로 배송비가 면제되었습니다.';
+      }
+
+      return '' +
+      '<aside class="sum-box">' +
+        '<p class="sum-title">ORDER SUMMARY</p>' +
+        '<div class="sum-row"><span>상품금액</span><span>' + S.won(amt.goods) + '</span></div>' +
+        shipRow +
+        '<div class="sum-total">' +
+          '<span class="sum-total-label">TOTAL</span>' +
+          '<span class="sum-total-value">' + S.won(amt.total) + '</span>' +
+        '</div>' +
+        '<p class="sum-note">' + note + '</p>' +
+        '<div class="sum-actions">' +
+          '<a href="checkout.html" class="shop-btn block">주문서 작성 →</a>' +
+          '<a href="store.html" class="shop-btn ghost block">계속 쇼핑하기</a>' +
+          '<button type="button" class="shop-btn ghost block sm" id="clearBtn">장바구니 비우기</button>' +
+        '</div>' +
+      '</aside>';
+    }
+
+    /* ── 전체 렌더 ── */
+    function render() {
+      const items = S.cart.detailed();
+
+      if (!items.length) {
+        body.innerHTML =
+        '<div class="shop-card"><div class="cart-empty">' +
+          '<div class="cart-empty-icon">🛒</div>' +
+          '<p class="cart-empty-msg">장바구니가 비어 있습니다</p>' +
+          '<p class="cart-empty-sub">스토어에서 마음에 드는 상품을 담아보세요.</p>' +
+          '<a href="store.html" class="shop-btn">스토어 둘러보기</a>' +
+        '</div></div>';
+        return;
+      }
+
+      body.innerHTML =
+      '<div class="shop-layout">' +
+        '<section class="shop-card">' +
+          '<p class="shop-card-title"><span>담은 상품</span><span style="color:var(--gray-3);font-weight:600">' +
+            items.length + '종 · 총 ' + S.cart.count() + '개</span></p>' +
+          items.map(lineHTML).join('') +
+        '</section>' +
+        sumHTML(items) +
+      '</div>';
+    }
+
+    /* ── 이벤트 (위임) ── */
+    body.addEventListener('click', e => {
+      const btn = e.target.closest('[data-act]');
+      if (!btn) return;
+
+      if (btn.id === 'clearBtn') return;
+
+      const line = btn.closest('.cart-line');
+      if (!line) return;
+      const id  = line.dataset.id;
+      const opt = line.dataset.opt;
+      const act = btn.dataset.act;
+
+      if (act === 'inc') {
+        const cur = S.cart.get().find(l => l.id === id && (l.opt || '') === opt);
+        S.cart.setQty(id, opt, (cur ? cur.qty : 0) + 1);
+        render();
+      } else if (act === 'dec') {
+        const cur = S.cart.get().find(l => l.id === id && (l.opt || '') === opt);
+        S.cart.setQty(id, opt, (cur ? cur.qty : 0) - 1);
+        render();
+      } else if (act === 'del') {
+        S.cart.remove(id, opt);
+        render();
+      }
+    });
+
+    /* 수량 직접 입력 */
+    body.addEventListener('change', e => {
+      const input = e.target.closest('input[data-act="qty"]');
+      if (!input) return;
+      const line = input.closest('.cart-line');
+      S.cart.setQty(line.dataset.id, line.dataset.opt, input.value);
+      render();
+    });
+
+    /* 비우기 */
+    body.addEventListener('click', e => {
+      if (e.target.id !== 'clearBtn') return;
+      if (!confirm('장바구니를 비울까요?')) return;
+      S.cart.clear();
+      render();
+    });
+
+    render();
+  })();
+  </script>
+
+</body>
+</html>

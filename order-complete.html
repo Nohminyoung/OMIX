@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OMIX — Order Complete</title>
+  <link rel="icon" href="symbol.png" type="image/png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,700&family=Stack+Sans+Notch&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="shop.css" />
+  <script src="theme.js"></script>
+  <script src="scroll-top.js" defer></script>
+  <script src="cursor.js" defer></script>
+  <script src="nav-mobile.js" defer></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/fontawesome.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/brands.min.css" />
+</head>
+<body class="page-shop">
+
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-dot" id="cursorDot"></div>
+
+  <!-- ══ NAV ══ -->
+  <nav class="nav" id="nav">
+    <ul class="nav-menu">
+      <li><a href="chart.html"     class="nav-link">Chart</a></li>
+      <li><a href="genre.html"     class="nav-link">Explore</a></li>
+      <li><a href="store.html"     class="nav-link">Store</a></li>
+      <li><a href="about.html"     class="nav-link">About</a></li>
+      <li><a href="my-player.html" class="nav-link">My Player</a></li>
+      <li class="nav-cart-item"><a href="cart.html" class="nav-link nav-cart-link">CART <span class="cart-badge">0</span></a></li>
+    </ul>
+    <a href="index.html" class="nav-logo-center"><img src="logo.png" alt="OMIX" class="logo-img" /></a>
+    <div class="nav-sns">
+      <a href="cart.html" class="nav-link nav-cart-link">
+        CART <span class="cart-badge" id="cartBadge">0</span>
+      </a>
+    </div>
+    <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+  </nav>
+
+  <!-- ══ 데모 고지 ══ -->
+  <div class="shop-demo-bar">
+    <b>DEMO</b>
+    <span>실제로 접수된 주문이 아닙니다. 이 내용은 현재 브라우저에만 저장되어 있습니다.</span>
+  </div>
+
+  <main class="shop-wrap narrow" id="doneWrap"></main>
+
+  <!-- ══ FOOTER ══ -->
+  <footer class="idx-footer">
+    <div class="idx-footer-brand">
+      <img src="logo.png" alt="OMIX" class="idx-footer-logo" />
+      <p class="idx-footer-copy">© 2026 OMIX Studio.<br>Korean Buddhism × Modern Music.<br>Cheongju, Korea.</p>
+    </div>
+    <nav class="idx-footer-links">
+      <a href="chart.html"     class="idx-footer-link">Chart</a>
+      <a href="genre.html"     class="idx-footer-link">Explore</a>
+      <a href="store.html"     class="idx-footer-link">Store</a>
+      <a href="about.html"     class="idx-footer-link">About</a>
+      <a href="my-player.html" class="idx-footer-link">My Player</a>
+    </nav>
+  </footer>
+
+  <script src="products.js"></script>
+  <script>
+  (function () {
+    'use strict';
+
+    const S    = window.OmixShop;
+    const wrap = document.getElementById('doneWrap');
+
+    function esc(s) {
+      return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+      }[c]));
+    }
+
+    const no    = new URLSearchParams(location.search).get('no');
+    const order = no ? S.orders.find(no) : null;
+
+    /* ── 주문을 못 찾은 경우 ── */
+    if (!order) {
+      wrap.innerHTML =
+      '<div class="shop-card" style="margin-top:60px;text-align:center;padding:70px 26px">' +
+        '<div class="cart-empty-icon">🔍</div>' +
+        '<p class="cart-empty-msg">주문 정보를 찾을 수 없습니다</p>' +
+        '<p class="cart-empty-sub">주문번호가 올바르지 않거나, 다른 브라우저에서 넣은 주문입니다.<br />' +
+          'DEMO 환경에서는 주문이 해당 브라우저에만 저장됩니다.</p>' +
+        '<a href="store.html" class="shop-btn">스토어로 돌아가기</a>' +
+      '</div>';
+      return;
+    }
+
+    /* ── 날짜 포맷 ── */
+    const d = new Date(order.createdAt);
+    const dateStr = d.getFullYear() + '. ' +
+      String(d.getMonth() + 1).padStart(2, '0') + '. ' +
+      String(d.getDate()).padStart(2, '0') + ' ' +
+      String(d.getHours()).padStart(2, '0') + ':' +
+      String(d.getMinutes()).padStart(2, '0');
+
+    /* 입금 기한 — 주문일 +3일 */
+    const due = new Date(d.getTime() + 3 * 86400000);
+    const dueStr = (due.getMonth() + 1) + '월 ' + due.getDate() + '일';
+
+    /* ── 상품 목록 ── */
+    const linesHTML = order.items.map(it =>
+      '<div class="done-line">' +
+        '<span class="done-line-name">' + esc(it.name) +
+          (it.opt ? ' <em>(' + esc(it.opt) + ')</em>' : '') +
+          ' <em>× ' + it.qty + '</em></span>' +
+        '<span class="done-line-val">' + S.won(it.lineTotal) + '</span>' +
+      '</div>'
+    ).join('');
+
+    /* ── 배송지 블록 ── */
+    let shipHTML;
+    if (order.shipping && order.shipping.needed) {
+      const sp = order.shipping;
+      shipHTML =
+      '<section class="shop-card">' +
+        '<p class="shop-card-title"><span>배송지</span></p>' +
+        '<dl>' +
+          '<div class="kv-row"><dt>받는 분</dt><dd>' + esc(sp.receiver) + '</dd></div>' +
+          '<div class="kv-row"><dt>연락처</dt><dd>' + esc(sp.phone) + '</dd></div>' +
+          '<div class="kv-row"><dt>주소</dt><dd>(' + esc(sp.zip) + ') ' + esc(sp.addr1) + '<br />' + esc(sp.addr2) + '</dd></div>' +
+          (sp.memo ? '<div class="kv-row"><dt>배송 메모</dt><dd>' + esc(sp.memo) + '</dd></div>' : '') +
+        '</dl>' +
+      '</section>';
+    } else {
+      shipHTML =
+      '<section class="shop-card">' +
+        '<p class="shop-card-title"><span>전달 방법</span></p>' +
+        '<p style="font-size:12.5px;line-height:1.7;color:var(--gray-2)">' +
+          '디지털 상품 주문입니다. 입금 확인 후 <b style="color:var(--white)">' +
+          esc(order.orderer.email) + '</b> 으로 다운로드 링크가 발송됩니다.</p>' +
+      '</section>';
+    }
+
+    /* ── 진행 단계 ── */
+    const flow = [
+      { n: '01', name: '주문접수', desc: '주문서가 접수되었습니다' },
+      { n: '02', name: '입금확인', desc: '입금이 확인되면 다음 단계로' },
+      { n: '03', name: '배송준비', desc: '상품을 포장해 발송합니다' },
+      { n: '04', name: '배송완료', desc: '송장번호로 조회 가능' }
+    ];
+
+    wrap.innerHTML =
+    '<div class="done-hero">' +
+      '<div class="done-mark">✓</div>' +
+      '<h1 class="done-title">주문이 접수되었습니다</h1>' +
+      '<p class="done-sub">아래 계좌로 입금해 주시면 확인 후 발송해 드립니다.<br />' +
+        '입금 기한은 <b style="color:var(--white)">' + dueStr + '</b> 까지입니다.</p>' +
+      '<div class="done-no"><small>ORDER NO.</small><strong>' + esc(order.orderNo) + '</strong></div>' +
+    '</div>' +
+
+    '<div class="done-flow">' +
+      flow.map((f, i) =>
+        '<div class="done-flow-step' + (i === 0 ? ' on' : '') + '">' +
+          '<p class="done-flow-num">' + f.n + '</p>' +
+          '<p class="done-flow-name">' + f.name + '</p>' +
+          '<p class="done-flow-desc">' + f.desc + '</p>' +
+        '</div>'
+      ).join('') +
+    '</div>' +
+
+    '<section class="shop-card" style="margin-top:26px">' +
+      '<p class="shop-card-title"><span>입금 계좌</span>' +
+        '<span class="adm-pill" data-s="' + esc(order.status) + '">' + esc(order.status) + '</span></p>' +
+      '<div class="bank-box" style="margin-top:0">' +
+        '<div class="bank-row"><span>은행</span><span>' + esc(S.POLICY.bank.name) + '</span></div>' +
+        '<div class="bank-row"><span>계좌번호</span><span>' + esc(S.POLICY.bank.account) + '</span></div>' +
+        '<div class="bank-row"><span>예금주</span><span>' + esc(S.POLICY.bank.holder) + '</span></div>' +
+        '<div class="bank-row"><span>입금자명</span><span>' + esc(order.payment.depositor) + '</span></div>' +
+        '<div class="bank-row" style="padding-top:8px;border-top:1px solid var(--border)">' +
+          '<span>입금하실 금액</span>' +
+          '<span style="color:var(--red);font-size:15px">' + S.won(order.amount.total) + '</span></div>' +
+      '</div>' +
+    '</section>' +
+
+    '<section class="shop-card">' +
+      '<p class="shop-card-title"><span>주문 내역</span>' +
+        '<span style="color:var(--gray-3);font-weight:600;font-size:11px">' + dateStr + '</span></p>' +
+      '<div class="done-lines">' + linesHTML + '</div>' +
+      '<div class="sum-row" style="margin-top:16px;padding-top:14px;border-top:1px solid var(--border)">' +
+        '<span>상품금액</span><span>' + S.won(order.amount.goods) + '</span></div>' +
+      '<div class="sum-row"><span>배송비</span><span>' +
+        (order.shipping.needed ? (order.amount.shipping === 0 ? '무료' : S.won(order.amount.shipping)) : '해당 없음') +
+      '</span></div>' +
+      '<div class="sum-total">' +
+        '<span class="sum-total-label">TOTAL</span>' +
+        '<span class="sum-total-value">' + S.won(order.amount.total) + '</span>' +
+      '</div>' +
+    '</section>' +
+
+    '<section class="shop-card">' +
+      '<p class="shop-card-title"><span>주문자</span></p>' +
+      '<dl>' +
+        '<div class="kv-row"><dt>이름</dt><dd>' + esc(order.orderer.name) + '</dd></div>' +
+        '<div class="kv-row"><dt>연락처</dt><dd>' + esc(order.orderer.phone) + '</dd></div>' +
+        '<div class="kv-row"><dt>이메일</dt><dd>' + esc(order.orderer.email) + '</dd></div>' +
+      '</dl>' +
+    '</section>' +
+
+    shipHTML +
+
+    '<div class="done-actions">' +
+      '<a href="store.html" class="shop-btn ghost">스토어로 돌아가기</a>' +
+      '<a href="admin.html" class="shop-btn">판매자 화면에서 확인 →</a>' +
+    '</div>' +
+
+    '<p style="margin-top:22px;text-align:center;font-size:11px;line-height:1.7;color:var(--gray-3)">' +
+      '실제 서비스라면 이 시점에 주문 확인 메일·문자가 발송되고,<br />' +
+      '판매자 관리자 화면에 신규 주문으로 표시됩니다.</p>';
+
+  })();
+  </script>
+
+</body>
+</html>

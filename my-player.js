@@ -58,6 +58,16 @@ const TRACKS = [
   { name: '파도에 맡겨',          artist: 'OMIX Studio', time: '4:09', sec: 249, emoji: '🎴', bg: 'linear-gradient(135deg, #1a0808 0%, #280a0a 50%, #1a0808 100%)', audioSrc: 'music/파도에%20맡겨.mp3',           cover: 'covers/파도에%20맡겨.jpg' },
 ];
 
+/* QR로 받은 트랙 — card-overlay.js 가 localStorage('omix_live_tracks')에 저장한 곡을
+   TRACKS 뒤에 붙여서 같은 플레이어로 재생한다 */
+const LIVE_START = TRACKS.length;
+let LIVE_TRACKS = [];
+try { LIVE_TRACKS = JSON.parse(localStorage.getItem('omix_live_tracks') || '[]'); } catch (e) {}
+LIVE_TRACKS.forEach(t => {
+  TRACKS.push({ name: t.trackName, artist: t.djName, time: '--:--', sec: 0, emoji: 'LIVE',
+    bg: 'linear-gradient(135deg, #1a0408 0%, #300a12 50%, #0a0408 100%)', audioSrc: t.audioSrc, liveId: t.id });
+});
+
 /* 실제 오디오 재생 담당 */
 const audioEl = new Audio();
 audioEl.preload = 'auto';
@@ -150,6 +160,9 @@ function loadTrack(idx, autoplay) {
     row.classList.toggle('current', i === idx);
     row.querySelector('.pt-num').textContent = i === idx ? '▶' : String(i + 1).padStart(2, '0');
   });
+  document.querySelectorAll('.live-track').forEach(row => {
+    row.classList.toggle('current', Number(row.dataset.track) === idx);
+  });
 
   if (autoplay) {
     audioEl.play().catch(() => {});
@@ -178,6 +191,13 @@ function updateProgressUI() {
   if (progressFill)   progressFill.style.width  = progress + '%';
   if (currentTimeEl)  currentTimeEl.textContent = formatTime(progress, audioEl.duration || TRACKS[currentIdx].sec);
 }
+
+/* 곡 길이를 실제 파일 기준으로 표시 (QR 트랙은 길이를 미리 모르므로) */
+audioEl.addEventListener('loadedmetadata', () => {
+  const total = formatTime(100, audioEl.duration);
+  if (nowTotalTime) nowTotalTime.textContent = total;
+  if (totalTimeEl)  totalTimeEl.textContent  = total;
+});
 
 /* 실제 재생 시간에 맞춰 진행률 동기화 */
 audioEl.addEventListener('timeupdate', () => {
@@ -326,6 +346,33 @@ document.querySelectorAll('.saved-track').forEach(el => {
 
 
 /* =====================================================
+   [13-B] QR로 받은 트랙 칸 — 목록 렌더링 + 클릭 재생
+   ===================================================== */
+const liveListEl  = document.getElementById('liveTrackList');
+const liveEmptyEl = document.getElementById('liveEmpty');
+if (liveListEl) {
+  if (liveEmptyEl) liveEmptyEl.style.display = LIVE_TRACKS.length ? 'none' : '';
+  LIVE_TRACKS.forEach((t, i) => {
+    const row = document.createElement('div');
+    row.className = 'saved-track live-track';
+    row.dataset.track = LIVE_START + i;
+    const num = t.cardNumber ? 'NO.' + String(t.cardNumber).padStart(2, '0') : 'DEMO';
+    row.innerHTML = `
+      <div class="saved-track-art">LIVE</div>
+      <div class="saved-track-info">
+        <p class="saved-track-name"></p>
+        <p class="saved-track-artist"></p>
+      </div>
+      <span class="live-badge">${num}</span>`;
+    row.querySelector('.saved-track-name').textContent   = t.trackName;
+    row.querySelector('.saved-track-artist').textContent = t.djName + ' · ' + new Date(t.createdAt).toLocaleDateString('ko-KR');
+    row.addEventListener('click', () => loadTrack(LIVE_START + i, true));
+    liveListEl.appendChild(row);
+  });
+}
+
+
+/* =====================================================
    [14] QUEUE / HISTORY 탭 전환
    탭 클릭 시 해당 콘텐츠 표시 (History는 현재 같은 목록 사용)
    ===================================================== */
@@ -361,6 +408,16 @@ if (globalLike) {
   });
 }
 
+/* 볼륨 — 좌 패널 볼륨과 하단 미니 플레이어 볼륨이 같은 값으로 실제 오디오를 조절한다.
+   (빨간 채움 · 스피커 아이콘 · 음소거 토글은 player-ui.js) */
+const volSliders = document.querySelectorAll('.vol-slider');
+volSliders.forEach(slider => {
+  slider.addEventListener('input', () => {
+    audioEl.volume = slider.value / 100;
+    volSliders.forEach(other => { if (other !== slider) other.value = slider.value; });
+  });
+});
+
 
 /* =====================================================
    [16] 모바일 햄버거 메뉴
@@ -380,7 +437,10 @@ if (hamburger) {
    [17] 초기 로드
    페이지 진입 시 첫 번째 트랙 로드
    ===================================================== */
-loadTrack(currentIdx);
+/* 카드의 'My Player에서 보기'(?live=<id>)로 들어오면 받은 곡을 바로 띄운다 */
+const liveParam = new URLSearchParams(location.search).get('live');
+const liveIdx   = TRACKS.findIndex(t => t.liveId && t.liveId === liveParam);
+loadTrack(liveIdx >= 0 ? liveIdx : currentIdx);
 
 
 /* =====================================================

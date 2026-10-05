@@ -165,56 +165,70 @@ statItems.forEach(item => statObserver.observe(item));
 
 
 /* =====================================================
-   [6] 미니 플레이어 — 재생/정지
+   [6] 오디오 — 에디토리얼 LP 버튼 · 하단 미니 플레이어가
+   <audio id="aboutAudio"> 하나를 같이 제어한다.
+   재생 상태는 audio 의 play/pause 이벤트로만 UI 에 반영 → 어느 쪽에서 틀어도 함께 따라온다
    ===================================================== */
+const aboutAudio    = document.getElementById('aboutAudio');
 const playPauseBtn  = document.getElementById('playPauseBtn');
 const playerDisc    = document.getElementById('playerDisc');
 const progressFill  = document.getElementById('progressFill');
 const currentTimeEl = document.getElementById('currentTime');
+const totalTimeEl   = document.getElementById('totalTime');
+const aboutPlayBtn  = document.getElementById('aboutPlay');
+const aboutDisc     = document.getElementById('aboutDisc');
+const aboutRecord   = document.querySelector('.ab-record-wrap');
 
-let isPlaying = false;
-let progress  = 0;
-let timer;
-
-function formatTime(pct) {
-  const total = 228;
-  const sec   = Math.floor(total * pct / 100);
+function formatTime(sec) {
+  sec = Math.floor(sec || 0);
   return Math.floor(sec / 60) + ':' + String(sec % 60).padStart(2, '0');
 }
 
-if (playPauseBtn && playerDisc && progressFill && currentTimeEl) {
-  playPauseBtn.addEventListener('click', () => {
-    isPlaying = !isPlaying;
-    playPauseBtn.textContent = isPlaying ? '⏸' : '▶';
+function toggleAudio() {
+  if (!aboutAudio) return;
+  if (aboutAudio.paused) aboutAudio.play().catch(() => {});
+  else aboutAudio.pause();
+}
 
-    if (isPlaying) {
-      playerDisc.classList.add('spinning');
-      timer = setInterval(() => {
-        progress = Math.min(progress + 0.05, 100);
-        progressFill.style.width = progress + '%';
-        currentTimeEl.textContent = formatTime(progress);
-        if (progress >= 100) {
-          clearInterval(timer); isPlaying = false; playPauseBtn.textContent = '▶';
-        }
-      }, 100);
-    } else {
-      playerDisc.classList.remove('spinning');
-      clearInterval(timer);
+if (aboutAudio) {
+  function syncPlaying() {
+    const on = !aboutAudio.paused;
+    if (playPauseBtn) playPauseBtn.textContent = on ? '⏸' : '▶';
+    if (playerDisc)   playerDisc.classList.toggle('spinning', on);
+    /* [10] 에디토리얼 LP: 판 회전 + 호버 효과(연꽃 만다라 · 물결)가 재생 내내 켜진다 */
+    if (aboutPlayBtn) {
+      aboutPlayBtn.textContent = on ? '⏸' : '▶';
+      aboutPlayBtn.classList.toggle('is-playing', on);
     }
+    if (aboutDisc)   aboutDisc.classList.toggle('spinning', on);
+    if (aboutRecord) aboutRecord.classList.toggle('is-playing', on);
+  }
+  aboutAudio.addEventListener('play',  syncPlaying);
+  aboutAudio.addEventListener('pause', syncPlaying);
+  aboutAudio.addEventListener('ended', syncPlaying);
+
+  aboutAudio.addEventListener('loadedmetadata', () => {
+    if (totalTimeEl) totalTimeEl.textContent = formatTime(aboutAudio.duration);
   });
+  aboutAudio.addEventListener('timeupdate', () => {
+    const pct = aboutAudio.duration ? aboutAudio.currentTime / aboutAudio.duration * 100 : 0;
+    if (progressFill)  progressFill.style.width = pct + '%';
+    if (currentTimeEl) currentTimeEl.textContent = formatTime(aboutAudio.currentTime);
+  });
+
+  if (playPauseBtn) playPauseBtn.addEventListener('click', toggleAudio);
 }
 
 
 /* =====================================================
-   [7] 프로그레스바 클릭
+   [7] 프로그레스바 클릭 → 해당 위치로 이동
    ===================================================== */
 const progressBar = document.getElementById('progressBar');
-if (progressBar) {
+if (progressBar && aboutAudio) {
   progressBar.addEventListener('click', e => {
+    if (!aboutAudio.duration) return;
     const rect = progressBar.getBoundingClientRect();
-    progress = ((e.clientX - rect.left) / rect.width) * 100;
-    if (progressFill)  progressFill.style.width = progress + '%';
-    if (currentTimeEl) currentTimeEl.textContent = formatTime(progress);
+    aboutAudio.currentTime = ((e.clientX - rect.left) / rect.width) * aboutAudio.duration;
   });
 }
 
@@ -248,20 +262,9 @@ if (hamburger) {
 
 /* =====================================================
    [10] 에디토리얼 LP 디스크 컨트롤
-   aboutPlay 버튼 클릭 → aboutDisc 회전 토글
+   aboutPlay 버튼 클릭 → 노래 재생/정지 (회전 · 효과 표시는 [6] syncPlaying)
    ===================================================== */
-const aboutPlayBtn = document.getElementById('aboutPlay');
-const aboutDisc    = document.getElementById('aboutDisc');
-let aboutPlaying = false;
-
-if (aboutPlayBtn && aboutDisc) {
-  aboutPlayBtn.addEventListener('click', () => {
-    aboutPlaying = !aboutPlaying;
-    aboutPlayBtn.textContent = aboutPlaying ? '⏸' : '▶';
-    aboutPlayBtn.classList.toggle('is-playing', aboutPlaying);
-    aboutDisc.classList.toggle('spinning', aboutPlaying);
-  });
-}
+if (aboutPlayBtn) aboutPlayBtn.addEventListener('click', toggleAudio);
 
 
 /* =====================================================

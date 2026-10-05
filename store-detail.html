@@ -10,6 +10,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
   <script src="theme.js"></script>
+  <script src="scroll-top.js" defer></script>
+  <script src="player-ui.js" defer></script>
   <script src="click-sound.js"></script>
   <style>
   /* ============================================================
@@ -108,7 +110,7 @@
   .stdet-options.active { pointer-events: all; }
 
   .stdet-opt-eyebrow {
-    font-size: 9px; font-weight: 700; letter-spacing: 0.28em;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.28em;
     text-transform: uppercase; color: var(--red);
     margin-bottom: 12px;
     display: flex; align-items: center; gap: 8px;
@@ -296,7 +298,7 @@
     padding-bottom: 18px; border-bottom: 1px solid var(--border);
   }
   .stdet-cuts-title {
-    font-size: 10px; font-weight: 700; letter-spacing: 0.28em;
+    font-size: 12px; font-weight: 700; letter-spacing: 0.28em;
     text-transform: uppercase; color: var(--red);
   }
   .stdet-cuts-count { font-size: 10px; color: var(--gray-3); letter-spacing: 0.1em; }
@@ -378,7 +380,7 @@
   }
   .stdet-fullcut-info { text-align: right; }
   .stdet-fullcut-tag {
-    display: block; font-size: 9px; font-weight: 700;
+    display: block; font-size: 11px; font-weight: 700;
     letter-spacing: 0.28em; text-transform: uppercase;
     color: var(--red); margin-bottom: 5px;
   }
@@ -400,7 +402,7 @@
     text-transform: uppercase; color: var(--gray-3);
   }
   .stdet-related-all {
-    font-size: 10px; font-weight: 700; letter-spacing: 0.15em;
+    font-size: 12px; font-weight: 700; letter-spacing: 0.15em;
     text-transform: uppercase; color: var(--red); transition: opacity 0.2s;
   }
   .stdet-related-all:hover { opacity: 0.7; }
@@ -549,9 +551,13 @@
       <li><a href="store.html"     class="nav-link">Store</a></li>
       <li><a href="about.html"     class="nav-link">About</a></li>
       <li><a href="my-player.html" class="nav-link">My Player</a></li>
+      <li class="nav-cart-item"><a href="cart.html" class="nav-link nav-cart-link">CART <span class="cart-badge">0</span></a></li>
     </ul>
     <a href="index.html" class="nav-logo-center"><img src="logo.png" alt="OMIX" class="logo-img" /></a>
     <div class="nav-sns">
+      <a href="cart.html" class="nav-link nav-cart-link">
+        CART <span class="cart-badge" id="cartBadge">0</span>
+      </a>
       <a href="#" class="nav-sns-link" aria-label="Spotify"    target="_blank"><i class="fab fa-spotify"></i></a>
       <a href="#" class="nav-sns-link" aria-label="Instagram"  target="_blank"><i class="fab fa-instagram"></i></a>
       <a href="#" class="nav-sns-link" aria-label="YouTube"    target="_blank"><i class="fab fa-youtube"></i></a>
@@ -841,7 +847,7 @@
       <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
       <div class="progress-times"><span id="currentTime">0:00</span><span>3:48</span></div>
     </div>
-    <div class="player-vol"><span>🔊</span><input type="range" class="vol-slider" min="0" max="100" value="70"/></div>
+    <div class="player-vol"><button type="button" class="vol-btn" aria-label="음소거"></button><input type="range" class="vol-slider" min="0" max="100" value="70"/></div>
     <button class="player-like">♡</button>
   </div>
 
@@ -859,6 +865,7 @@
     </div>
   </div>
 
+  <script src="products.js"></script>
   <script src="now-playing-panel.js"></script>
   <script>
   (function () {
@@ -966,21 +973,150 @@
     window.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
 
-    /* ── 사이즈 버튼 ── */
-    document.querySelectorAll('.stdet-size-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.stdet-size-btn').forEach(b => b.classList.remove('sel'));
-        btn.classList.add('sel');
-      });
-    });
+    /* ══════════════════════════════════════════════════
+       상품 바인딩 + 장바구니 담기
 
-    /* ── ADD TO CART ── */
-    document.getElementById('stdetBuyBtn').addEventListener('click', function() {
-      const orig = this.innerHTML;
-      this.innerHTML = '✓ &nbsp;ADDED!';
-      this.style.background = '#22c55e';
-      setTimeout(() => { this.innerHTML = orig; this.style.background = ''; }, 1800);
-    });
+       ?id=<슬러그> 로 넘어온 상품을 products.js 에서 찾아
+       옵션 패널을 채운다. 상품 정보는 products.js 한 곳에만 있다.
+       ══════════════════════════════════════════════════ */
+    (function () {
+      const S = window.OmixShop;
+      if (!S) return;
+
+      const qid = new URLSearchParams(location.search).get('id');
+      const p   = S.get(qid) || S.PRODUCTS[0];
+      const q   = sel => document.querySelector(sel);
+
+      /* ── 텍스트 ── */
+      q('.stdet-opt-eyebrow').textContent = p.label;
+      q('.stdet-opt-title').textContent   = p.name;
+      q('.stdet-opt-sub').textContent     = p.typeLabel + ' · ' + p.desc;
+      q('.stdet-opt-price').textContent   = S.won(p.price);
+
+      /* 배송비 안내는 정책값에서 계산 (products.js POLICY) */
+      const note = q('.stdet-opt-price-note');
+      if (p.type === 'digital') {
+        note.textContent = '다운로드 상품';
+      } else if (p.price >= S.POLICY.freeThreshold) {
+        note.textContent = '무료배송';
+      } else {
+        note.textContent = '배송비 ' + S.won(S.POLICY.shippingFee) + ' 별도';
+      }
+
+      const barName  = q('.stdet-bar-name');
+      const barPrice = q('.stdet-bar-price');
+      if (barName)  barName.textContent  = p.name + ' · OMIX';
+      if (barPrice) barPrice.textContent = S.won(p.price);
+      document.title = 'OMIX — ' + p.name;
+
+      /* ── 좌측 세로 라벨 ── */
+      const side = document.getElementById('stdetSideLabel');
+      if (side) {
+        side.innerHTML =
+          '<strong>' + p.typeLabel + '</strong>' +
+          '<span>' + p.code + '</span>' +
+          '<span>2026</span>';
+      }
+
+      /* ── 스펙 표 ── */
+      const specWrap = q('.stdet-opt-specs');
+      if (specWrap && p.specs) {
+        specWrap.innerHTML = p.specs.map(s =>
+          '<div class="stdet-opt-spec-row">' +
+            '<span class="stdet-opt-spec-k">' + s.k + '</span>' +
+            '<span class="stdet-opt-spec-v">' + s.v + '</span>' +
+          '</div>'
+        ).join('');
+      }
+
+      /* ── INFO 모달 ── */
+      const mTitle = q('.stdet-modal-ptitle');
+      const mSub   = q('.stdet-modal-psub');
+      const mDesc  = q('.stdet-modal-desc');
+      if (mTitle) mTitle.innerHTML  = p.name + '<br />' + p.code;
+      if (mSub)   mSub.textContent  = 'A PRODUCT BY OMIX';
+      if (mDesc)  mDesc.textContent = p.intro;
+
+      /* ── 이미지 파일명(가칭)을 상품에 맞춰 교체 ──
+         IMAGES 는 위 스크롤 섹션에서 선언된 배열.
+         const 라 재할당은 못 하지만 내용은 바꿀 수 있다. */
+      const SUFFIX = ['main', 'side', 'back', 'detail'];
+      IMAGES.forEach((im, i) => {
+        im.ph = 'product-' + p.id + '-' + SUFFIX[i] + '.jpg';
+      });
+      const phSpan = q('.stdet-img-ph span');
+      if (phSpan) phSpan.textContent = IMAGES[0].ph;
+
+      /* ── 관련 상품 — 현재 상품을 뺀 4개 ── */
+      const relGrid = q('.stdet-related-grid');
+      if (relGrid) {
+        relGrid.innerHTML = S.PRODUCTS
+          .filter(x => x.id !== p.id)
+          .slice(0, 4)
+          .map(x =>
+            '<a href="store-detail.html?id=' + encodeURIComponent(x.id) + '" class="stdet-rel-card">' +
+              '<div class="stdet-rel-img" style="background:' + x.art + '">' +
+                '<div class="stdet-rel-ph"><em>🖼</em><span>product-' + x.id + '-thumb.jpg</span></div>' +
+              '</div>' +
+              '<p class="stdet-rel-name">' + x.name + '</p>' +
+              '<p class="stdet-rel-price">' + S.won(x.price) + '</p>' +
+            '</a>'
+          ).join('');
+      }
+
+      /* ── 옵션(사이즈) ── */
+      const sizeLabel = q('.stdet-opt-size-label');
+      const sizeWrap  = q('.stdet-opt-sizes');
+      let selectedOpt = '';
+
+      if (p.options) {
+        sizeLabel.textContent = p.options.name;
+        sizeWrap.innerHTML = p.options.values.map((v, i) =>
+          '<button class="stdet-size-btn' + (i === 0 ? ' sel' : '') + '" data-sz="' + v + '">' + v + '</button>'
+        ).join('');
+        selectedOpt = p.options.values[0];
+
+        sizeWrap.addEventListener('click', e => {
+          const b = e.target.closest('.stdet-size-btn');
+          if (!b) return;
+          sizeWrap.querySelectorAll('.stdet-size-btn').forEach(x => x.classList.remove('sel'));
+          b.classList.add('sel');
+          selectedOpt = b.dataset.sz;
+        });
+      } else {
+        /* 옵션이 없는 상품(LP·디지털)은 SIZE 영역 자체를 숨긴다 */
+        sizeLabel.style.display = 'none';
+        sizeWrap.style.display  = 'none';
+      }
+
+      /* ── ADD TO CART — 실제로 장바구니에 담긴다 ── */
+      const buyBtn = document.getElementById('stdetBuyBtn');
+      const orig   = buyBtn.innerHTML;
+      let resetT   = null;
+      let goLink   = null;
+
+      buyBtn.addEventListener('click', function () {
+        S.cart.add(p.id, selectedOpt, 1);
+
+        this.innerHTML = '✓ &nbsp;장바구니에 담았습니다';
+        this.style.background = '#22c55e';
+        clearTimeout(resetT);
+        resetT = setTimeout(() => {
+          this.innerHTML = orig;
+          this.style.background = '';
+        }, 1800);
+
+        /* 담은 뒤에는 장바구니로 가는 길을 열어둔다 */
+        if (!goLink) {
+          goLink = document.createElement('a');
+          goLink.href = 'cart.html';
+          goLink.className = 'stdet-opt-wish-btn';
+          goLink.textContent = '장바구니 보기 →';
+          goLink.style.cssText = 'display:block;text-align:center;text-decoration:none;margin-top:8px';
+          this.insertAdjacentElement('afterend', goLink);
+        }
+      });
+    })();
 
     /* ── INFO 모달 ── */
     const modal   = document.getElementById('stdetModal');

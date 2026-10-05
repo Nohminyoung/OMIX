@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OMIX — Checkout</title>
+  <link rel="icon" href="symbol.png" type="image/png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,700&family=Stack+Sans+Notch&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="shop.css" />
+  <script src="theme.js"></script>
+  <script src="scroll-top.js" defer></script>
+  <script src="cursor.js" defer></script>
+  <script src="nav-mobile.js" defer></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/fontawesome.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/brands.min.css" />
+  <!-- 카카오(다음) 우편번호 서비스 — 무료·가입 불필요 -->
+  <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+</head>
+<body class="page-shop">
+
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-dot" id="cursorDot"></div>
+
+  <!-- ══ NAV ══ -->
+  <nav class="nav" id="nav">
+    <ul class="nav-menu">
+      <li><a href="chart.html"     class="nav-link">Chart</a></li>
+      <li><a href="genre.html"     class="nav-link">Explore</a></li>
+      <li><a href="store.html"     class="nav-link">Store</a></li>
+      <li><a href="about.html"     class="nav-link">About</a></li>
+      <li><a href="my-player.html" class="nav-link">My Player</a></li>
+      <li class="nav-cart-item"><a href="cart.html" class="nav-link nav-cart-link">CART <span class="cart-badge">0</span></a></li>
+    </ul>
+    <a href="index.html" class="nav-logo-center"><img src="logo.png" alt="OMIX" class="logo-img" /></a>
+    <div class="nav-sns">
+      <a href="cart.html" class="nav-link nav-cart-link">
+        CART <span class="cart-badge" id="cartBadge">0</span>
+      </a>
+    </div>
+    <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+  </nav>
+
+  <!-- ══ 데모 고지 ══ -->
+  <div class="shop-demo-bar">
+    <b>DEMO</b>
+    <span>화면 구성 시연용입니다. 실제 주문·결제가 이뤄지지 않으니 실제 주소·연락처를 입력하지 마세요.</span>
+  </div>
+
+  <main class="shop-wrap">
+
+    <header class="shop-head">
+      <p class="shop-eyebrow">STEP 02</p>
+      <h1 class="shop-title">ORDER</h1>
+      <p class="shop-sub">주문자 정보와 받으실 주소를 입력해 주세요.</p>
+
+      <div class="shop-steps">
+        <div class="shop-step done"><i>1</i> CART</div>
+        <div class="shop-step-sep"></div>
+        <div class="shop-step on"><i>2</i> ORDER</div>
+        <div class="shop-step-sep"></div>
+        <div class="shop-step"><i>3</i> COMPLETE</div>
+      </div>
+    </header>
+
+    <form id="coForm" novalidate>
+      <div class="shop-layout">
+
+        <!-- ══════════ 좌: 입력 영역 ══════════ -->
+        <div>
+
+          <!-- ── 주문 상품 ── -->
+          <section class="shop-card">
+            <p class="shop-card-title">
+              <span>주문 상품</span>
+              <a href="cart.html" style="font-size:11px;font-weight:600;color:var(--gray-3)">장바구니 수정 →</a>
+            </p>
+            <div id="coItems"></div>
+          </section>
+
+          <!-- ── 주문자 정보 ── -->
+          <section class="shop-card">
+            <p class="shop-card-title"><span>주문자 정보</span></p>
+
+            <div class="shop-row-2">
+              <div class="shop-field">
+                <label class="shop-label" for="ordName">이름<span class="req">*</span></label>
+                <input class="shop-input" type="text" id="ordName" autocomplete="name" placeholder="홍길동" />
+                <p class="shop-err" data-for="ordName">이름을 입력해 주세요.</p>
+              </div>
+              <div class="shop-field">
+                <label class="shop-label" for="ordPhone">연락처<span class="req">*</span></label>
+                <input class="shop-input" type="tel" id="ordPhone" autocomplete="tel" placeholder="010-0000-0000" />
+                <p class="shop-err" data-for="ordPhone">올바른 연락처를 입력해 주세요.</p>
+              </div>
+            </div>
+
+            <div class="shop-field">
+              <label class="shop-label" for="ordEmail">이메일<span class="req">*</span></label>
+              <input class="shop-input" type="email" id="ordEmail" autocomplete="email" placeholder="you@example.com" />
+              <p class="shop-err" data-for="ordEmail">올바른 이메일 주소를 입력해 주세요.</p>
+            </div>
+          </section>
+
+          <!-- ── 배송지 (실물 상품이 있을 때만) ── -->
+          <section class="shop-card" id="shipCard">
+            <p class="shop-card-title">
+              <span>배송지 정보</span>
+              <label class="shop-check" style="font-size:11px">
+                <input type="checkbox" id="sameAsOrderer" /> 주문자 정보와 동일
+              </label>
+            </p>
+
+            <div class="shop-row-2">
+              <div class="shop-field">
+                <label class="shop-label" for="shipName">받는 분<span class="req">*</span></label>
+                <input class="shop-input" type="text" id="shipName" placeholder="홍길동" />
+                <p class="shop-err" data-for="shipName">받는 분 이름을 입력해 주세요.</p>
+              </div>
+              <div class="shop-field">
+                <label class="shop-label" for="shipPhone">연락처<span class="req">*</span></label>
+                <input class="shop-input" type="tel" id="shipPhone" placeholder="010-0000-0000" />
+                <p class="shop-err" data-for="shipPhone">올바른 연락처를 입력해 주세요.</p>
+              </div>
+            </div>
+
+            <div class="shop-field">
+              <label class="shop-label" for="shipZip">우편번호<span class="req">*</span></label>
+              <div class="shop-row-zip">
+                <input class="shop-input" type="text" id="shipZip" placeholder="00000" readonly />
+                <button type="button" class="shop-btn ghost" id="zipBtn">주소 찾기</button>
+              </div>
+              <p class="shop-err" data-for="shipZip">주소 찾기로 우편번호를 선택해 주세요.</p>
+            </div>
+
+            <div class="shop-field">
+              <label class="shop-label" for="shipAddr1">주소<span class="req">*</span></label>
+              <input class="shop-input" type="text" id="shipAddr1" placeholder="주소 찾기를 눌러 주세요" readonly />
+            </div>
+
+            <div class="shop-field">
+              <label class="shop-label" for="shipAddr2">상세주소<span class="req">*</span></label>
+              <input class="shop-input" type="text" id="shipAddr2" placeholder="동·호수 등 나머지 주소" />
+              <p class="shop-err" data-for="shipAddr2">상세주소를 입력해 주세요.</p>
+            </div>
+
+            <div class="shop-field">
+              <label class="shop-label" for="shipMemo">배송 메모</label>
+              <select class="shop-select" id="shipMemo">
+                <option value="">선택하지 않음</option>
+                <option>부재 시 경비실에 맡겨주세요</option>
+                <option>부재 시 문 앞에 놓아주세요</option>
+                <option>배송 전 연락 주세요</option>
+                <option>파손 위험이 있으니 주의해 주세요</option>
+                <option value="__custom">직접 입력</option>
+              </select>
+              <textarea class="shop-textarea" id="shipMemoCustom" placeholder="배송 시 요청사항을 적어주세요"
+                        style="display:none;margin-top:9px"></textarea>
+            </div>
+          </section>
+
+          <!-- ── 디지털 전용 안내 ── -->
+          <section class="shop-card" id="digitalCard" style="display:none">
+            <p class="shop-card-title"><span>전달 방법</span></p>
+            <p style="font-size:12.5px;line-height:1.7;color:var(--gray-2)">
+              담으신 상품이 모두 디지털이라 <b style="color:var(--white)">배송지 입력이 필요하지 않습니다.</b><br />
+              결제 확인 후 주문자 이메일로 다운로드 링크가 발송됩니다.
+            </p>
+          </section>
+
+          <!-- ── 결제수단 ── -->
+          <section class="shop-card">
+            <p class="shop-card-title"><span>결제수단</span></p>
+
+            <div class="pay-opts">
+              <label class="pay-opt sel">
+                <input type="radio" name="pay" value="무통장입금" checked />
+                <span>
+                  <span class="pay-opt-name">무통장입금</span>
+                  <span class="pay-opt-desc">주문 후 안내되는 계좌로 입금해 주세요.</span>
+                </span>
+              </label>
+
+              <label class="pay-opt off">
+                <input type="radio" name="pay" value="카드결제" disabled />
+                <span>
+                  <span class="pay-opt-name">신용·체크카드</span>
+                  <span class="pay-opt-desc">PG 계약 후 제공됩니다.</span>
+                </span>
+                <span class="pay-opt-tag">준비중</span>
+              </label>
+
+              <label class="pay-opt off">
+                <input type="radio" name="pay" value="간편결제" disabled />
+                <span>
+                  <span class="pay-opt-name">간편결제</span>
+                  <span class="pay-opt-desc">카카오페이 · 네이버페이 · 토스</span>
+                </span>
+                <span class="pay-opt-tag">준비중</span>
+              </label>
+            </div>
+
+            <div class="bank-box">
+              <div class="bank-row"><span>은행</span><span id="bankName">-</span></div>
+              <div class="bank-row"><span>계좌번호</span><span id="bankAcct">-</span></div>
+              <div class="bank-row"><span>예금주</span><span id="bankHolder">-</span></div>
+            </div>
+
+            <div class="shop-field" style="margin-top:16px">
+              <label class="shop-label" for="depositor">입금자명<span class="req">*</span></label>
+              <input class="shop-input" type="text" id="depositor" placeholder="주문자와 다를 경우 입금하실 분 성함" />
+              <p class="shop-err" data-for="depositor">입금자명을 입력해 주세요.</p>
+            </div>
+          </section>
+
+        </div>
+
+        <!-- ══════════ 우: 결제 요약 ══════════ -->
+        <aside>
+          <div class="sum-box">
+            <p class="sum-title">PAYMENT</p>
+            <div class="sum-row"><span>상품금액</span><span id="sumGoods">-</span></div>
+            <div class="sum-row" id="sumShipRow"><span>배송비</span><span id="sumShip">-</span></div>
+            <div class="sum-total">
+              <span class="sum-total-label">TOTAL</span>
+              <span class="sum-total-value" id="sumTotal">-</span>
+            </div>
+
+            <div style="margin-top:18px;padding-top:16px;border-top:1px solid var(--border)">
+              <label class="shop-check" style="margin-bottom:10px">
+                <input type="checkbox" id="agreeAll" />
+                <b>전체 동의</b>
+              </label>
+              <label class="shop-check" style="margin-bottom:8px">
+                <input type="checkbox" class="agree" id="agree1" />
+                <span>[필수] 구매조건 및 주문내용 확인</span>
+              </label>
+              <label class="shop-check">
+                <input type="checkbox" class="agree" id="agree2" />
+                <span>[필수] 개인정보 수집·이용 동의</span>
+              </label>
+              <p class="shop-err" data-for="agree">필수 항목에 동의해 주세요.</p>
+            </div>
+
+            <div class="sum-actions">
+              <button type="submit" class="shop-btn block" id="submitBtn">결제하기</button>
+              <a href="cart.html" class="shop-btn ghost block">장바구니로 돌아가기</a>
+            </div>
+
+            <p class="sum-note">
+              DEMO 환경입니다. 결제가 실제로 이뤄지지 않으며 주문 내용은 이 브라우저에만 저장됩니다.
+            </p>
+          </div>
+        </aside>
+
+      </div>
+    </form>
+  </main>
+
+  <!-- ══ FOOTER ══ -->
+  <footer class="idx-footer">
+    <div class="idx-footer-brand">
+      <img src="logo.png" alt="OMIX" class="idx-footer-logo" />
+      <p class="idx-footer-copy">© 2026 OMIX Studio.<br>Korean Buddhism × Modern Music.<br>Cheongju, Korea.</p>
+    </div>
+    <nav class="idx-footer-links">
+      <a href="chart.html"     class="idx-footer-link">Chart</a>
+      <a href="genre.html"     class="idx-footer-link">Explore</a>
+      <a href="store.html"     class="idx-footer-link">Store</a>
+      <a href="about.html"     class="idx-footer-link">About</a>
+      <a href="my-player.html" class="idx-footer-link">My Player</a>
+    </nav>
+  </footer>
+
+  <script src="products.js"></script>
+  <script>
+  (function () {
+    'use strict';
+
+    const S     = window.OmixShop;
+    const items = S.cart.detailed();
+
+    /* 장바구니가 비어 있으면 주문서를 열 이유가 없다 */
+    if (!items.length) {
+      alert('장바구니가 비어 있습니다.');
+      location.replace('cart.html');
+      return;
+    }
+
+    const needShip = S.needsShipping(items);
+    const amt      = S.amounts(items);
+    const $        = id => document.getElementById(id);
+
+    function esc(s) {
+      return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+      }[c]));
+    }
+
+    /* =====================================================
+       주문 상품 · 금액 표시
+       ===================================================== */
+    $('coItems').innerHTML = items.map(it =>
+      '<div class="done-line">' +
+        '<span class="done-line-name">' + esc(it.name) +
+          (it.opt ? ' <em>(' + esc(it.opt) + ')</em>' : '') +
+          ' <em>× ' + it.qty + '</em></span>' +
+        '<span class="done-line-val">' + S.won(it.lineTotal) + '</span>' +
+      '</div>'
+    ).join('');
+
+    $('sumGoods').textContent = S.won(amt.goods);
+    $('sumTotal').textContent = S.won(amt.total);
+    if (!needShip) {
+      $('sumShip').textContent = '해당 없음';
+    } else if (amt.shipping === 0) {
+      $('sumShip').textContent = '무료';
+      $('sumShipRow').classList.add('free');
+    } else {
+      $('sumShip').textContent = S.won(amt.shipping);
+    }
+
+    /* 디지털 전용 주문이면 배송지 섹션을 통째로 감춘다 */
+    if (!needShip) {
+      $('shipCard').style.display = 'none';
+      $('digitalCard').style.display = '';
+    }
+
+    /* 계좌 안내 */
+    $('bankName').textContent   = S.POLICY.bank.name;
+    $('bankAcct').textContent   = S.POLICY.bank.account;
+    $('bankHolder').textContent = S.POLICY.bank.holder;
+
+    /* =====================================================
+       입력 편의
+       ===================================================== */
+    /* 전화번호 자동 하이픈 */
+    function hyphen(v) {
+      const d = v.replace(/[^0-9]/g, '').slice(0, 11);
+      if (d.length < 4) return d;
+      if (d.length < 8) return d.slice(0, 3) + '-' + d.slice(3);
+      return d.slice(0, 3) + '-' + d.slice(3, 7) + '-' + d.slice(7);
+    }
+    ['ordPhone', 'shipPhone'].forEach(id => {
+      const el = $(id);
+      if (el) el.addEventListener('input', () => { el.value = hyphen(el.value); });
+    });
+
+    /* 주문자 정보와 동일 */
+    const same = $('sameAsOrderer');
+    if (same) {
+      same.addEventListener('change', () => {
+        if (same.checked) {
+          $('shipName').value  = $('ordName').value;
+          $('shipPhone').value = $('ordPhone').value;
+        }
+        $('shipName').disabled  = same.checked;
+        $('shipPhone').disabled = same.checked;
+      });
+    }
+
+    /* 카카오(다음) 우편번호 */
+    $('zipBtn').addEventListener('click', () => {
+      if (typeof daum === 'undefined' || !daum.Postcode) {
+        alert('주소 검색 서비스를 불러오지 못했습니다. 인터넷 연결을 확인해 주세요.');
+        return;
+      }
+      new daum.Postcode({
+        oncomplete: function (data) {
+          $('shipZip').value   = data.zonecode;
+          $('shipAddr1').value = data.roadAddress || data.jibunAddress;
+          $('shipAddr2').focus();
+          clearErr('shipZip');
+        }
+      }).open();
+    });
+
+    /* 배송 메모 직접 입력 */
+    const memoSel = $('shipMemo');
+    const memoTxt = $('shipMemoCustom');
+    memoSel.addEventListener('change', () => {
+      const custom = memoSel.value === '__custom';
+      memoTxt.style.display = custom ? '' : 'none';
+      if (custom) memoTxt.focus();
+    });
+
+    /* 결제수단 선택 표시 */
+    document.querySelectorAll('.pay-opt input[name="pay"]').forEach(r => {
+      r.addEventListener('change', () => {
+        document.querySelectorAll('.pay-opt').forEach(o => o.classList.remove('sel'));
+        if (r.checked) r.closest('.pay-opt').classList.add('sel');
+      });
+    });
+
+    /* 약관 전체 동의 */
+    const agreeAll = $('agreeAll');
+    const agrees   = Array.from(document.querySelectorAll('.agree'));
+    agreeAll.addEventListener('change', () => {
+      agrees.forEach(a => { a.checked = agreeAll.checked; });
+      clearErr('agree');
+    });
+    agrees.forEach(a => a.addEventListener('change', () => {
+      agreeAll.checked = agrees.every(x => x.checked);
+      if (a.checked) clearErr('agree');
+    }));
+
+    /* =====================================================
+       검증
+       ===================================================== */
+    function showErr(key) {
+      const p = document.querySelector('.shop-err[data-for="' + key + '"]');
+      if (p) p.classList.add('show');
+      const f = $(key);
+      if (f) f.classList.add('invalid');
+    }
+    function clearErr(key) {
+      const p = document.querySelector('.shop-err[data-for="' + key + '"]');
+      if (p) p.classList.remove('show');
+      const f = $(key);
+      if (f) f.classList.remove('invalid');
+    }
+    document.querySelectorAll('.shop-input, .shop-select').forEach(el => {
+      el.addEventListener('input', () => clearErr(el.id));
+    });
+
+    const rePhone = /^0\d{1,2}-\d{3,4}-\d{4}$/;
+    const reMail  = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+    function validate() {
+      const bad = [];
+      const val = id => ($(id) ? $(id).value.trim() : '');
+
+      if (!val('ordName'))                  bad.push('ordName');
+      if (!rePhone.test(val('ordPhone')))   bad.push('ordPhone');
+      if (!reMail.test(val('ordEmail')))    bad.push('ordEmail');
+
+      if (needShip) {
+        if (!val('shipName'))                bad.push('shipName');
+        if (!rePhone.test(val('shipPhone'))) bad.push('shipPhone');
+        if (!val('shipZip'))                 bad.push('shipZip');
+        if (!val('shipAddr2'))               bad.push('shipAddr2');
+      }
+
+      if (!val('depositor'))                bad.push('depositor');
+      if (!agrees.every(a => a.checked))    bad.push('agree');
+
+      bad.forEach(showErr);
+      return bad;
+    }
+
+    /* =====================================================
+       제출
+       ===================================================== */
+    $('coForm').addEventListener('submit', async e => {
+      e.preventDefault();
+
+      const bad = validate();
+      if (bad.length) {
+        const first = $(bad[0]) || document.querySelector('.shop-err.show');
+        if (first) first.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
+      }
+
+      const btn = $('submitBtn');
+      btn.disabled = true;
+      btn.textContent = '주문 처리 중…';
+
+      const memo = memoSel.value === '__custom'
+        ? memoTxt.value.trim()
+        : memoSel.value;
+
+      const order = {
+        orderNo:   S.genOrderNo(),
+        createdAt: new Date().toISOString(),
+        status:    '입금대기',
+        items: items.map(i => ({
+          id: i.id, name: i.name, opt: i.opt, qty: i.qty,
+          price: i.price, lineTotal: i.lineTotal, typeLabel: i.typeLabel
+        })),
+        amount: amt,
+        orderer: {
+          name:  $('ordName').value.trim(),
+          phone: $('ordPhone').value.trim(),
+          email: $('ordEmail').value.trim()
+        },
+        shipping: needShip ? {
+          needed:   true,
+          receiver: $('shipName').value.trim(),
+          phone:    $('shipPhone').value.trim(),
+          zip:      $('shipZip').value.trim(),
+          addr1:    $('shipAddr1').value.trim(),
+          addr2:    $('shipAddr2').value.trim(),
+          memo:     memo
+        } : { needed: false },
+        payment: {
+          method:    '무통장입금',
+          depositor: $('depositor').value.trim(),
+          bank:      S.POLICY.bank.name + ' ' + S.POLICY.bank.account
+        },
+        courier:    '',
+        trackingNo: ''
+      };
+
+      try {
+        /* ⚠ 여기가 유일한 저장 지점.
+           실제 서비스 전환 시 products.js 의 saveOrder() 본문만 교체하면 된다. */
+        const orderNo = await S.saveOrder(order);
+        S.cart.clear();
+        location.href = 'order-complete.html?no=' + encodeURIComponent(orderNo);
+      } catch (err) {
+        btn.disabled = false;
+        btn.textContent = '결제하기';
+        alert('주문 저장에 실패했습니다. 브라우저 저장소가 차단되어 있는지 확인해 주세요.');
+      }
+    });
+
+  })();
+  </script>
+
+</body>
+</html>

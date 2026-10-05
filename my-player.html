@@ -10,6 +10,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,700&family=Stack+Sans+Notch&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
   <script src="theme.js"></script>
+  <script src="scroll-top.js" defer></script>
+  <script src="player-ui.js" defer></script>
+  <script src="products.js"></script>
   <script src="click-sound.js"></script>
   <script src="transition-head.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/fontawesome.min.css" />
@@ -35,9 +38,11 @@
       <li><a href="store.html"     class="nav-link">Store</a></li>
       <li><a href="about.html"     class="nav-link">About</a></li>
       <li><a href="my-player.html" class="nav-link">My Player</a></li>
+      <li class="nav-cart-item"><a href="cart.html" class="nav-link nav-cart-link">CART <span class="cart-badge">0</span></a></li>
     </ul>
     <a href="index.html" class="nav-logo-center"><img src="logo.png" alt="OMIX" class="logo-img" /></a>
     <div class="nav-sns">
+      <a href="cart.html" class="nav-link nav-cart-link">CART <span class="cart-badge">0</span></a>
       <a href="#" class="nav-sns-link" aria-label="Spotify"    target="_blank"><i class="fab fa-spotify"></i></a>
       <a href="#" class="nav-sns-link" aria-label="Instagram"  target="_blank"><i class="fab fa-instagram"></i></a>
       <a href="#" class="nav-sns-link" aria-label="YouTube"    target="_blank"><i class="fab fa-youtube"></i></a>
@@ -141,7 +146,7 @@
             <button class="now-like" id="nowLike">♡</button>
             <!-- 볼륨 슬라이더 -->
             <div class="now-vol">
-              <span>🔊</span>
+              <button type="button" class="vol-btn" aria-label="음소거"></button>
               <input type="range" class="vol-slider" id="nowVolSlider" min="0" max="100" value="70" />
             </div>
           </div>
@@ -301,6 +306,18 @@
            ════════════════════════════════════════ -->
       <div class="panel-library">
 
+        <!-- ── QR로 받은 트랙 ──
+             전시 부스에서 QR로 받은 곡(card-overlay.js 가 localStorage 에 저장)을 보여준다.
+             목록은 my-player.js [13-B] 에서 렌더링 -->
+        <div class="library-section live-section" id="liveSection">
+          <p class="lib-section-title">QR로 받은 트랙</p>
+          <div id="liveTrackList"></div>
+          <div class="live-empty" id="liveEmpty">
+            <p>아직 받은 트랙이 없어요.<br>전시 부스에서 QR을 스캔해보세요.</p>
+            <a href="index.html?card=demo" class="live-empty-link">데모 카드 받아보기 →</a>
+          </div>
+        </div>
+
         <!-- ── 이번 주 통계 ── -->
         <div class="library-section">
           <p class="lib-section-title">이번 주 통계</p>
@@ -423,7 +440,7 @@
       </div>
     </div>
     <div class="player-vol">
-      <span>🔊</span>
+      <button type="button" class="vol-btn" aria-label="음소거"></button>
       <input type="range" class="vol-slider" min="0" max="100" value="70" />
     </div>
     <button class="player-like" id="globalLike">♡</button>

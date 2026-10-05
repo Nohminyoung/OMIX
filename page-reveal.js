@@ -47,6 +47,11 @@
     { sel: '.player-hero-sub',      type: 'up',   delay: 400 },
   ];
 
+  /* 클립 래퍼 여유 — 좁은 자간(-0.03em)·줄간격(0.87) 때문에 글자 박스가 실제 글자 모양보다
+     작아서, overflow:hidden 이 마침표·B 오른쪽·글자 위아래를 잘랐다.
+     padding 으로 클립 영역만 넓히고 같은 크기의 음수 margin 으로 되돌려 배치는 그대로 둔다. */
+  const CLIP_PAD = 'padding:0.14em 0.12em;margin:-0.14em -0.12em;';
+
   /* ── 글자 분리 → 클립 래퍼 ── */
   function splitChars(el) {
     const text = el.textContent;
@@ -58,10 +63,11 @@
 
     return [...text].map(ch => {
       const clip = document.createElement('span');
-      clip.style.cssText = 'display:inline-block;overflow:hidden;vertical-align:bottom;';
+      clip.style.cssText = 'display:inline-block;overflow:hidden;vertical-align:bottom;' + CLIP_PAD;
       const inner = document.createElement('span');
       inner.textContent = ch === ' ' ? ' ' : ch;
-      inner.style.cssText = 'display:inline-block;transform:translateX(-110%);will-change:transform;';
+      /* 넓힌 여유(0.12em)만큼 더 밀어 둬야 시작할 때 글자 끝이 비치지 않는다 */
+      inner.style.cssText = 'display:inline-block;transform:translateX(calc(-110% - 0.24em));will-change:transform;';
       clip.appendChild(inner);
       el.appendChild(clip);
       return inner;
@@ -86,7 +92,7 @@
       words.forEach((word, wi) => {
         if (wi > 0) el.appendChild(document.createTextNode(' '));
         const clip = document.createElement('span');
-        clip.style.cssText = 'display:inline-block;overflow:hidden;vertical-align:bottom;';
+        clip.style.cssText = 'display:inline-block;overflow:hidden;vertical-align:bottom;' + CLIP_PAD;
         const inner = document.createElement('span');
         inner.textContent = word;
         inner.style.cssText = 'display:inline-block;transform:translateX(-60px);opacity:0;will-change:transform,opacity;';

@@ -1380,7 +1380,8 @@ La-la-la, here and now
     btn.className = 'np-detail-btn';
     btn.id = 'npDetailBtn';
     btn.setAttribute('aria-label', '곡 상세보기');
-    btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+    /* viewBox 를 잉크 범위(1~14.1 × 2~14.1) 중심에 맞춰 옮겨 버튼 정중앙에 오게 한다 */
+    btn.innerHTML = `<svg width="14" height="14" viewBox="0.55 1.05 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
       <rect x="1" y="2" width="12" height="1.2" rx="0.6" fill="currentColor"/>
       <rect x="1" y="5.4" width="8" height="1.2" rx="0.6" fill="currentColor"/>
       <rect x="1" y="8.8" width="10" height="1.2" rx="0.6" fill="currentColor"/>

@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="theme-color" content="#0a0a0a" />
+<title>OMIX — My DJ Card</title>
+<link rel="icon" href="symbol.png" type="image/png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700;900&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+/* =====================================================
+   OMIX — card.html (관람객 QR 도착 페이지, 모바일 세로 전용)
+   ?id={id} → R2 의 cards/{id}/card.jpg · play.mp4 를 각각 5초마다 확인해서 보여준다.
+   ?id=demo → R2 없이 ①→②→③ 상태 전환을 시간차로 보여주는 디자인 확인용.
+   ===================================================== */
+:root {
+  --bg: #0a0a0a;
+  --red: #F91536;
+  --red-glow: rgba(249, 21, 54, 0.45);
+  --white: #fff;
+  --gray: #9b9b9b;
+  --line: rgba(255, 255, 255, 0.07);
+  --w: min(100vw, 440px);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  background: var(--bg);
+  color: var(--white);
+  font-family: 'Montserrat', 'Noto Sans KR', sans-serif;
+  min-height: 100vh; min-height: 100dvh;
+  overflow-x: hidden;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ── 만다라 라인 배경 ── */
+#bg { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+#bg svg { width: 100%; height: 100%; display: block; }
+
+.wrap {
+  position: relative; z-index: 1;
+  width: var(--w); margin: 0 auto;
+  min-height: 100vh; min-height: 100dvh;
+  padding: max(40px, env(safe-area-inset-top)) 20px max(40px, env(safe-area-inset-bottom));
+  display: flex; flex-direction: column; align-items: center;
+}
+
+/* ── 헤더 ── */
+.brand { text-align: center; margin-bottom: 26px; }
+.brand-logo { display: block; height: 30px; width: auto; margin: 0 auto; }
+.brand-sub {
+  margin-top: 10px;
+  font-size: 10.5px; font-weight: 500; letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+/* ── 공통: 스피너 ── */
+.spin {
+  width: 42px; height: 42px; border-radius: 50%;
+  border: 2.5px solid rgba(255, 255, 255, 0.12);
+  border-top-color: var(--red);
+  border-right-color: var(--red);
+  filter: drop-shadow(0 0 6px var(--red-glow));
+  animation: spin 1s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.wait-title { font-family: 'Noto Sans KR', sans-serif; font-weight: 700; font-size: 18px; letter-spacing: -0.01em; }
+.wait-sub { font-family: 'Noto Sans KR', sans-serif; font-size: 12px; color: var(--gray); margin-top: 6px; line-height: 1.5; }
+
+/* ── ① 카드 대기 (화면 가운데) ── */
+#cardWait {
+  flex: 1; width: 100%;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center; gap: 18px;
+  padding-bottom: 12vh;
+}
+
+/* ── ②③ 본문 ── */
+#main { width: 100%; display: none; flex-direction: column; align-items: center; }
+#main.show { display: flex; animation: rise .6s cubic-bezier(.2, .8, .2, 1) both; }
+@keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+
+.card-frame {
+  width: 82%;
+  border: 1.5px solid var(--red);
+  box-shadow: 0 0 16px var(--red-glow), inset 0 0 0 1px rgba(0, 0, 0, 0.6);
+  background: #000;
+  line-height: 0;
+}
+.card-frame img {
+  width: 100%; height: auto; display: block;
+  -webkit-touch-callout: default; /* 아이폰 길게 눌러 저장 허용 */
+  user-select: auto;
+}
+
+.sec-title {
+  width: 100%;
+  display: flex; align-items: center; gap: 12px;
+  font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 14px; letter-spacing: 0.02em;
+  margin: 26px 0 12px;
+}
+.sec-title::after {
+  content: ''; flex: 1; height: 1px;
+  background: linear-gradient(90deg, rgba(249, 21, 54, 0.55), rgba(249, 21, 54, 0.15));
+}
+
+.btn-save {
+  width: 100%; height: 50px; border: 0; border-radius: 999px;
+  background: var(--red); color: #fff;
+  font-family: 'Noto Sans KR', sans-serif; font-weight: 700; font-size: 16px;
+  box-shadow: 0 0 18px var(--red-glow);
+  cursor: pointer;
+  transition: transform .15s, opacity .2s;
+}
+.btn-save:active { transform: scale(0.98); }
+.btn-save:disabled { opacity: 0.6; }
+.btn-save.ghost {
+  height: 44px; margin-top: 12px;
+  background: transparent; color: var(--white);
+  border: 1px solid rgba(249, 21, 54, 0.7);
+  box-shadow: none; font-size: 14px; font-weight: 500;
+}
+.hint {
+  margin-top: 10px; text-align: center;
+  font-family: 'Noto Sans KR', sans-serif; font-size: 11.5px; color: var(--gray);
+}
+
+/* ── 영상 박스 ── */
+.video-box {
+  width: 100%;
+  border: 1px solid rgba(249, 21, 54, 0.75);
+  box-shadow: 0 0 12px rgba(249, 21, 54, 0.18);
+  background: rgba(14, 6, 8, 0.85);
+}
+#videoWait {
+  aspect-ratio: 16 / 9;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center; gap: 14px; padding: 16px;
+}
+#videoWait .spin { width: 34px; height: 34px; }
+#videoWait .wait-title { font-size: 15px; }
+#videoWait .wait-sub { font-size: 11px; margin-top: 4px; }
+#video { display: none; width: 100%; height: auto; background: #000; }
+.video-box.ready #videoWait { display: none; }
+.video-box.ready #video { display: block; }
+#videoSave { display: none; }
+.video-box.ready ~ #videoSave { display: block; }
+
+/* ── 오류 (id 없음) ── */
+#noId { display: none; flex: 1; align-items: center; justify-content: center; text-align: center; padding-bottom: 12vh; }
+
+/* ── 토스트 ── */
+#toast {
+  position: fixed; left: 50%; bottom: max(24px, env(safe-area-inset-bottom));
+  transform: translate(-50%, 20px); opacity: 0;
+  background: rgba(20, 20, 20, 0.95); border: 1px solid rgba(249, 21, 54, 0.5);
+  color: #fff; font-family: 'Noto Sans KR', sans-serif; font-size: 13px;
+  padding: 10px 18px; border-radius: 999px; z-index: 10;
+  transition: opacity .25s, transform .25s; pointer-events: none; white-space: nowrap;
+}
+#toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+@media (prefers-reduced-motion: reduce) {
+  .spin { animation-duration: 2.4s; }
+  #main.show { animation: none; }
+}
+</style>
+</head>
+<body>
+
+<div id="bg" aria-hidden="true"></div>
+
+<div class="wrap">
+  <header class="brand">
+    <img class="brand-logo" src="logo.png" alt="OMIX" />
+    <div class="brand-sub">FROM OM, INTO SOUND</div>
+  </header>
+
+  <!-- ① 카드 대기 -->
+  <section id="cardWait" aria-live="polite">
+    <div class="spin" role="img" aria-label="불러오는 중"></div>
+    <div>
+      <p class="wait-title">카드를 준비하고 있어요</p>
+      <p class="wait-sub">전시장에서 방금 만든 카드가 곧 도착해요</p>
+    </div>
+  </section>
+
+  <!-- id 없음 -->
+  <section id="noId">
+    <div>
+      <p class="wait-title">카드를 찾을 수 없어요</p>
+      <p class="wait-sub">전시장 화면의 QR을 다시 스캔해주세요</p>
+    </div>
+  </section>
+
+  <!-- ②③ 카드 + 영상 -->
+  <main id="main">
+    <div class="card-frame"><img id="cardImg" alt="나의 OMIX DJ 카드" /></div>
+
+    <h2 class="sec-title">MY DJ CARD</h2>
+    <button class="btn-save" id="cardSave" type="button">카드 저장하기</button>
+    <p class="hint" id="cardHint">아이폰은 카드 이미지를 길게 눌러 저장하세요</p>
+
+    <h2 class="sec-title">PLAY VIDEO</h2>
+    <div class="video-box" id="videoBox">
+      <div id="videoWait" aria-live="polite">
+        <div class="spin" role="img" aria-label="불러오는 중"></div>
+        <div>
+          <p class="wait-title">플레이 영상을 올리고 있어요</p>
+          <p class="wait-sub">잠시 후 자동으로 나타나요 · 나중에 다시 열어도 돼요</p>
+        </div>
+      </div>
+      <video id="video" controls playsinline preload="metadata"></video>
+    </div>
+    <button class="btn-save ghost" id="videoSave" type="button">영상 저장하기</button>
+  </main>
+</div>
+
+<div id="toast" role="status"></div>
+
+<script>
+(function () {
+  /* R2 공개 주소는 넷리파이 환경변수 R2_PUBLIC_URL 을 card-config 함수로 받아온다 */
+  const CONFIG_URL = '/.netlify/functions/card-config';
+  const POLL_MS = 5000;
+
+  const id = new URLSearchParams(location.search).get('id');
+  const $ = (s) => document.getElementById(s);
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
+  drawMandala();
+
+  if (!id || !/^[\w-]+$/.test(id)) {
+    $('cardWait').style.display = 'none';
+    $('noId').style.display = 'flex';
+    return;
+  }
+
+  /* ── 데모 모드: 로컬 파일 + 시간차 도착 ── */
+  const DEMO = id.startsWith('demo');
+  const demoStart = Date.now();
+  let src = { card: 'about-04-artist.jpg', video: 'omix-mandala-loop.webm', cardAt: 3000, videoAt: 20000 };
+
+  /* 설정을 못 받아오면(네트워크 끊김 등) 5초 뒤 다시 시도 — 화면은 계속 ① 대기 상태 */
+  async function loadConfig() {
+    while (true) {
+      try {
+        const r = await fetch(CONFIG_URL);
+        const { mediaBase } = await r.json();
+        if (r.ok && mediaBase) return mediaBase;
+      } catch (e) {}
+      await new Promise((ok) => setTimeout(ok, POLL_MS));
+    }
+  }
+
+  const fileBase = `OMIX_${id}`;
+  if (!isIOS) $('cardHint').textContent = '버튼을 누르면 사진첩(다운로드)에 저장돼요';
+
+  /* ── 존재 확인 ── */
+  function bust(url) { return url + (url.includes('?') ? '&' : '?') + 't=' + Date.now(); }
+
+  function probeImage(url) {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.onload = () => resolve(true);
+      img.onerror = () => resolve(false);
+      img.src = bust(url);
+    });
+  }
+
+  /* 영상: R2 CORS 가 열려 있으면 HEAD 로 확인, 아니면 video 엘리먼트로 메타데이터 로드 시도 */
+  async function probeVideo(url) {
+    try {
+      const r = await fetch(bust(url), { method: 'HEAD', cache: 'no-store' });
+      return r.ok;
+    } catch (e) { /* CORS 미설정 또는 404 → 아래 방식으로 */ }
+    return new Promise((resolve) => {
+      const v = document.createElement('video');
+      let done = false;
+      const end = (ok) => { if (done) return; done = true; v.removeAttribute('src'); v.load(); resolve(ok); };
+      v.muted = true; v.preload = 'metadata'; v.playsInline = true;
+      v.onloadedmetadata = () => end(true);
+      v.onerror = () => end(false);
+      setTimeout(() => end(false), 8000);
+      v.src = bust(url);
+    });
+  }
+
+  function demoReady(at) { return Promise.resolve(Date.now() - demoStart >= at); }
+
+  /* ── 카드 / 영상 각각 폴링 ── */
+  function poll(check, onReady) {
+    let stopped = false;
+    const tick = async () => {
+      if (stopped) return;
+      if (await check()) { stopped = true; onReady(); return; }
+      setTimeout(tick, document.hidden ? POLL_MS * 2 : POLL_MS);
+    };
+    tick();
+  }
+
+  (async () => {
+  if (!DEMO) {
+    const base = await loadConfig();
+    src = { card: `${base}/cards/${id}/card.jpg`, video: `${base}/cards/${id}/play.mp4` };
+  }
+
+  poll(
+    () => DEMO ? demoReady(src.cardAt) : probeImage(src.card),
+    () => {
+      const img = $('cardImg');
+      img.src = DEMO ? src.card : bust(src.card);
+      img.onload = () => {
+        $('cardWait').style.display = 'none';
+        $('main').classList.add('show');
+      };
+    }
+  );
+
+  poll(
+    () => DEMO ? demoReady(src.videoAt) : probeVideo(src.video),
+    () => {
+      const v = $('video');
+      /* #t=0.1 → 아이폰에서도 재생 전 첫 장면이 썸네일로 보이게 */
+      v.src = (DEMO ? src.video : bust(src.video)) + '#t=0.1';
+      $('videoBox').classList.add('ready');
+    }
+  );
+  })();
+
+  /* ── 저장 ──
+     아이폰: 공유 시트 → '이미지 저장' / '비디오 저장'
+     안드로이드·PC: blob 다운로드
+     R2 CORS 가 막혀 있으면 파일을 새 탭으로 열어준다 (길게 눌러 저장) */
+  const blobs = {};
+  function toast(msg) {
+    const t = $('toast');
+    t.textContent = msg; t.classList.add('show');
+    clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove('show'), 2600);
+  }
+
+  async function save(kind, btn) {
+    const url = kind === 'card' ? $('cardImg').src : $('video').src;
+    const name = `${fileBase}_${kind === 'card' ? 'card.jpg' : 'play.mp4'}`;
+    const type = kind === 'card' ? 'image/jpeg' : 'video/mp4';
+    const label = btn.textContent;
+
+    try {
+      if (!blobs[kind]) {
+        btn.disabled = true; btn.textContent = '불러오는 중…';
+        const r = await fetch(url);
+        if (!r.ok) throw new Error('fetch ' + r.status);
+        blobs[kind] = await r.blob();
+      }
+      const blob = blobs[kind];
+      const file = new File([blob], name, { type });
+
+      if (isIOS && navigator.canShare && navigator.canShare({ files: [file] })) {
+        try {
+          await navigator.share({ files: [file] });
+        } catch (e) {
+          if (e.name === 'NotAllowedError') toast('한 번 더 눌러 저장해주세요');
+          /* AbortError = 사용자가 공유 시트를 닫음 → 무시 */
+        }
+        return;
+      }
+
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob); a.download = name;
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+      toast('저장했어요');
+    } catch (e) {
+      window.open(url, '_blank');
+      toast(isIOS ? '열린 화면에서 길게 눌러 저장하세요' : '열린 화면에서 저장하세요');
+    } finally {
+      btn.disabled = false; btn.textContent = label;
+    }
+  }
+
+  $('cardSave').addEventListener('click', (e) => save('card', e.currentTarget));
+  $('videoSave').addEventListener('click', (e) => save('video', e.currentTarget));
+
+  /* ── 만다라 라인 배경 (SVG) ── */
+  function drawMandala() {
+    const NS = 'http://www.w3.org/2000/svg';
+    const svg = document.createElementNS(NS, 'svg');
+    svg.setAttribute('viewBox', '0 0 400 860');
+    svg.setAttribute('preserveAspectRatio', 'xMidYMid slice');
+    const g = document.createElementNS(NS, 'g');
+    g.setAttribute('fill', 'none');
+    g.setAttribute('stroke', 'rgba(255,255,255,0.075)');
+    g.setAttribute('stroke-width', '0.8');
+    svg.appendChild(g);
+
+    function rosette(cx, cy, r, petals, rot) {
+      for (let ring = 0; ring < 3; ring++) {
+        const rr = r * (1 - ring * 0.3);
+        const n = petals + ring * 4;
+        const w = 0.22 + ring * 0.04;
+        for (let i = 0; i < n; i++) {
+          const a = (i / n) * Math.PI * 2 + rot + ring * (Math.PI / n);
+          const tip = [cx + Math.cos(a) * rr, cy + Math.sin(a) * rr];
+          const c1 = [cx + Math.cos(a - w) * rr * 0.62, cy + Math.sin(a - w) * rr * 0.62];
+          const c2 = [cx + Math.cos(a + w) * rr * 0.62, cy + Math.sin(a + w) * rr * 0.62];
+          const p = document.createElementNS(NS, 'path');
+          p.setAttribute('d', `M${cx},${cy} Q${c1} ${tip} Q${c2} ${cx},${cy}`);
+          g.appendChild(p);
+        }
+      }
+      [1.08, 0.36].forEach((k) => {
+        const c = document.createElementNS(NS, 'circle');
+        c.setAttribute('cx', cx); c.setAttribute('cy', cy); c.setAttribute('r', r * k);
+        g.appendChild(c);
+      });
+    }
+
+    rosette(200, 380, 210, 12, 0);
+    rosette(-30, 760, 170, 10, 0.3);
+    rosette(430, 70, 150, 10, 0.15);
+    rosette(420, 820, 110, 8, 0.5);
+    $('bg').appendChild(svg);
+  }
+})();
+</script>
+</body>
+</html>

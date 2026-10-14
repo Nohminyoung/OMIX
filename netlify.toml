@@ -1,0 +1,12 @@
+[build]
+  publish = "."
+  functions = "netlify/functions"
+
+[functions]
+  node_bundler = "esbuild"
+
+# QR 주소 /card?id=... → card.html (쿼리는 그대로 전달됨)
+[[redirects]]
+  from = "/card"
+  to = "/card.html"
+  status = 200

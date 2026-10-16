@@ -136,6 +136,17 @@
       </div><!-- /.ci-sticky -->
     </section>
 
+    <!-- 스크롤 안내 팝업 — 인트로에 처음 들어왔을 때만 잠깐 떠 있다가, 스크롤하면 사라진다
+         (테마 색상 스위처와 같은 반투명 다크 글래스 스타일) -->
+    <button class="scroll-guide" id="scrollGuide" type="button" aria-label="아래로 스크롤해서 차트 보기">
+      <span class="scroll-guide-mouse" aria-hidden="true"><span class="scroll-guide-wheel"></span></span>
+      <span class="scroll-guide-text">
+        <strong>아래로 스크롤하세요</strong>
+        <span>이번 주 TOP 차트가 이어져요</span>
+      </span>
+      <span class="scroll-guide-close" aria-hidden="true">✕</span>
+    </button>
+
     <!-- ════════════════════════════════════════════════════
          [상단] 가로 스크롤 카드 스트립
          마우스 휠/드래그로 스크롤, 스크롤바 숨김
@@ -158,7 +169,7 @@
         <!-- 우측: 트랙 수 + 스크롤 힌트 -->
         <div class="chart-strip-meta">
           <span class="meta-badge">매주 월요일 업데이트</span>
-          <span class="strip-scroll-hint">← 스크롤 →</span>
+          <span class="strip-scroll-hint">옆으로 넘겨보세요 <span class="strip-hint-arrow" aria-hidden="true">→</span></span>
         </div>
       </div>
 
@@ -173,6 +184,10 @@
       <div class="strip-fade-left"  aria-hidden="true"></div>
       <div class="strip-fade-right" aria-hidden="true"></div>
 
+      <!-- 좌우 화살표 — 옆으로 더 있다는 걸 알려주고, 누르면 한 칸씩 이동 -->
+      <button class="strip-arrow strip-arrow-left"  id="stripPrev" aria-label="이전 카드">‹</button>
+      <button class="strip-arrow strip-arrow-right" id="stripNext" aria-label="다음 카드">›</button>
+
     </section>
 
     <!-- ════════════════════════════════════════════════════
@@ -183,7 +198,7 @@
 
       <!-- 좌측: 장르 필터 탭 -->
       <div class="filter-bar-left">
-        <span class="filter-bar-label">장르</span>
+        <span class="filter-bar-label">GENRE</span>
         <div class="filter-chip-group" id="genreFilterGroup">
           <button class="filter-chip active" data-genre="all">ALL</button>
           <button class="filter-chip" data-genre="club">CLUB</button>
@@ -199,14 +214,14 @@
 
       <!-- 우측: 정렬 기준 선택 -->
       <div class="filter-bar-right">
-        <span class="filter-bar-label">정렬</span>
+        <span class="filter-bar-label">SORT</span>
         <div class="filter-chip-group" id="sortFilterGroup">
-          <button class="filter-chip active" data-sort="rank">순위</button>
-          <button class="filter-chip" data-sort="plays">재생수</button>
-          <button class="filter-chip" data-sort="duration">길이</button>
+          <button class="filter-chip active" data-sort="rank">RANK</button>
+          <button class="filter-chip" data-sort="plays">PLAYS</button>
+          <button class="filter-chip" data-sort="duration">LENGTH</button>
         </div>
         <!-- 전체 트랙 수 표시 -->
-        <span class="filter-track-count" id="filterTrackCount">23 TRACKS</span>
+        <span class="filter-track-count" id="filterTrackCount">43 TRACKS</span>
       </div>
 
     </div>
@@ -225,10 +240,10 @@
       <div class="chart-list-header">
         <span class="col-rank">#</span>
         <span class="col-art"></span>      <!-- 앨범 아트 (헤더 없음) -->
-        <span class="col-title">제목</span>
-        <span class="col-genre">장르</span>
-        <span class="col-plays">재생수</span>
-        <span class="col-dur">시간</span>
+        <span class="col-title">TITLE</span>
+        <span class="col-genre">GENRE</span>
+        <span class="col-plays">PLAYS</span>
+        <span class="col-dur">TIME</span>
         <span class="col-action"></span>   <!-- 재생 버튼 (헤더 없음) -->
       </div>
 

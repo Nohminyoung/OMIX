@@ -54,18 +54,19 @@ if (nav) {
 /* =====================================================
    [4] 트랙 데이터
    ===================================================== */
-/* 앨범아트 그라디언트 팔레트 — 레드 / 퍼플 두 컬러만 사용 */
+/* 앨범아트 그라디언트 팔레트 — 레드/퍼플 계열을 중심으로, 한 장 안에서 색이 확실히 바뀌도록
+   서로 대비되는 두 색을 짝지었다 (같은 계열 명암 차이만 있으면 단색처럼 보인다) */
 const GRADS = [
-  ['#F91536','#7a0c1b'],   /* 딥 레드 */
-  ['#A647FF','#4a1d9e'],   /* 퍼플 */
-  ['#F91536','#A647FF'],   /* 레드→퍼플 */
-  ['#b40f28','#0C0C0B'],   /* 다크 레드 */
-  ['#7C3AED','#1e0533'],   /* 다크 퍼플 */
-  ['#F91536','#5b0099'],   /* 레드→딥퍼플 */
-  ['#A647FF','#F91536'],   /* 퍼플→레드 (역순) */
-  ['#6d0019','#A647FF'],   /* 다크레드→퍼플 */
-  ['#F91536','#7a0c1b'],   /* 딥 레드 (반복) */
-  ['#A647FF','#4a1d9e'],   /* 퍼플 (반복) */
+  ['#FF4D6D','#6A00F4'],   /* 핑크레드→바이올렛 */
+  ['#C77DFF','#3A0CA3'],   /* 라벤더→인디고 */
+  ['#F91536','#FFB800'],   /* 레드→골드 */
+  ['#FF006E','#3A86FF'],   /* 마젠타→블루 */
+  ['#7C3AED','#00D4FF'],   /* 퍼플→시안 */
+  ['#FF5F6D','#FFC371'],   /* 코랄→피치 */
+  ['#A647FF','#F91536'],   /* 퍼플→레드 */
+  ['#F72585','#4CC9F0'],   /* 핑크→스카이 */
+  ['#FF7A00','#B5179E'],   /* 오렌지→플럼 */
+  ['#4361EE','#F72585'],   /* 블루→핑크 */
 ];
 
 /* 장르 레이블 → CSS 클래스 & 표시명 */
@@ -79,16 +80,16 @@ const TRENDS = [3,0,-1,2,0,1,-2,0,4,-1,2,0,-3,1,0,-1,2,0,1,-2,3,0,-1];
 
 /* 전체 트랙 */
 const ALL_TRACKS = [
-  { rank:1,  title:'Han Groove Riot',   artist:'OMIX Studio',             genre:'dance',      dur:'2:57', plays:'32K',  g:0, audioSrc:'music/Han%20Groove%20Riot.mp3', detailIdx:14 },
-  { rank:2,  title:'Karma Game',        artist:'OMIX Studio',             genre:'electronic', dur:'5:00', plays:'29K',  g:1, audioSrc:'music/Karma%20Game.mp3', detailIdx:15 },
-  { rank:3,  title:'Mix Attack',        artist:'OMIX Studio',             genre:'club',       dur:'2:56', plays:'26K',  g:2, audioSrc:'music/Mix%20Attack.mp3', detailIdx:16 },
-  { rank:4,  title:'No Score, Just Soul', artist:'OMIX Studio',           genre:'healing',    dur:'5:01', plays:'23K',  g:3, audioSrc:'music/No%20Score,%20Just%20Soul.mp3', detailIdx:17 },
-  { rank:5,  title:'Temple Echo Loop',  artist:'OMIX Studio',             genre:'ambient',    dur:'4:09', plays:'20K',  g:4, audioSrc:'music/Temple%20Echo%20Loop.mp3', detailIdx:18 },
-  { rank:6,  title:'공즉',              artist:'OMIX Studio',             genre:'meditation', dur:'2:53', plays:'17K',  g:5, audioSrc:'music/공즉.mp3', detailIdx:19 },
-  { rank:7,  title:'무명등',            artist:'OMIX Studio',             genre:'mindful',    dur:'2:55', plays:'14K',  g:6, audioSrc:'music/무명등.mp3', detailIdx:20 },
-  { rank:8,  title:'사계윤회',          artist:'OMIX Studio',             genre:'world',      dur:'2:30', plays:'11K',  g:7, audioSrc:'music/사계윤회.mp3', detailIdx:21 },
-  { rank:9,  title:'업보 Bounce',       artist:'OMIX Studio',             genre:'dance',      dur:'3:14', plays:'8K',   g:8, audioSrc:'music/업보%20Bounce.mp3', detailIdx:22 },
-  { rank:10, title:'파도에 맡겨',       artist:'OMIX Studio',             genre:'healing',    dur:'4:09', plays:'5K',   g:9, audioSrc:'music/파도에%20맡겨.mp3', detailIdx:23 },
+  { rank:1,  title:'Han Groove Riot',   artist:'OMIX Studio',             genre:'dance',      dur:'2:57', plays:'3.2M',  g:0, audioSrc:'music/Han%20Groove%20Riot.mp3', detailIdx:14 },
+  { rank:2,  title:'Karma Game',        artist:'OMIX Studio',             genre:'electronic', dur:'5:00', plays:'3.0M',  g:1, audioSrc:'music/Karma%20Game.mp3', detailIdx:15 },
+  { rank:3,  title:'Mix Attack',        artist:'OMIX Studio',             genre:'club',       dur:'2:56', plays:'2.8M',  g:2, audioSrc:'music/Mix%20Attack.mp3', detailIdx:16 },
+  { rank:4,  title:'No Score, Just Soul', artist:'OMIX Studio',           genre:'healing',    dur:'5:01', plays:'2.6M',  g:3, audioSrc:'music/No%20Score,%20Just%20Soul.mp3', detailIdx:17 },
+  { rank:5,  title:'Temple Echo Loop',  artist:'OMIX Studio',             genre:'ambient',    dur:'4:09', plays:'2.5M',  g:4, audioSrc:'music/Temple%20Echo%20Loop.mp3', detailIdx:18 },
+  { rank:6,  title:'공즉',              artist:'OMIX Studio',             genre:'meditation', dur:'2:53', plays:'2.4M',  g:5, audioSrc:'music/공즉.mp3', detailIdx:19 },
+  { rank:7,  title:'무명등',            artist:'OMIX Studio',             genre:'mindful',    dur:'2:55', plays:'2.3M',  g:6, audioSrc:'music/무명등.mp3', detailIdx:20 },
+  { rank:8,  title:'사계윤회',          artist:'OMIX Studio',             genre:'world',      dur:'2:30', plays:'2.2M',  g:7, audioSrc:'music/사계윤회.mp3', detailIdx:21 },
+  { rank:9,  title:'업보 Bounce',       artist:'OMIX Studio',             genre:'dance',      dur:'3:14', plays:'2.1M',   g:8, audioSrc:'music/업보%20Bounce.mp3', detailIdx:22 },
+  { rank:10, title:'파도에 맡겨',       artist:'OMIX Studio',             genre:'healing',    dur:'4:09', plays:'2.0M',   g:9, audioSrc:'music/파도에%20맡겨.mp3', detailIdx:23 },
   { rank:11, title:'Silent Thunder',    artist:'DJ Haein × OMIX Studio',  genre:'club',       dur:'2:46', plays:'1.8M', g:4, audioSrc:'music/Silent%20Thunder.mp3', detailIdx:12 },
   { rank:12, title:'Dharma Lights',     artist:'DJ Haein × OMIX Studio',  genre:'dance',      dur:'1:55', plays:'1.4M', g:2, audioSrc:'music/Dharma%20Lights.mp3',  detailIdx:13 },
   { rank:13, title:'Void Mandala',      artist:'DJ Haein × OMIX Studio', genre:'club',       dur:'3:48', plays:'1.2M', g:0, detailIdx:0 },
@@ -199,6 +200,7 @@ function buildStrip() {
         </div>
       </div>
       <div class="sc-info">
+        <p class="sc-title">${t.title}</p>
         <p class="sc-artist">${t.artist}</p>
         <span class="sc-genre genre-tag ${t.genre}">${GENRE_LABEL[t.genre]}</span>
       </div>`;
@@ -365,6 +367,56 @@ document.getElementById('sortFilterGroup')
     e.preventDefault();
     strip.scrollLeft += e.deltaY * 0.5;
   }, { passive: false });
+
+  /* 좌우 화살표 — 카드 2장 폭만큼 이동, 끝에 닿으면 그쪽 화살표는 숨김 */
+  const prev = document.getElementById('stripPrev');
+  const next = document.getElementById('stripNext');
+  const step = () => (strip.querySelector('.strip-card')?.offsetWidth || 240) * 2;
+  prev?.addEventListener('click', () => strip.scrollBy({ left: -step(), behavior: 'smooth' }));
+  next?.addEventListener('click', () => strip.scrollBy({ left:  step(), behavior: 'smooth' }));
+
+  function syncArrows() {
+    const max = strip.scrollWidth - strip.clientWidth - 4;
+    prev?.classList.toggle('is-hidden', strip.scrollLeft <= 4);
+    next?.classList.toggle('is-hidden', strip.scrollLeft >= max);
+  }
+  strip.addEventListener('scroll', syncArrows, { passive: true });
+  window.addEventListener('resize', syncArrows);
+  /* 카드는 render()로 다시 그려지므로 내용이 바뀔 때마다 다시 계산 */
+  new MutationObserver(syncArrows).observe(strip, { childList: true });
+  syncArrows();
+})();
+
+
+/* =====================================================
+   [11-B] 인트로 스크롤 안내 팝업
+   페이지 맨 위에서만 보이고, 조금이라도 스크롤하거나 닫으면 사라진다
+   ===================================================== */
+(function () {
+  const guide = document.getElementById('scrollGuide');
+  if (!guide) return;
+
+  let dismissed = false;
+  const showTimer = setTimeout(() => {
+    if (!dismissed && window.scrollY < 40) guide.classList.add('is-visible');
+  }, 1200);
+
+  function hide() {
+    dismissed = true;
+    clearTimeout(showTimer);
+    guide.classList.remove('is-visible');
+    window.removeEventListener('scroll', onScroll);
+  }
+  function onScroll() { if (window.scrollY > 40) hide(); }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  /* 누르면 카세트가 다 보이는 지점까지 대신 내려준다 */
+  guide.addEventListener('click', e => {
+    if (!e.target.closest('.scroll-guide-close')) {
+      window.scrollBy({ top: window.innerHeight * 0.45, behavior: 'smooth' });
+    }
+    hide();
+  });
 })();
 
 
@@ -880,9 +932,9 @@ render();
   function updateCassette() {
     const rect      = intro.getBoundingClientRect();
     const navOffset = 72 + 36;  /* --nav-h + --marquee-h */
-    /* sticky 패널이 고정된 후 vh의 55%만큼 스크롤하면 카세트 완전 등장 */
+    /* sticky 패널이 고정된 후 vh의 40%만큼 스크롤하면 카세트 완전 등장 */
     const progress  = Math.max(0, Math.min(1,
-      (navOffset - rect.top) / (window.innerHeight * 0.55)
+      (navOffset - rect.top) / (window.innerHeight * 0.4)
     ));
     cassette.style.transform = `translateY(${200 * (1 - progress)}px)`;
     cassette.style.opacity   = `${progress}`;

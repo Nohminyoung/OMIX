@@ -1267,7 +1267,7 @@ body.cursor-merged .cursor-dot { width: 7px; height: 7px; }
 
 .chart-intro {
   position: relative;
-  height: 250vh;  /* 스크롤 공간 확보 — sticky 패널이 그 안에서 고정됨 */
+  height: 170vh;  /* 스크롤 공간 확보 — sticky 패널이 그 안에서 고정됨 */
 }
 
 /* 스크롤 중 고정되는 시각 패널 */
@@ -1404,13 +1404,17 @@ body.cursor-merged .cursor-dot { width: 7px; height: 7px; }
 }
 
 /* CTA */
+/* 빨간 바탕 위에서 눌러볼 수 있는 버튼으로 보이도록 흰 글씨 + 테두리 알약 모양 */
 .ci-cta {
-  display: inline-flex; align-items: center; gap: 8px;
-  font-size: 11px; font-weight: 700; letter-spacing: 0.28em; text-transform: uppercase;
-  color: rgba(0,0,0,0.45); margin-top: 4px;
-  transition: color 0.2s, gap 0.25s;
+  display: inline-flex; align-items: center; gap: 10px;
+  font-size: 14px; font-weight: 800; letter-spacing: 0.24em; text-transform: uppercase;
+  color: #fff; margin-top: 8px;
+  padding: 14px 28px; border-radius: 999px;
+  border: 1.5px solid rgba(255,255,255,0.85);
+  background: rgba(0,0,0,0.12);
+  transition: background 0.25s, color 0.25s, gap 0.25s;
 }
-.ci-cta:hover { color: rgba(0,0,0,0.75); gap: 16px; }
+.ci-cta:hover { background: #fff; color: var(--red); gap: 16px; }
 .ci-arrow { display: inline-block; transition: transform 0.3s ease; }
 .ci-cta:hover .ci-arrow { transform: translateY(4px); }
 
@@ -1473,8 +1477,18 @@ body.cursor-merged .cursor-dot { width: 7px; height: 7px; }
 }
 /* 스크롤 힌트 텍스트 */
 .strip-scroll-hint {
-  font-size: 10px; font-weight: 600; letter-spacing: 0.2em;
-  color: var(--gray-3); text-transform: uppercase;
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 12px; font-weight: 600; letter-spacing: 0.08em;
+  color: var(--gray-2);
+}
+/* 오른쪽으로 살짝 밀렸다 돌아오는 화살표 — 옆으로 넘길 수 있다는 신호 */
+.strip-hint-arrow {
+  display: inline-block; color: var(--red);
+  animation: strip-hint-nudge 1.6s ease-in-out infinite;
+}
+@keyframes strip-hint-nudge {
+  0%, 100% { transform: translateX(0); }
+  50%      { transform: translateX(5px); }
 }
 
 /* ── 가로 스크롤 트랙 ──
@@ -1651,6 +1665,11 @@ body.cursor-merged .cursor-dot { width: 7px; height: 7px; }
 .sc-info {
   display: flex; flex-direction: column; align-items: center; gap: 5px;
   text-align: center; position: relative; z-index: 1;
+}
+.sc-title {
+  font-size: 14px; font-weight: 700; color: var(--white);
+  max-width: 180px; white-space: nowrap;
+  overflow: hidden; text-overflow: ellipsis;
 }
 .sc-artist {
   font-size: 11px; font-weight: 500; color: var(--gray-2);
@@ -1859,13 +1878,13 @@ body.cursor-merged .cursor-dot { width: 7px; height: 7px; }
 
 /* 재생수 칸 */
 .track-plays {
-  font-size: 12px; color: var(--gray-3);
+  font-size: 13px; color: var(--gray-2);
   text-align: right; font-variant-numeric: tabular-nums;
 }
 
 /* 시간 칸 */
 .track-dur {
-  font-size: 12px; color: var(--gray-3);
+  font-size: 13px; color: var(--gray-2);
   text-align: right; font-variant-numeric: tabular-nums;
 }
 
@@ -5017,4 +5036,146 @@ body:has(.mini-player) .to-top { bottom: calc(var(--player-h) + 20px); }
 }
 @media (prefers-reduced-motion: reduce) {
   .to-top, .to-top-arrow, .to-top-fill { transition: none; }
+}
+
+
+/* =====================================================
+   [29] CHART 페이지 사용성 보완
+   스크롤 안내 팝업 · 카드 화살표 · 목록 영역 · 모바일 정리
+   ===================================================== */
+
+/* ── 인트로 스크롤 안내 팝업 (테마 스위처와 같은 다크 글래스) ── */
+.scroll-guide {
+  position: fixed; left: 50%; z-index: 450;
+  bottom: calc(var(--player-h) + 24px);
+  display: flex; align-items: center; gap: 14px;
+  padding: 12px 16px 12px 14px; border-radius: 18px;
+  background: rgba(12,12,11,0.82);
+  border: 1px solid rgba(255,255,255,0.15);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.35);
+  color: var(--white); text-align: left; cursor: pointer;
+  opacity: 0; pointer-events: none;
+  transform: translate(-50%, 12px) scale(0.96);
+  transition: opacity 0.3s ease, transform 0.35s cubic-bezier(0.23,1,0.32,1);
+}
+.scroll-guide.is-visible {
+  opacity: 1; pointer-events: all;
+  transform: translate(-50%, 0) scale(1);
+}
+.scroll-guide:hover { border-color: var(--red); }
+
+/* 마우스 모양 아이콘 + 휠이 아래로 굴러가는 애니메이션 */
+.scroll-guide-mouse {
+  width: 22px; height: 34px; flex-shrink: 0;
+  border: 1.5px solid rgba(255,255,255,0.7); border-radius: 12px;
+  display: flex; justify-content: center; padding-top: 6px;
+}
+.scroll-guide-wheel {
+  width: 3px; height: 7px; border-radius: 2px; background: var(--red);
+  animation: scroll-guide-wheel 1.5s ease-in-out infinite;
+}
+@keyframes scroll-guide-wheel {
+  0%   { transform: translateY(0);   opacity: 1; }
+  70%  { transform: translateY(10px); opacity: 0; }
+  100% { transform: translateY(0);   opacity: 0; }
+}
+.scroll-guide-text { display: flex; flex-direction: column; gap: 3px; }
+.scroll-guide-text strong { font-size: 13px; font-weight: 700; }
+.scroll-guide-text span   { font-size: 11px; color: var(--gray-2); }
+.scroll-guide-close {
+  width: 22px; height: 22px; border-radius: 50%; margin-left: 4px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; color: var(--gray-2);
+  background: rgba(255,255,255,0.07);
+}
+.scroll-guide-close:hover { color: var(--white); background: rgba(255,255,255,0.15); }
+
+/* ── 카드 스트립 좌우 화살표 (작고 연하게) ── */
+.strip-arrow {
+  position: absolute; z-index: 6;
+  top: 58%; transform: translateY(-50%);
+  width: 38px; height: 38px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; line-height: 1; padding-bottom: 3px;
+  color: rgba(255,255,255,0.6);
+  background: rgba(12,12,11,0.45);
+  border: 1px solid rgba(255,255,255,0.12);
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+  transition: opacity 0.25s, color 0.2s, border-color 0.2s;
+}
+.strip-arrow-left  { left: 14px; }
+.strip-arrow-right { right: 14px; }
+.strip-arrow:hover { color: var(--white); border-color: var(--red); }
+.strip-arrow.is-hidden { opacity: 0; pointer-events: none; }
+
+/* 재생 중 카드는 아래 .sc-title 에 이미 제목이 있으므로 프레임 안 중복 제목은 숨긴다 */
+.sc-card-title { display: none; }
+.strip-card.playing .sc-card-label { height: 34px; }
+
+/* ── 필터 바: 장르 칩이 길어도 화면 밖으로 밀리지 않게 ──
+   장르 그룹이 남는 폭만 쓰고, 넘치는 칩은 그룹 안에서 가로 스크롤.
+   오른쪽 끝을 흐리게 해서 "더 있다"는 걸 보여준다 */
+.filter-bar-left  { flex: 1 1 auto; min-width: 0; }
+.filter-bar-right { flex-shrink: 0; }
+.filter-bar-left .filter-chip-group {
+  flex: 1 1 auto; min-width: 0;
+  -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 36px), transparent);
+          mask-image: linear-gradient(to right, #000 calc(100% - 36px), transparent);
+  padding-right: 28px;
+}
+.filter-bar-label { font-size: 11px; color: var(--gray-2); }
+
+/* 순위 변동 숫자가 너무 작아 보이지 않던 것 */
+.track-trend { font-size: 10px; }
+
+/* 중간 폭: 필터 바를 두 줄로 나누고, 제목 칸이 잘리지 않도록 장르 열을 접는다 */
+@media (max-width: 1100px) {
+  .chart-filter-bar { flex-wrap: wrap; padding: 12px 24px; gap: 10px; }
+  .filter-bar-left  { flex: 1 1 100%; }
+  .filter-bar-right { flex: 1 1 100%; justify-content: flex-end; }
+}
+@media (max-width: 900px) {
+  .chart-list-section { padding-left: 20px; padding-right: 20px; }
+  .chart-list-header,
+  .chart-track-row { grid-template-columns: 44px 44px minmax(0, 1fr) 72px 52px 36px; gap: 12px; }
+  .col-genre, .track-genre-wrap { display: none; }
+}
+
+/* ── 모바일 ── */
+@media (max-width: 640px) {
+  /* 스트립 헤더: 제목과 배지를 위아래로 쌓고, 주차/제목이 중간에서 끊기지 않게 */
+  .chart-strip-header { flex-direction: column; align-items: flex-start; gap: 14px; }
+  .chart-strip-eyebrow { font-size: 11px; letter-spacing: 0.16em; white-space: nowrap; }
+  .chart-strip-title { font-size: 40px; white-space: nowrap; }
+  .chart-strip-meta { flex-direction: row; align-items: center; gap: 12px; }
+  .chart-strip-meta .meta-badge,
+  .strip-scroll-hint { white-space: nowrap; }
+
+  /* 정렬 칩 3개가 잘리지 않도록 — 트랙 수 표시는 휴대폰에서 생략 */
+  .filter-bar-right .filter-chip-group { flex-shrink: 0; }
+  .filter-track-count { display: none; }
+
+  /* 위 900px 규칙이 [27]의 휴대폰 5열 구성을 덮어쓰지 않도록 다시 지정 */
+  .chart-list-section { padding-left: 14px; padding-right: 14px; }
+  .chart-list-header,
+  .chart-track-row { grid-template-columns: 30px 40px minmax(0, 1fr) 44px 32px; gap: 8px; }
+
+  /* 인트로 버튼·팝업 크기 */
+  .ci-cta { font-size: 12px; padding: 12px 22px; }
+  /* 휴대폰에선 한 줄짜리 작은 팝업으로 — 두 줄이면 EXPLORE 버튼을 가린다 */
+  .scroll-guide { bottom: calc(var(--player-h) + 16px); padding: 10px 12px; gap: 10px; white-space: nowrap; }
+  .scroll-guide-text span { display: none; }
+  .scroll-guide-mouse { width: 18px; height: 28px; padding-top: 5px; }
+
+  /* 화살표는 터치 스와이프가 있으니 조금 더 작게 */
+  .strip-arrow { width: 32px; height: 32px; font-size: 18px; }
+  .strip-arrow-left  { left: 6px; }
+  .strip-arrow-right { right: 6px; }
+
+  /* 화면을 가리던 떠 있는 요소 숨김 — 커서(터치에선 의미 없음) · 테마 스위처 · 맨 위로 버튼 */
+  body:has(.chart-page) .cursor,
+  body:has(.chart-page) .cursor-dot,
+  body:has(.chart-page) .theme-switcher,
+  body:has(.chart-page) .to-top { display: none !important; }
 }

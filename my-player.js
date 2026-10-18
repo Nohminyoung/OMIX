@@ -562,6 +562,115 @@ if (liveListEl) {
 
 
 /* =====================================================
+   [13-C] 청취 통계 — 실제로 들은 만큼만 기록
+   · 재생 1회: 한 곡을 30초 이상(30초보다 짧은 곡은 절반 이상) 들었을 때
+   · 청취 시간: 실제 재생된 초만 더한다 (앞으로 건너뛴 구간은 제외)
+   · 이번 주(월요일 시작) 기록 + 누적 재생 수를 localStorage에 저장
+   ===================================================== */
+const STATS_KEY = 'omix_listen_stats';
+
+/* 이번 주 월요일 날짜 'YYYY-MM-DD' — 주가 바뀌면 이번 주 기록을 새로 시작 */
+function weekKey() {
+  const d = new Date();
+  d.setDate(d.getDate() - (d.getDay() + 6) % 7);
+  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+}
+
+function loadStats() {
+  let st = {};
+  try { st = JSON.parse(localStorage.getItem(STATS_KEY) || '{}'); } catch (e) {}
+  st.totalPlays = st.totalPlays || 0;
+  if (!st.week || st.week.key !== weekKey()) {
+    st.week = { key: weekKey(), plays: 0, sec: 0, tracks: [] };
+  }
+  return st;
+}
+const stats = loadStats();
+
+function saveStats() {
+  try { localStorage.setItem(STATS_KEY, JSON.stringify(stats)); } catch (e) {}
+}
+
+/* 시·분만 표시: 3h 42m · 12m · 0m */
+function formatListenTime(sec) {
+  const h = Math.floor(sec / 3600), m = Math.floor(sec % 3600 / 60);
+  return h ? `${h}h ${m}m` : `${m}m`;
+}
+
+const statWeekEl   = document.getElementById('statWeek');
+const statPlaysEl  = document.getElementById('statPlays');
+const statTimeEl   = document.getElementById('statTime');
+const statTracksEl = document.getElementById('statTracks');
+
+function renderStats() {
+  if (stats.week.key !== weekKey()) {   /* 페이지를 켜둔 채 주가 바뀐 경우 */
+    stats.week = { key: weekKey(), plays: 0, sec: 0, tracks: [] };
+  }
+  if (statWeekEl)   statWeekEl.textContent   = stats.week.plays;
+  if (statPlaysEl)  statPlaysEl.textContent  = stats.totalPlays;
+  if (statTimeEl)   statTimeEl.textContent   = formatListenTime(stats.week.sec);
+  if (statTracksEl) statTracksEl.textContent = stats.week.tracks.length + '곡';
+}
+
+/* 현재 곡에서 들은 시간 추적 */
+let listenedOnTrack = 0;     /* 이번 재생에서 실제로 들은 초 */
+let countedOnTrack  = false; /* 이번 재생이 이미 1회로 집계됐는지 */
+let lastPos         = 0;
+let unsavedSec      = 0;
+/* 듣고 있는 곡의 음원·길이 — 곡이 끝나면 다음 곡으로 먼저 넘어가므로 따로 기억해 둔다 */
+let listenSrc = '';
+let listenDur = 0;
+
+function resetTrackListen() {
+  listenedOnTrack = 0;
+  countedOnTrack  = false;
+  lastPos         = audioEl.currentTime || 0;
+}
+
+function countPlayIfDue() {
+  if (countedOnTrack || !listenDur) return;
+  if (listenedOnTrack < Math.min(30, listenDur / 2)) return;
+  countedOnTrack = true;
+  stats.totalPlays++;
+  stats.week.plays++;
+  if (!stats.week.tracks.includes(listenSrc)) stats.week.tracks.push(listenSrc);
+  saveStats();
+  renderStats();
+}
+
+audioEl.addEventListener('loadstart', resetTrackListen);   /* 다른 곡으로 바뀜 */
+audioEl.addEventListener('loadedmetadata', () => {
+  listenSrc = audioEl.currentSrc || audioEl.src;
+  listenDur = audioEl.duration;
+});
+audioEl.addEventListener('seeked', () => { lastPos = audioEl.currentTime; });
+audioEl.addEventListener('timeupdate', () => {
+  const pos = audioEl.currentTime;
+  const d = pos - lastPos;
+  lastPos = pos;
+  /* 정상 재생 중의 작은 진행만 인정 — 건너뛰기(큰 점프)·되감기는 제외 */
+  if (audioEl.paused || d <= 0 || d > 1.5) return;
+  listenedOnTrack += d;
+  stats.week.sec  += d;
+  unsavedSec      += d;
+  if (unsavedSec >= 5) { unsavedSec = 0; saveStats(); }
+  countPlayIfDue();
+  renderStats();
+});
+/* 곡이 끝나면 정리 — 반복 재생 시 다음 회차를 새로 센다 */
+audioEl.addEventListener('ended', () => {
+  countPlayIfDue();
+  saveStats();
+  resetTrackListen();
+  lastPos = 0;
+});
+audioEl.addEventListener('pause', saveStats);
+window.addEventListener('pagehide', saveStats);
+
+renderStats();
+
+
+/* =====================================================
    [14] QUEUE / HISTORY 탭 전환
    탭 클릭 시 해당 콘텐츠 표시 (History는 현재 같은 목록 사용)
    ===================================================== */

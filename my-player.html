@@ -152,10 +152,11 @@
           </div>
         </div>
 
-        <!-- 청취 통계 칩 3개: 이번 주 / 좋아요 / 재생 -->
+        <!-- 청취 통계 칩 3개: 이번 주 / 좋아요 / 재생
+             이번 주·총 재생은 my-player.js [13-C]에서 실제 재생 기록으로 채운다 -->
         <div class="now-stats">
           <div class="now-stat-chip">
-            <div class="now-stat-val" id="statWeek">12</div>
+            <div class="now-stat-val" id="statWeek">0</div>
             <div class="now-stat-key">이번 주</div>
           </div>
           <div class="now-stat-chip">
@@ -163,7 +164,7 @@
             <div class="now-stat-key">좋아요</div>
           </div>
           <div class="now-stat-chip">
-            <div class="now-stat-val" id="statPlays">108</div>
+            <div class="now-stat-val" id="statPlays">0</div>
             <div class="now-stat-key">총 재생</div>
           </div>
         </div>
@@ -225,7 +226,7 @@
           <div class="lib-stat-card">
             <span class="lib-stat-icon">⏱</span>
             <div class="lib-stat-info">
-              <div class="lib-stat-val">3h 42m</div>
+              <div class="lib-stat-val" id="statTime">0m</div>
               <div class="lib-stat-label">청취 시간</div>
             </div>
           </div>
@@ -234,7 +235,7 @@
           <div class="lib-stat-card">
             <span class="lib-stat-icon">🎵</span>
             <div class="lib-stat-info">
-              <div class="lib-stat-val">48곡</div>
+              <div class="lib-stat-val" id="statTracks">0곡</div>
               <div class="lib-stat-label">재생 트랙</div>
             </div>
           </div>

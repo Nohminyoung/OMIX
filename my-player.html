@@ -194,109 +194,8 @@
         <!-- 트랙 리스트 스크롤 영역 -->
         <div class="playlist-body" id="playlistBody">
 
-          <!-- ── QUEUE 탭 콘텐츠 ──
-               .current: 현재 재생 중 강조 (레드 배경)
-               data-track으로 JS에서 트랙 식별 -->
-
-          <!-- 트랙 1 (현재 재생 중) -->
-          <div class="playlist-track current" data-track="0">
-            <span class="pt-num">▶</span>
-            <div class="pt-info">
-              <p class="pt-name">Han Groove Riot</p>
-              <p class="pt-artist">OMIX Studio</p>
-            </div>
-            <span class="pt-time">2:57</span>
-          </div>
-
-          <!-- 트랙 2 -->
-          <div class="playlist-track" data-track="1">
-            <span class="pt-num">02</span>
-            <div class="pt-info">
-              <p class="pt-name">Karma Game</p>
-              <p class="pt-artist">OMIX Studio</p>
-            </div>
-            <span class="pt-time">5:00</span>
-          </div>
-
-          <!-- 트랙 3 -->
-          <div class="playlist-track" data-track="2">
-            <span class="pt-num">03</span>
-            <div class="pt-info">
-              <p class="pt-name">Mix Attack</p>
-              <p class="pt-artist">OMIX Studio</p>
-            </div>
-            <span class="pt-time">2:56</span>
-          </div>
-
-          <!-- 트랙 4 -->
-          <div class="playlist-track" data-track="3">
-            <span class="pt-num">04</span>
-            <div class="pt-info">
-              <p class="pt-name">No Score, Just Soul</p>
-              <p class="pt-artist">OMIX Studio</p>
-            </div>
-            <span class="pt-time">5:01</span>
-          </div>
-
-          <!-- 트랙 5 -->
-          <div class="playlist-track" data-track="4">
-            <span class="pt-num">05</span>
-            <div class="pt-info">
-              <p class="pt-name">Temple Echo Loop</p>
-              <p class="pt-artist">OMIX Studio</p>
-            </div>
-            <span class="pt-time">4:09</span>
-          </div>
-
-          <!-- 트랙 6 -->
-          <div class="playlist-track" data-track="5">
-            <span class="pt-num">06</span>
-            <div class="pt-info">
-              <p class="pt-name">공즉</p>
-              <p class="pt-artist">OMIX Studio</p>
-            </div>
-            <span class="pt-time">2:53</span>
-          </div>
-
-          <!-- 트랙 7 -->
-          <div class="playlist-track" data-track="6">
-            <span class="pt-num">07</span>
-            <div class="pt-info">
-              <p class="pt-name">무명등</p>
-              <p class="pt-artist">OMIX Studio</p>
-            </div>
-            <span class="pt-time">2:55</span>
-          </div>
-
-          <!-- 트랙 8 -->
-          <div class="playlist-track" data-track="7">
-            <span class="pt-num">08</span>
-            <div class="pt-info">
-              <p class="pt-name">사계윤회</p>
-              <p class="pt-artist">OMIX Studio</p>
-            </div>
-            <span class="pt-time">2:30</span>
-          </div>
-
-          <!-- 트랙 9 -->
-          <div class="playlist-track" data-track="8">
-            <span class="pt-num">09</span>
-            <div class="pt-info">
-              <p class="pt-name">업보 Bounce</p>
-              <p class="pt-artist">OMIX Studio</p>
-            </div>
-            <span class="pt-time">3:14</span>
-          </div>
-
-          <!-- 트랙 10 -->
-          <div class="playlist-track" data-track="9">
-            <span class="pt-num">10</span>
-            <div class="pt-info">
-              <p class="pt-name">파도에 맡겨</p>
-              <p class="pt-artist">OMIX Studio</p>
-            </div>
-            <span class="pt-time">4:09</span>
-          </div>
+          <!-- 트랙 행은 my-player.js [12] renderPlaylist()에서 TRACKS 기준으로 생성
+               (기본 10곡 + 차트에서 담은 곡). .current: 현재 재생 중 강조 -->
 
         </div>
       </div>
@@ -447,6 +346,7 @@
   </div>
 
   <!-- my-player.js: 커서, nav, 플레이어 컨트롤, 트랙 전환, 탭, 저장 트랙 -->
+  <script src="my-playlist.js"></script>
   <script src="my-player.js"></script>
   <script src="now-playing-panel.js"></script>
 

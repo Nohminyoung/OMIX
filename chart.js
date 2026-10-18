@@ -258,9 +258,18 @@ function buildRow(t, i) {
     </div>
     <span class="track-plays">${t.plays}</span>
     <span class="track-dur">${t.dur}</span>
-    <button class="track-play-btn" aria-label="재생">${isPlay ? '⏸' : '▶'}</button>`;
+    <div class="track-actions">
+      ${addBtnHtml(t)}
+      <button class="track-play-btn" aria-label="재생">${isPlay ? '⏸' : '▶'}</button>
+    </div>`;
 
   row.addEventListener('click', (e) => {
+    /* + 버튼: My Playlist에 담기만 하고 상세 페이지로 넘어가지 않는다 */
+    const addBtn = e.target.closest('.track-add-btn');
+    if (addBtn) {
+      addToMyPlaylist(t, addBtn);
+      return;
+    }
     /* If clicking the play button, just play — don't navigate */
     if (e.target.classList.contains('track-play-btn')) {
       playTrack(i);
@@ -273,6 +282,57 @@ function buildRow(t, i) {
     }
   });
   return row;
+}
+
+/* =====================================================
+   [7-B] My Playlist에 담기
+   my-playlist.js 저장소에 곡을 넣고, 토스트로 My Player 바로가기를 띄운다.
+   실제 음원(audioSrc)이 없는 곡은 재생할 수 없으므로 버튼을 비활성화한다.
+   ===================================================== */
+function addBtnHtml(t) {
+  if (!t.audioSrc) {
+    return `<button class="track-add-btn" disabled aria-label="음원 준비중" title="음원 준비중">+</button>`;
+  }
+  const added = window.OmixPlaylist?.has(t.audioSrc);
+  return `<button class="track-add-btn${added ? ' added' : ''}" aria-label="My Playlist에 담기" title="${added ? 'My Playlist에 담김' : 'My Playlist에 담기'}">${added ? '✓' : '+'}</button>`;
+}
+
+function addToMyPlaylist(t, btn) {
+  if (!t.audioSrc || !window.OmixPlaylist) return;
+  const [c1, c2] = GRADS[t.g];
+  const isNew = OmixPlaylist.add({
+    title: t.title, artist: t.artist, dur: t.dur, audioSrc: t.audioSrc,
+    bg: `linear-gradient(135deg,${c1} 0%,${c2} 100%)`,
+  });
+  btn.classList.add('added');
+  btn.textContent = '✓';
+  btn.title = 'My Playlist에 담김';
+  showPlaylistToast(t, isNew);
+}
+
+let toastTimer;
+function showPlaylistToast(t, isNew) {
+  let toast = document.getElementById('plToast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'plToast';
+    toast.className = 'pl-toast';
+    toast.setAttribute('role', 'status');
+    toast.innerHTML = `<span class="pl-toast-text"></span><a class="pl-toast-link">My Player에서 듣기 →</a>`;
+    document.body.appendChild(toast);
+    /* 마우스를 올리고 있는 동안은 사라지지 않게 */
+    toast.addEventListener('mouseenter', () => clearTimeout(toastTimer));
+    toast.addEventListener('mouseleave', () => {
+      toastTimer = setTimeout(() => toast.classList.remove('is-visible'), 1500);
+    });
+  }
+  toast.querySelector('.pl-toast-text').textContent =
+    isNew ? `'${t.title}' 담았어요` : `'${t.title}'은(는) 이미 담겨 있어요`;
+  toast.querySelector('.pl-toast-link').href =
+    'my-player.html?play=' + encodeURIComponent(t.audioSrc);
+  toast.classList.add('is-visible');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toast.classList.remove('is-visible'), 4000);
 }
 
 function buildList() {

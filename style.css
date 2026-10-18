@@ -2166,6 +2166,9 @@ body.cursor-merged .cursor-dot { width: 7px; height: 7px; }
 }
 /* CHOOSE A GENRE 제목 */
 .genre-heading { flex-shrink: 0; padding: 36px 40px 20px; text-align: center; position: relative; z-index: 10; }
+/* 글자 등장 스크립트가 제목을 display:flex 로 바꾸므로 flex 기준으로도 가운데 정렬 */
+.genre-heading .genre-heading-title { justify-content: center; }
+.genre-heading-sub { margin-top: 12px; font-size: 14px; color: var(--gray-2); letter-spacing: 0.01em; }
 .genre-heading-title {
   font-size: clamp(36px, 4.5vw, 64px); font-weight: 900;
   letter-spacing: -0.03em; text-transform: uppercase; color: var(--white); line-height: 1;
@@ -2176,25 +2179,31 @@ body.cursor-merged .cursor-dot { width: 7px; height: 7px; }
 /* LP 디스크 */
 .lp-disc {
   position: absolute; border-radius: 50%; pointer-events: none; will-change: transform;
+  /* 배경과 구분되도록 홈 결을 밝게, 빛 반사(conic)를 강하게, 바깥 테두리에 림 라이트 */
   background:
-    radial-gradient(circle at 50% 50%, #1c0404 0%, #110202 6%, rgba(249,21,54,0.2) 6.5%, rgba(249,21,54,0.08) 7.2%, transparent 8%),
-    conic-gradient(from 15deg, transparent 0deg, rgba(249,21,54,0.09) 40deg, transparent 90deg, rgba(166,71,255,0.06) 150deg, transparent 200deg, rgba(249,21,54,0.07) 260deg, transparent 310deg, rgba(100,80,200,0.04) 340deg, transparent 360deg),
-    repeating-radial-gradient(circle at 50% 50%, #0d0d0d 0%, #161616 0.42%, #0d0d0d 0.84%);
-  box-shadow: 0 0 0 1px rgba(255,255,255,0.05), inset 0 0 0 1px rgba(255,255,255,0.03);
+    conic-gradient(from 20deg, transparent 0deg, rgba(255,255,255,0.10) 30deg, transparent 70deg, transparent 180deg, rgba(255,255,255,0.08) 210deg, transparent 250deg, transparent 360deg),
+    conic-gradient(from 15deg, transparent 0deg, rgba(249,21,54,0.22) 40deg, transparent 95deg, rgba(166,71,255,0.16) 150deg, transparent 205deg, rgba(249,21,54,0.18) 260deg, transparent 315deg, rgba(166,71,255,0.10) 340deg, transparent 360deg),
+    repeating-radial-gradient(circle at 50% 50%, #151515 0%, #262626 0.4%, #151515 0.8%);
+  box-shadow:
+    0 0 0 2px rgba(255,255,255,0.14),
+    0 0 60px rgba(249,21,54,0.18),
+    0 -20px 80px rgba(0,0,0,0.6),
+    inset 0 0 0 10px rgba(0,0,0,0.35);
 }
 .lp-label-ring {
   position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-  width: 13%; aspect-ratio: 1; border-radius: 50%;
-  background: radial-gradient(circle, #200606 0%, #0e0101 100%);
-  border: 1px solid rgba(249,21,54,0.22);
+  width: 15%; aspect-ratio: 1; border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #ff4d6d 0%, var(--red) 45%, #7a0c1b 100%);
+  border: 2px solid rgba(255,255,255,0.18);
+  box-shadow: 0 0 40px rgba(249,21,54,0.45);
   display: flex; align-items: center; justify-content: center;
 }
 .lp-label-inner {
   display: flex; align-items: center; justify-content: center;
   width: 60%; aspect-ratio: 1; border-radius: 50%;
-  border: 1px solid rgba(249,21,54,0.15);
+  border: 1px solid rgba(255,255,255,0.3);
 }
-.lp-label-omix { font-size: clamp(4px, 0.8%, 9px); font-weight: 800; letter-spacing: 0.2em; color: rgba(249,21,54,0.5); text-transform: uppercase; }
+.lp-label-omix { font-size: clamp(4px, 0.8%, 9px); font-weight: 800; letter-spacing: 0.2em; color: rgba(255,255,255,0.85); text-transform: uppercase; }
 .lp-hole {
   position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
   width: 2%; aspect-ratio: 1; border-radius: 50%;
@@ -2202,8 +2211,10 @@ body.cursor-merged .cursor-dot { width: 7px; height: 7px; }
 }
 .genre-labels-layer { position: absolute; inset: 0; pointer-events: none; z-index: 20; }
 .genre-item { position: absolute; display: flex; flex-direction: column; align-items: center; gap: 8px; pointer-events: auto; cursor: pointer; user-select: none; transition: opacity 0.35s ease; }
-.genre-item:hover .genre-item-text { color: var(--white); }
-.genre-item-text { font-size: 14px; font-weight: 400; letter-spacing: 0.08em; color: rgba(255,255,255,0.5); white-space: nowrap; transition: color 0.2s, font-weight 0.25s, font-size 0.25s, text-decoration 0.2s; }
+/* 원호 위 장르 이름 — 눌러볼 수 있게 알약 버튼 모양 */
+.genre-item:hover .genre-item-text { color: var(--white); border-color: rgba(255,255,255,0.45); background: rgba(255,255,255,0.08); }
+.genre-item-text { font-size: 14px; font-weight: 500; letter-spacing: 0.06em; color: rgba(255,255,255,0.7); white-space: nowrap; padding: 6px 14px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.18); background: rgba(12,12,11,0.55); transition: color 0.2s, background 0.2s, border-color 0.2s; }
+.genre-item.active .genre-item-text { border-color: var(--red); background: rgba(249,21,54,0.18); }
 .genre-item-dot { width: 5px; height: 5px; border-radius: 50%; background: rgba(255,255,255,0.35); flex-shrink: 0; transition: background 0.3s, width 0.3s, height 0.3s, box-shadow 0.3s; }
 .genre-item.active .genre-item-text { color: var(--white); font-weight: 600; font-size: 15px; }
 .genre-item.active .genre-item-dot { width: 7px; height: 7px; background: var(--red); box-shadow: 0 0 10px rgba(249,21,54,0.7); }
@@ -2216,22 +2227,52 @@ body.cursor-merged .cursor-dot { width: 7px; height: 7px; }
   content: ''; position: absolute; top: 0; left: 50%; transform: translate(-50%, -50%);
   width: 8px; height: 8px; border-radius: 50%; background: var(--red); box-shadow: 0 0 12px rgba(249,21,54,0.8);
 }
+/* 중앙 선택 패널 — 프레임 없이 LP 위에 바로 올린다 (글자 그림자로 가독성 확보) */
 .lp-center-info {
   position: absolute; transform: translate(-50%, -50%);
-  text-align: center; z-index: 30; pointer-events: none;
-  min-width: 160px; padding: 28px 36px;
+  text-align: center; z-index: 30;
+  display: flex; flex-direction: column; align-items: center;
+  min-width: 300px; padding: 22px 26px 24px;
+  text-shadow: 0 2px 14px rgba(0,0,0,0.85);
+  cursor: default;
 }
-.sel-genre-label { font-size: 10px; font-weight: 600; letter-spacing: 0.3em; color: rgba(255,255,255,0.3); text-transform: uppercase; margin-bottom: 6px; }
-.sel-genre-name { font-size: clamp(14px, 2vw, 20px); font-weight: 600; letter-spacing: 0.12em; color: rgba(255,255,255,0.85); text-transform: uppercase; margin-bottom: 10px; min-height: 1.3em; transition: color 0.2s, opacity 0.25s; pointer-events: auto; cursor: pointer; }
+/* 테두리 없는 어두운 번짐 — LP 둘레 장식 글자가 설명과 겹쳐 읽히지 않던 것 */
+.lp-center-info::before {
+  content: ''; position: absolute; inset: -10% -14%; z-index: -1;
+  background: radial-gradient(ellipse at center, rgba(8,8,8,0.92) 0%, rgba(8,8,8,0.7) 45%, transparent 72%);
+  pointer-events: none;
+}
+.sel-genre-label { font-size: 10px; font-weight: 700; letter-spacing: 0.3em; color: var(--red); text-transform: uppercase; margin-bottom: 10px; }
+.sel-genre-row { display: flex; align-items: center; justify-content: center; gap: 14px; }
+.sel-genre-name { font-size: clamp(20px, 2.4vw, 28px); font-weight: 800; letter-spacing: 0.06em; color: var(--white); text-transform: uppercase; min-width: 7.5em; min-height: 1.2em; line-height: 1.2; transition: color 0.2s; cursor: pointer; }
 .sel-genre-name:hover { color: var(--red); }
-.sel-more-link { display: inline-block; font-size: 11px; font-weight: 500; letter-spacing: 0.25em; color: rgba(255,255,255,0.35); text-decoration: underline; text-underline-offset: 4px; text-decoration-color: rgba(255,255,255,0.2); pointer-events: auto; cursor: pointer; transition: color 0.2s, text-decoration-color 0.2s; }
-.sel-more-link:hover { color: rgba(255,255,255,0.75); text-decoration-color: rgba(255,255,255,0.5); }
+/* ‹ › 버튼 — 원형 테두리 없이 기호만 */
+.sel-nav {
+  width: 32px; height: 38px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 30px; line-height: 1; padding-bottom: 4px;
+  color: rgba(255,255,255,0.75); background: none; border: none;
+  transition: color 0.2s, transform 0.15s;
+}
+.sel-nav:hover { color: var(--red); transform: scale(1.15); }
+.sel-genre-desc { font-size: 13px; color: var(--gray-2); margin: 8px 0 18px; min-height: 1.4em; }
+/* 메인 이동 버튼 — 테마색으로 채운 알약 버튼 */
+.sel-more-link {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  padding: 11px 22px; border-radius: 999px;
+  font-size: 12px; font-weight: 700; letter-spacing: 0.02em; line-height: 1;
+  text-shadow: none;
+  color: #fff; background: var(--red);
+  box-shadow: 0 8px 26px rgba(249,21,54,0.4);
+  transition: transform 0.2s, box-shadow 0.2s, gap 0.2s;
+}
+.sel-more-link:hover { transform: translateY(-2px); gap: 12px; box-shadow: 0 12px 32px rgba(249,21,54,0.55); }
 .lp-arc-text { position: absolute; pointer-events: none; z-index: 8; user-select: none; }
 .arc-text-el { font-family: var(--font); font-size: 11px; font-weight: 500; letter-spacing: 5px; text-transform: uppercase; }
 .lp-drag-hint {
   position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
-  font-size: 10px; font-weight: 600; letter-spacing: 0.2em; color: rgba(255,255,255,0.25); text-transform: uppercase;
-  z-index: 30; pointer-events: none; animation: hintFade 3.5s ease-in-out forwards;
+  font-size: 12px; font-weight: 600; letter-spacing: 0.06em; color: rgba(255,255,255,0.55); white-space: nowrap;
+  z-index: 30; pointer-events: none; animation: hintFade 5s ease-in-out forwards;
 }
 @keyframes hintFade { 0%{opacity:0;transform:translateX(-50%) translateY(6px)} 20%{opacity:1;transform:translateX(-50%) translateY(0)} 75%{opacity:1} 100%{opacity:0} }
 
@@ -3552,7 +3593,7 @@ body.cursor-merged .cursor-dot { width: 7px; height: 7px; }
 
 /* 개별 트랙 행 — 에디토리얼 왼쪽 라인 */
 .playlist-track {
-  display: grid; grid-template-columns: 36px 1fr auto;
+  display: grid; grid-template-columns: 18px 28px 1fr auto;
   align-items: center; gap: 14px;
   padding: 10px 12px; border-radius: 0;
   border-left: 2px solid transparent;
@@ -5179,3 +5220,121 @@ body:has(.mini-player) .to-top { bottom: calc(var(--player-h) + 20px); }
   body:has(.chart-page) .theme-switcher,
   body:has(.chart-page) .to-top { display: none !important; }
 }
+
+
+/* =====================================================
+   [30] EXPLORE(장르 선택) 모바일 보완
+   ===================================================== */
+@media (max-width: 640px) {
+  .genre-heading-sub { font-size: 12px; word-break: keep-all; padding: 0 12px; }
+  .lp-center-info { min-width: 0; width: calc(100vw - 40px); max-width: 320px; padding: 18px 16px 20px; }
+  .sel-genre-row { gap: 10px; }
+  .sel-genre-name { font-size: 19px; min-width: 0; white-space: nowrap; }
+  .sel-nav { width: 28px; height: 34px; font-size: 26px; }
+  .sel-genre-desc { font-size: 12px; margin: 6px 0 14px; }
+  .sel-more-link { padding: 10px 20px; font-size: 12px; }
+  .genre-item-text { padding: 5px 11px; }
+
+  /* Chart 페이지와 동일하게 떠 있는 요소 숨김 (장르 버튼을 가린다) */
+  body:has(.genre-main) .cursor,
+  body:has(.genre-main) .cursor-dot,
+  body:has(.genre-main) .theme-switcher,
+  body:has(.genre-main) .to-top { display: none !important; }
+}
+
+
+/* =====================================================
+   차트 → My Playlist 담기 (+ 버튼 · 토스트)
+   마지막 칸에 담기(+) 버튼과 재생 버튼이 나란히 들어가도록 폭을 넓힌다
+   ===================================================== */
+.chart-list-header,
+.chart-track-row { grid-template-columns: 52px 48px 1fr 110px 80px 56px 76px; }
+
+.track-actions { display: flex; align-items: center; justify-content: flex-end; gap: 6px; }
+
+.track-add-btn {
+  width: 32px; height: 32px; border-radius: 50%;
+  border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; line-height: 1; color: var(--gray-2);
+  opacity: 0;
+  transition: opacity 0.2s, background 0.2s, border-color 0.2s, color 0.2s, transform 0.15s;
+}
+.chart-track-row:hover .track-add-btn { opacity: 1; }
+.track-add-btn:hover:not(:disabled) { border-color: var(--red); color: var(--red); transform: scale(1.1); }
+/* 담긴 곡은 항상 체크 표시 */
+.track-add-btn.added { opacity: 1; color: var(--red); border-color: var(--red); font-size: 13px; }
+.track-add-btn:disabled { cursor: not-allowed; }
+.chart-track-row:hover .track-add-btn:disabled { opacity: 0.25; }
+
+/* 터치 기기는 hover가 없으니 버튼을 항상 보여준다 */
+@media (hover: none) {
+  .track-add-btn:not(:disabled), .track-play-btn { opacity: 1; }
+}
+
+.pl-toast {
+  position: fixed; left: 50%; bottom: calc(var(--player-h, 72px) + 20px);
+  transform: translate(-50%, 16px);
+  display: flex; align-items: center; gap: 16px;
+  max-width: calc(100vw - 32px);
+  padding: 12px 18px;
+  background: var(--bg); color: var(--white);
+  border: 1px solid var(--border); border-left: 2px solid var(--red);
+  font-size: 13px; z-index: 9000;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.25s, transform 0.25s;
+}
+.pl-toast.is-visible { opacity: 1; transform: translate(-50%, 0); pointer-events: auto; }
+.pl-toast-text { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pl-toast-link { color: var(--red); font-weight: 700; white-space: nowrap; text-decoration: none; }
+.pl-toast-link:hover { text-decoration: underline; }
+
+@media (max-width: 900px) {
+  .chart-list-header,
+  .chart-track-row { grid-template-columns: 44px 44px minmax(0, 1fr) 72px 52px 72px; }
+}
+@media (max-width: 640px) {
+  .chart-list-header,
+  .chart-track-row { grid-template-columns: 30px 40px minmax(0, 1fr) 44px 64px; }
+  .track-actions { gap: 4px; }
+  .track-add-btn, .track-play-btn { width: 30px; height: 30px; }
+}
+
+/* My Player — 차트에서 담은 곡의 빼기(×) 버튼 */
+.pt-end { display: flex; align-items: center; gap: 10px; }
+.pt-remove {
+  width: 22px; height: 22px; border-radius: 50%;
+  font-size: 14px; line-height: 1; color: var(--gray-3);
+  opacity: 0; transition: opacity 0.2s, color 0.2s;
+}
+.playlist-track:hover .pt-remove { opacity: 1; }
+.pt-remove:hover { color: var(--red); }
+@media (hover: none) { .pt-remove { opacity: 1; } }
+
+/* My Player — 플레이리스트 편집: ⠿ 손잡이로 순서 바꾸기 */
+.pt-drag {
+  width: 18px; height: 28px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; line-height: 1; color: var(--gray-3);
+  cursor: grab; touch-action: none;   /* 터치 드래그 중 페이지 스크롤 방지 */
+  opacity: 0.35; transition: opacity 0.2s, color 0.2s;
+}
+.playlist-track:hover .pt-drag,
+.pt-drag:focus-visible { opacity: 1; }
+.pt-drag:hover { color: var(--white); }
+.pt-drag:active { cursor: grabbing; }
+@media (hover: none) { .pt-drag { opacity: 0.8; } }
+
+/* 끌고 있는 행 */
+.playlist-track.dragging {
+  background: rgba(255,255,255,0.08);
+  border-left-color: var(--red);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.35);
+  position: relative; z-index: 1;
+}
+.playlist-track.dragging .pt-drag { opacity: 1; color: var(--red); }
+
+/* 플레이리스트를 다 비웠을 때 */
+.pl-empty { padding: 40px 12px; text-align: center; font-size: 13px; color: var(--gray-3); }
+.pl-empty a { display: inline-block; margin-top: 10px; color: var(--red); font-weight: 700; text-decoration: none; }
+.pl-empty a:hover { text-decoration: underline; }

@@ -92,37 +92,52 @@ const ALL_TRACKS = [
   { rank:10, title:'파도에 맡겨',       artist:'OMIX Studio',             genre:'healing',    dur:'4:09', plays:'2.0M',   g:9, audioSrc:'music/파도에%20맡겨.mp3', detailIdx:23 },
   { rank:11, title:'Silent Thunder',    artist:'DJ Haein × OMIX Studio',  genre:'club',       dur:'2:46', plays:'1.8M', g:4, audioSrc:'music/Silent%20Thunder.mp3', detailIdx:12 },
   { rank:12, title:'Dharma Lights',     artist:'DJ Haein × OMIX Studio',  genre:'dance',      dur:'1:55', plays:'1.4M', g:2, audioSrc:'music/Dharma%20Lights.mp3',  detailIdx:13 },
-  { rank:13, title:'Void Mandala',      artist:'DJ Haein × OMIX Studio', genre:'club',       dur:'3:48', plays:'1.2M', g:0, detailIdx:0 },
-  { rank:14, title:'108 Bells',         artist:'Samsara Sound',           genre:'mindful',    dur:'4:21', plays:'987K', g:1, detailIdx:1 },
-  { rank:15, title:'Lotus Drop',        artist:'OMIX Collective',         genre:'dance',      dur:'5:02', plays:'876K', g:2, detailIdx:2 },
-  { rank:16, title:'Temple Bass',       artist:'DJ Haein',                genre:'club',       dur:'3:55', plays:'754K', g:3, detailIdx:3 },
-  { rank:17, title:'Nirvana Beat',      artist:'Zero Point × Dharma',     genre:'meditation', dur:'6:15', plays:'612K', g:4, detailIdx:4 },
-  { rank:18, title:'Dharma Flow',       artist:'Studio OMIX',             genre:'mindful',    dur:'4:44', plays:'541K', g:5, detailIdx:5 },
-  { rank:19, title:'Sacred Groove',     artist:'Haein × Karma',           genre:'dance',      dur:'5:18', plays:'489K', g:6, detailIdx:6 },
-  { rank:20, title:'Bodhi Bass',        artist:'DJ Sangha',               genre:'club',       dur:'3:39', plays:'423K', g:7, detailIdx:7 },
-  { rank:21, title:'Breath of Sutra',   artist:'Mindwave',                genre:'meditation', dur:'7:02', plays:'387K', g:8, detailIdx:8 },
-  { rank:22, title:'Crystal Stupa',     artist:'OMIX ft. Zen',            genre:'mindful',    dur:'4:55', plays:'341K', g:9, detailIdx:9 },
-  { rank:23, title:'Karma Kicks',       artist:'DJ Haein',                genre:'club',       dur:'3:22', plays:'312K', g:0 },
-  { rank:24, title:'Sangha Sessions',   artist:'Collective OM',           genre:'dance',      dur:'5:40', plays:'287K', g:1 },
-  { rank:25, title:'Empty Sky',         artist:'Zero Point',              genre:'meditation', dur:'8:10', plays:'254K', g:2 },
-  { rank:26, title:'Mandala Drops',     artist:'Studio OMIX',             genre:'mindful',    dur:'4:31', plays:'231K', g:3 },
-  { rank:27, title:'Five Skandhas',     artist:'OMIX Collective',         genre:'dance',      dur:'5:55', plays:'214K', g:4 },
-  { rank:28, title:'Bell Tower',        artist:'Samsara Sound',           genre:'mindful',    dur:'3:48', plays:'198K', g:5 },
-  { rank:29, title:'Red Lotus',         artist:'DJ Haein × Studio',       genre:'club',       dur:'4:07', plays:'178K', g:6 },
-  { rank:30, title:'Night Dharma',      artist:'Karma Wave',              genre:'meditation', dur:'6:30', plays:'162K', g:7 },
-  { rank:31, title:'Seven Factors',     artist:'OMIX Studio',             genre:'dance',      dur:'5:12', plays:'148K', g:8 },
-  { rank:32, title:'Return to Source',  artist:'DJ Haein',                genre:'mindful',    dur:'4:58', plays:'134K', g:9 },
-  { rank:33, title:'Om Bassline',       artist:'Dharma Drop',             genre:'club',       dur:'3:31', plays:'122K', g:2 },
-  { rank:34, title:'Wheel of Sound',    artist:'Zero Point',              genre:'dance',      dur:'5:03', plays:'114K', g:1 },
-  { rank:35, title:'Koan Reverb',       artist:'OMIX ft. Seon',           genre:'meditation', dur:'9:00', plays:'98K',  g:0 },
-  { rank:36, title:'Deep Stillness',    artist:'OMIX Ambient',            genre:'ambient',    dur:'8:22', plays:'87K',  g:1 },
-  { rank:37, title:'Cloud Temple',      artist:'Sky Monk',                genre:'ambient',    dur:'9:15', plays:'79K',  g:5 },
-  { rank:38, title:'Morning Chant',     artist:'Healing Waves',           genre:'healing',    dur:'5:45', plays:'72K',  g:3 },
-  { rank:39, title:'Five Elements',     artist:'Sound Garden',            genre:'healing',    dur:'4:55', plays:'65K',  g:7 },
-  { rank:40, title:'Binary Dharma',     artist:'DJ Circuit',              genre:'electronic', dur:'4:10', plays:'58K',  g:6 },
-  { rank:41, title:'Pulse Sutra',       artist:'Electronic Dharma',       genre:'electronic', dur:'3:58', plays:'51K',  g:4 },
-  { rank:42, title:'Gamelan Mandala',   artist:'OMIX × Bali Collective',  genre:'world',      dur:'7:12', plays:'44K',  g:9 },
-  { rank:43, title:'Sacred Patterns',   artist:'World Collective',        genre:'world',      dur:'6:33', plays:'38K',  g:2 },
+  /* 2026.10 추가 — OMIX Studio 신곡 (13~26위) */
+  { rank:13, title:'108 OVERDRIVE', artist:'OMIX Studio',             genre:'club',       dur:'4:09', plays:'1.38M', g:0, audioSrc:'music/108%20OVERDRIVE.mp3', detailIdx:24 },
+  { rank:14, title:'ONLY TONIGHT', artist:'OMIX Studio',             genre:'dance',      dur:'3:17', plays:'1.37M', g:1, audioSrc:'music/ONLY%20TONIGHT.mp3', detailIdx:25 },
+  { rank:15, title:'MOVE FREE',    artist:'OMIX Studio',             genre:'dance',      dur:'1:51', plays:'1.36M', g:2, audioSrc:'music/MOVE%20FREE.mp3', detailIdx:26 },
+  { rank:16, title:'BREAK THE CYCLE', artist:'OMIX Studio',             genre:'electronic', dur:'1:56', plays:'1.35M', g:3, audioSrc:'music/BREAK%20THE%20CYCLE.mp3', detailIdx:27 },
+  { rank:17, title:'GOOD RETURNS', artist:'OMIX Studio',             genre:'mindful',    dur:'2:11', plays:'1.34M', g:4, audioSrc:'music/GOOD%20RETURNS.mp3', detailIdx:28 },
+  { rank:18, title:'AFTER THE LIGHTS', artist:'OMIX Studio',             genre:'ambient',    dur:'2:19', plays:'1.33M', g:5, audioSrc:'music/AFTER%20THE%20LIGHTS.mp3', detailIdx:29 },
+  { rank:19, title:'108 SIGNAL',   artist:'OMIX Studio',             genre:'electronic', dur:'2:22', plays:'1.32M', g:6, audioSrc:'music/108%20SIGNAL.mp3', detailIdx:30 },
+  { rank:20, title:'TIDE BETWEEN US', artist:'OMIX Studio',             genre:'healing',    dur:'2:48', plays:'1.31M', g:7, audioSrc:'music/TIDE%20BETWEEN%20US.mp3', detailIdx:31 },
+  { rank:21, title:'RESET MY MIND', artist:'OMIX Studio',             genre:'meditation', dur:'2:33', plays:'1.3M', g:8, audioSrc:'music/RESET%20MY%20MIND.mp3', detailIdx:32 },
+  { rank:22, title:'NO FIXED NAME', artist:'OMIX Studio',             genre:'world',      dur:'2:47', plays:'1.29M', g:9, audioSrc:'music/NO%20FIXED%20NAME.mp3', detailIdx:33 },
+  { rank:23, title:'LET IT RING',  artist:'OMIX Studio',             genre:'dance',      dur:'2:22', plays:'1.28M', g:0, audioSrc:'music/LET%20IT%20RING.mp3', detailIdx:34 },
+  { rank:24, title:'무상(無常)',       artist:'OMIX Studio',             genre:'meditation', dur:'4:30', plays:'1.27M', g:1, audioSrc:'music/무상(無常).mp3', detailIdx:35 },
+  { rank:25, title:'BACK TO NOW',  artist:'OMIX Studio',             genre:'mindful',    dur:'2:55', plays:'1.26M', g:2, audioSrc:'music/BACK%20TO%20NOW.mp3', detailIdx:36 },
+  { rank:26, title:'잔상(殘像)',       artist:'OMIX Studio',             genre:'ambient',    dur:'4:12', plays:'1.25M', g:3, audioSrc:'music/잔상(殘像).mp3', detailIdx:37 },
+  { rank:27, title:'Void Mandala',      artist:'DJ Haein × OMIX Studio', genre:'club',       dur:'3:48', plays:'1.2M', g:0, detailIdx:0 },
+  { rank:28, title:'108 Bells',         artist:'Samsara Sound',           genre:'mindful',    dur:'4:21', plays:'987K', g:1, detailIdx:1 },
+  { rank:29, title:'Lotus Drop',        artist:'OMIX Collective',         genre:'dance',      dur:'5:02', plays:'876K', g:2, detailIdx:2 },
+  { rank:30, title:'Temple Bass',       artist:'DJ Haein',                genre:'club',       dur:'3:55', plays:'754K', g:3, detailIdx:3 },
+  { rank:31, title:'Nirvana Beat',      artist:'Zero Point × Dharma',     genre:'meditation', dur:'6:15', plays:'612K', g:4, detailIdx:4 },
+  { rank:32, title:'Dharma Flow',       artist:'Studio OMIX',             genre:'mindful',    dur:'4:44', plays:'541K', g:5, detailIdx:5 },
+  { rank:33, title:'Sacred Groove',     artist:'Haein × Karma',           genre:'dance',      dur:'5:18', plays:'489K', g:6, detailIdx:6 },
+  { rank:34, title:'Bodhi Bass',        artist:'DJ Sangha',               genre:'club',       dur:'3:39', plays:'423K', g:7, detailIdx:7 },
+  { rank:35, title:'Breath of Sutra',   artist:'Mindwave',                genre:'meditation', dur:'7:02', plays:'387K', g:8, detailIdx:8 },
+  { rank:36, title:'Crystal Stupa',     artist:'OMIX ft. Zen',            genre:'mindful',    dur:'4:55', plays:'341K', g:9, detailIdx:9 },
+  { rank:37, title:'Karma Kicks',       artist:'DJ Haein',                genre:'club',       dur:'3:22', plays:'312K', g:0 },
+  { rank:38, title:'Sangha Sessions',   artist:'Collective OM',           genre:'dance',      dur:'5:40', plays:'287K', g:1 },
+  { rank:39, title:'Empty Sky',         artist:'Zero Point',              genre:'meditation', dur:'8:10', plays:'254K', g:2 },
+  { rank:40, title:'Mandala Drops',     artist:'Studio OMIX',             genre:'mindful',    dur:'4:31', plays:'231K', g:3 },
+  { rank:41, title:'Five Skandhas',     artist:'OMIX Collective',         genre:'dance',      dur:'5:55', plays:'214K', g:4 },
+  { rank:42, title:'Bell Tower',        artist:'Samsara Sound',           genre:'mindful',    dur:'3:48', plays:'198K', g:5 },
+  { rank:43, title:'Red Lotus',         artist:'DJ Haein × Studio',       genre:'club',       dur:'4:07', plays:'178K', g:6 },
+  { rank:44, title:'Night Dharma',      artist:'Karma Wave',              genre:'meditation', dur:'6:30', plays:'162K', g:7 },
+  { rank:45, title:'Seven Factors',     artist:'OMIX Studio',             genre:'dance',      dur:'5:12', plays:'148K', g:8 },
+  { rank:46, title:'Return to Source',  artist:'DJ Haein',                genre:'mindful',    dur:'4:58', plays:'134K', g:9 },
+  { rank:47, title:'Om Bassline',       artist:'Dharma Drop',             genre:'club',       dur:'3:31', plays:'122K', g:2 },
+  { rank:48, title:'Wheel of Sound',    artist:'Zero Point',              genre:'dance',      dur:'5:03', plays:'114K', g:1 },
+  { rank:49, title:'Koan Reverb',       artist:'OMIX ft. Seon',           genre:'meditation', dur:'9:00', plays:'98K',  g:0 },
+  { rank:50, title:'Deep Stillness',    artist:'OMIX Ambient',            genre:'ambient',    dur:'8:22', plays:'87K',  g:1 },
+  { rank:51, title:'Cloud Temple',      artist:'Sky Monk',                genre:'ambient',    dur:'9:15', plays:'79K',  g:5 },
+  { rank:52, title:'Morning Chant',     artist:'Healing Waves',           genre:'healing',    dur:'5:45', plays:'72K',  g:3 },
+  { rank:53, title:'Five Elements',     artist:'Sound Garden',            genre:'healing',    dur:'4:55', plays:'65K',  g:7 },
+  { rank:54, title:'Binary Dharma',     artist:'DJ Circuit',              genre:'electronic', dur:'4:10', plays:'58K',  g:6 },
+  { rank:55, title:'Pulse Sutra',       artist:'Electronic Dharma',       genre:'electronic', dur:'3:58', plays:'51K',  g:4 },
+  { rank:56, title:'Gamelan Mandala',   artist:'OMIX × Bali Collective',  genre:'world',      dur:'7:12', plays:'44K',  g:9 },
+  { rank:57, title:'Sacred Patterns',   artist:'World Collective',        genre:'world',      dur:'6:33', plays:'38K',  g:2 },
 ];
 
 /* 현재 필터·정렬 상태 */
@@ -265,9 +280,8 @@ function buildRow(t, i) {
 
   row.addEventListener('click', (e) => {
     /* + 버튼: My Playlist에 담기만 하고 상세 페이지로 넘어가지 않는다 */
-    const addBtn = e.target.closest('.track-add-btn');
-    if (addBtn) {
-      addToMyPlaylist(t, addBtn);
+    if (e.target.closest('.track-add-btn')) {
+      addToMyPlaylist(t);
       return;
     }
     /* If clicking the play button, just play — don't navigate */
@@ -293,20 +307,17 @@ function addBtnHtml(t) {
   if (!t.audioSrc) {
     return `<button class="track-add-btn" disabled aria-label="음원 준비중" title="음원 준비중">+</button>`;
   }
-  const added = window.OmixPlaylist?.has(t.audioSrc);
-  return `<button class="track-add-btn${added ? ' added' : ''}" aria-label="My Playlist에 담기" title="${added ? 'My Playlist에 담김' : 'My Playlist에 담기'}">${added ? '✓' : '+'}</button>`;
+  /* 담긴 곡도 차트에서는 따로 표시하지 않는다 — 다시 누르면 토스트로 '이미 담겨 있어요' 안내 */
+  return `<button class="track-add-btn" aria-label="My Playlist에 담기" title="My Playlist에 담기">+</button>`;
 }
 
-function addToMyPlaylist(t, btn) {
+function addToMyPlaylist(t) {
   if (!t.audioSrc || !window.OmixPlaylist) return;
   const [c1, c2] = GRADS[t.g];
   const isNew = OmixPlaylist.add({
     title: t.title, artist: t.artist, dur: t.dur, audioSrc: t.audioSrc,
     bg: `linear-gradient(135deg,${c1} 0%,${c2} 100%)`,
   });
-  btn.classList.add('added');
-  btn.textContent = '✓';
-  btn.title = 'My Playlist에 담김';
   showPlaylistToast(t, isNew);
 }
 

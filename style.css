@@ -5262,8 +5262,6 @@ body:has(.mini-player) .to-top { bottom: calc(var(--player-h) + 20px); }
 }
 .chart-track-row:hover .track-add-btn { opacity: 1; }
 .track-add-btn:hover:not(:disabled) { border-color: var(--red); color: var(--red); transform: scale(1.1); }
-/* 담긴 곡은 항상 체크 표시 */
-.track-add-btn.added { opacity: 1; color: var(--red); border-color: var(--red); font-size: 13px; }
 .track-add-btn:disabled { cursor: not-allowed; }
 .chart-track-row:hover .track-add-btn:disabled { opacity: 0.25; }
 

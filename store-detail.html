@@ -84,6 +84,21 @@
   }
   .stdet-img-ph em { font-size: 32px; opacity: 0.12; font-style: normal; }
 
+  /* 실제 상품 사진 — 있으면 플레이스홀더 위를 덮는다 */
+  .stdet-img-photo {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: none;
+  }
+  .stdet-img-card.has-photo .stdet-img-photo { display: block; }
+  .stdet-img-card.has-photo .stdet-img-ph { display: none; }
+  .stdet-img-card.has-photo .stdet-img-counter {
+    z-index: 1;
+    color: rgba(255,255,255,0.85);
+    text-shadow: 0 1px 4px rgba(0,0,0,0.6);
+  }
+
   /* 이미지 카운터 */
   .stdet-img-counter {
     position: absolute; bottom: 14px; right: 14px;
@@ -366,6 +381,11 @@
     text-transform: uppercase;
   }
   .stdet-fullcut-ph em { font-size: 36px; opacity: 0.08; font-style: normal; }
+  /* 실제 사진: 위아래만 패럴랙스 여유(±40px)를 두고 사진 전체 높이를 보여준다 */
+  .stdet-fullcut-bg.has-photo {
+    inset: -50px 0;
+    background: center / cover no-repeat;
+  }
   .stdet-fullcut-caption {
     position: absolute; bottom: 0; left: 0; right: 0;
     padding: 80px max(32px,5vw) 28px;
@@ -656,6 +676,7 @@
               <em>🖼</em>
               <span>product-void-mandala-main.jpg</span>
             </div>
+            <img class="stdet-img-photo" id="stdetPhoto" alt="" />
             <span class="stdet-img-counter" id="stdetCounter">1 / 4</span>
           </div>
         </div>
@@ -908,6 +929,7 @@
       { ph: 'product-void-mandala-label.jpg', label: '4 / 4' },
     ];
     const counter = document.getElementById('stdetCounter');
+    const photo   = document.getElementById('stdetPhoto');
 
     function lerp(a, b, t) { return a + (b - a) * Math.max(0, Math.min(1, t)); }
     function invlerp(a, b, v) { return Math.max(0, Math.min(1, (v - a) / (b - a))); }
@@ -957,12 +979,20 @@
       sideLabel.style.opacity = lerp(1, 0, invlerp(0.28, 0.42, p));
 
       /* 이미지 카운터 변경 */
-      const imgIdx = Math.min(Math.floor(p * IMAGES.length), IMAGES.length - 1);
+      /* p 는 hero 전체 높이 기준이라 끝까지 내려도 1 에 못 미친다.
+         사진은 실제로 스크롤 가능한 구간(hero − 화면 높이) 기준으로 나눠야
+         마지막 장까지 보인다. */
+      const imgP = Math.max(0, Math.min(1, raw / Math.max(1, heroH - window.innerHeight)));
+      const imgIdx = Math.min(Math.floor(imgP * IMAGES.length), IMAGES.length - 1);
       const imgData = IMAGES[imgIdx];
       counter.textContent = imgData.label;
-      // 이미지 ph 텍스트도 교체
-      const ph = imgCard.querySelector('.stdet-img-ph span');
-      if (ph) ph.textContent = imgData.ph;
+      // 실제 사진이 있으면 사진을, 없으면 ph 텍스트를 교체
+      if (imgData.src) {
+        if (photo.getAttribute('src') !== imgData.src) photo.src = imgData.src;
+      } else {
+        const ph = imgCard.querySelector('.stdet-img-ph span');
+        if (ph) ph.textContent = imgData.ph;
+      }
 
       /* 배경 미세 변화 */
       const bgA = lerp(0.06, 0.03, splitT);
@@ -1037,15 +1067,46 @@
       if (mSub)   mSub.textContent  = 'A PRODUCT BY OMIX';
       if (mDesc)  mDesc.textContent = p.intro;
 
-      /* ── 이미지 파일명(가칭)을 상품에 맞춰 교체 ──
+      /* ── 이미지를 상품에 맞춰 교체 ──
          IMAGES 는 위 스크롤 섹션에서 선언된 배열.
-         const 라 재할당은 못 하지만 내용은 바꿀 수 있다. */
-      const SUFFIX = ['main', 'side', 'back', 'detail'];
-      IMAGES.forEach((im, i) => {
-        im.ph = 'product-' + p.id + '-' + SUFFIX[i] + '.jpg';
-      });
-      const phSpan = q('.stdet-img-ph span');
-      if (phSpan) phSpan.textContent = IMAGES[0].ph;
+         const 라 재할당은 못 하지만 내용은 바꿀 수 있다.
+         products.js 에 images 가 있으면 실제 사진(장수 자유),
+         없으면 가칭 파일명 4장을 보여준다. */
+      if (p.images && p.images.length) {
+        const n = p.images.length;
+        IMAGES.splice(0, IMAGES.length, ...p.images.map((path, i) => ({
+          src: S.imgUrl(path),
+          label: (i + 1) + ' / ' + n
+        })));
+        photo.alt = p.name;
+        imgCard.classList.add('has-photo');
+        /* 스크롤 중 끊기지 않게 나머지 사진을 미리 받아 둔다 */
+        IMAGES.slice(1).forEach(im => { new Image().src = im.src; });
+      } else {
+        const SUFFIX = ['main', 'side', 'back', 'detail'];
+        IMAGES.forEach((im, i) => {
+          im.ph = 'product-' + p.id + '-' + SUFFIX[i] + '.jpg';
+        });
+        const phSpan = q('.stdet-img-ph span');
+        if (phSpan) phSpan.textContent = IMAGES[0].ph;
+      }
+      /* ── 풀컷 패럴랙스 — products.js 의 fullcuts 로 채움 ── */
+      if (p.fullcuts && p.fullcuts.length) {
+        document.querySelectorAll('.stdet-fullcut').forEach((fc, i) => {
+          const d = p.fullcuts[i];
+          if (!d) { fc.style.display = 'none'; return; }
+          const bg = fc.querySelector('.stdet-fullcut-bg');
+          bg.classList.add('has-photo');
+          bg.style.backgroundImage = 'url("' + S.imgUrl(d.img) + '")';
+          bg.innerHTML = '';
+          fc.querySelector('.stdet-fullcut-tag').textContent = d.tag;
+          fc.querySelector('.stdet-fullcut-desc').innerHTML  = d.desc;
+        });
+      }
+
+      /* 바뀐 IMAGES 로 현재 스크롤 위치를 다시 그린다 */
+      lastP = -1;
+      onScroll();
 
       /* ── 관련 상품 — 현재 상품을 뺀 4개 ── */
       const relGrid = q('.stdet-related-grid');
@@ -1055,8 +1116,9 @@
           .slice(0, 4)
           .map(x =>
             '<a href="store-detail.html?id=' + encodeURIComponent(x.id) + '" class="stdet-rel-card">' +
-              '<div class="stdet-rel-img" style="background:' + x.art + '">' +
-                '<div class="stdet-rel-ph"><em>🖼</em><span>product-' + x.id + '-thumb.jpg</span></div>' +
+              '<div class="stdet-rel-img" style=\'background:' + S.cardBg(x) + '\'>' +
+                (x.images && x.images.length ? '' :
+                  '<div class="stdet-rel-ph"><em>🖼</em><span>product-' + x.id + '-thumb.jpg</span></div>') +
               '</div>' +
               '<p class="stdet-rel-name">' + x.name + '</p>' +
               '<p class="stdet-rel-price">' + S.won(x.price) + '</p>' +

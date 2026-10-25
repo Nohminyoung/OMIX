@@ -2659,6 +2659,23 @@ body.cursor-merged .cursor-dot { width: 7px; height: 7px; }
   position: relative; overflow: hidden;
   display: flex; align-items: flex-end; padding: 8px 10px;
 }
+/* 상품 사진 — 카드 가운데 빈 공간을 채움 (store.js setPhoto) */
+/* 기본: 사진 전체를 어둡게 → 호버: 원래 밝기 */
+.card-photo {
+  flex: 1; min-height: 120px;
+  margin-top: 8px;
+  border-radius: 3px;
+  background: center 35% / cover no-repeat;
+  filter: brightness(0.45);
+  transition: transform 0.5s ease, filter 0.5s ease;
+}
+.has-photo:hover .card-photo { filter: brightness(1); }
+
+.st-product-card.has-photo .stpc-header,
+.product-card.has-photo .pc-header { overflow: hidden; }
+.st-product-card.has-photo:hover .card-photo,
+.product-card.has-photo:hover .card-photo { transform: scale(1.03); }
+
 .stpc-art-type {
   font-size: 8px; font-weight: 800; letter-spacing: 0.22em; text-transform: uppercase;
   color: rgba(255,255,255,0.3);

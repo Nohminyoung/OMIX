@@ -46,6 +46,22 @@
     const i = name.lastIndexOf(' ');
     return i === -1 ? name : name.slice(0, i) + '<br />' + name.slice(i + 1);
   };
+  /* 대표 사진이 있으면 카드의 빈 가운데(header 아래)를 사진으로 채우고
+     하단 얇은 아트 띠는 숨긴다.
+     darkImage(배경 지운 컷)가 있으면 그걸 쓴다. 평소엔 어둡게, 호버 시 밝게 */
+  const setPhoto = (card, headerSel, artSel, p) => {
+    if (!p.images || !p.images.length) return false;
+    const header = card.querySelector(headerSel);
+    if (!header) return false;
+    const ph = document.createElement('div');
+    ph.className = 'card-photo';
+    ph.style.backgroundImage = 'url("' + S.imgUrl(p.darkImage || p.images[0]) + '")';
+    header.appendChild(ph);
+    card.classList.add('has-photo');
+    const art = card.querySelector(artSel);
+    if (art) art.style.display = 'none';   /* .stpc-art 의 display:flex 가 hidden 속성을 이겨서 직접 끔 */
+    return true;
+  };
 
   /* ── 카드마다 채우기 ── */
   const CARD_SEL = '.st-hero-card, .st-product-card, .product-card';
@@ -61,7 +77,7 @@
     if (card.classList.contains('st-hero-card')) {
       /* 좌측 대형 히어로 카드 */
       setHTML(card, '.st-hero-title', name0(p));
-      setBg(card,  '.st-hero-art-block', p.art);
+      setBg(card,  '.st-hero-art-block', S.cardBg(p));
       setText(card, '.st-hero-art-label', p.name.toLowerCase());
       setText(card, '.st-hero-art-meta span', p.typeLabel + ' · 2026');
       setText(card, '.st-hero-genres', p.desc);
@@ -73,8 +89,9 @@
       setHTML(card, '.stpc-title', twoLines(p.name));
       setText(card, '.stpc-genres', p.desc);
       setText(card, '.stpc-price', S.won(p.price));
-      setBg(card,  '.stpc-art', p.art);
+      setBg(card,  '.stpc-art', S.cardBg(p));
       setText(card, '.stpc-art-type', p.typeLabel);
+      setPhoto(card, '.stpc-header', '.stpc-art', p);
 
     } else {
       /* 하단 전체 상품 그리드 */
@@ -82,8 +99,9 @@
       setText(card, '.pc-title', p.name);
       setText(card, '.pc-genres', p.desc);
       setText(card, '.pc-price', S.won(p.price));
-      setBg(card,  '.pc-art', p.art);
+      setBg(card,  '.pc-art', S.cardBg(p));
       setText(card, '.pc-type', p.typeLabel);
+      setPhoto(card, '.pc-header', '.pc-art', p);
     }
   });
 

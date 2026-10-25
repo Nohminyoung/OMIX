@@ -27,7 +27,14 @@
      code      : 상세 페이지 좌측 라벨에 쓰는 품번
      options   : 선택 옵션. 없으면 null
      specs     : 상세 페이지 스펙 표 (k = 항목, v = 값)
-     ===================================================== */
+     images    : 상품 사진 경로 배열. [0] 이 대표(카드·썸네일) 이미지.
+                 상세 페이지는 배열 순서대로 스크롤에 맞춰 넘긴다.
+                 없으면 art 그라데이션으로 대신 칠한다.
+     darkImage : 스토어 목록 카드용 — 배경을 카드색으로 지운 사진.
+                 없으면 images[0] 을 쓴다. (카드에선 어둡게 → 호버 시 밝게)
+     fullcuts  : 상세 페이지 풀컷 패럴랙스 3칸. [{ img, tag, desc }]
+                 img 는 가로로 넓힌 사진(2:1), desc 는 <br /> 허용.
+                 없으면 플레이스홀더 그대로.     ===================================================== */
   const PRODUCTS = [
     /* ── 티셔츠 ────────────────────────────────── */
     {
@@ -41,7 +48,22 @@
       price: 35000,
       desc: 'BLACK / S·M·L·XL',
       art: 'linear-gradient(148deg,#0c0c0b,#1a1a18,#0c0c0b)',
-      options: { name: 'SIZE', values: ['S', 'M', 'L', 'XL'] },
+      images: [
+        'products/omix-tee-logo-main.jpg',
+        'products/omix-tee-logo-fit1.jpg',
+        'products/omix-tee-logo-fit2.jpg',
+        'products/omix-tee-logo-fit3.jpg',
+        'products/omix-tee-logo-fit4.jpg'
+      ],
+      darkImage: 'products/omix-tee-logo-dark.jpg',
+      fullcuts: [
+        { img: 'products/omix-tee-logo-fullcut-1.jpg', tag: 'OVERSIZED FIT',
+          desc: '드롭 숄더 오버핏<br />어깨부터 떨어지는 실루엣' },
+        { img: 'products/omix-tee-logo-fullcut-2.jpg', tag: 'FRONT GRAPHIC',
+          desc: 'OMIX SOUND TEMPLE<br />불상 · 연꽃 · 만다라 아트워크' },
+        { img: 'products/omix-tee-logo-fullcut-3.jpg', tag: 'DAILY WEAR',
+          desc: '와이드 카고 · 청키 스니커즈와 매칭<br />사계절 레이어드 기본템' }
+      ],      options: { name: 'SIZE', values: ['S', 'M', 'L', 'XL'] },
       stock: 60,
       specs: [
         { k: 'FABRIC',   v: '20수 코마 싱글' },
@@ -70,6 +92,120 @@
         { k: 'FIT',      v: '레귤러핏' },
         { k: 'PRINT',    v: '실크스크린 3도' },
         { k: 'COLOR',    v: 'Charcoal' },
+        { k: 'SIZE',     v: 'S · M · L · XL' },
+        { k: 'SHIPPING', v: '2–5 영업일' }
+      ]
+    },
+    {
+      id: 'omix-tee-108',
+      name: 'OMIX 108 TEE',
+      label: 'OMIX APPAREL',
+      type: 'tee',
+      typeLabel: 'T-SHIRT',
+      code: 'OMIX.TS.03',
+      intro: '108 번뇌에서 이름을 딴 108 그래픽 위에 OMIX 로고를 얹은 티셔츠입니다. 빈티지 크랙 질감을 살린 2도 실크스크린, 20수 코마 싱글 오버핏입니다.',
+      price: 35000,
+      desc: 'BLACK / S·M·L·XL',
+      art: 'linear-gradient(148deg,#0c0c0b,#1a1a18,#0c0c0b)',
+      images: [
+        'products/omix-tee-108-main.jpg',
+        'products/omix-tee-108-fit1.jpg',
+        'products/omix-tee-108-fit2.jpg',
+        'products/omix-tee-108-fit3.jpg',
+        'products/omix-tee-108-fit4.jpg'
+      ],
+      darkImage: 'products/omix-tee-108-dark.jpg',
+      fullcuts: [
+        { img: 'products/omix-tee-108-fullcut-1.jpg', tag: 'OVERSIZED FIT',
+          desc: '드롭 숄더 오버핏<br />어깨부터 떨어지는 실루엣' },
+        { img: 'products/omix-tee-108-fullcut-2.jpg', tag: 'FRONT GRAPHIC',
+          desc: 'OMIX × 108<br />크랙 텍스처 빅 넘버 그래픽' },
+        { img: 'products/omix-tee-108-fullcut-3.jpg', tag: 'DAILY WEAR',
+          desc: '와이드 카고 · 청키 스니커즈와 매칭<br />사계절 레이어드 기본템' }
+      ],
+      options: { name: 'SIZE', values: ['S', 'M', 'L', 'XL'] },
+      stock: 60,
+      specs: [
+        { k: 'FABRIC',   v: '20수 코마 싱글' },
+        { k: 'FIT',      v: '오버핏' },
+        { k: 'PRINT',    v: '실크스크린 2도' },
+        { k: 'COLOR',    v: 'Black' },
+        { k: 'SIZE',     v: 'S · M · L · XL' },
+        { k: 'SHIPPING', v: '2–5 영업일' }
+      ]
+    },
+    {
+      id: 'omix-tee-buddha-beat',
+      name: 'BUDDHA BEAT TEE',
+      label: 'OMIX APPAREL',
+      type: 'tee',
+      typeLabel: 'T-SHIRT',
+      code: 'OMIX.TS.04',
+      intro: '네온 레이저와 연꽃, 우주 배경 위의 불상을 담은 BUDDHA BEAT 그래픽 티셔츠입니다. 풀컬러 DTG 프린트, 20수 코마 싱글 오버핏입니다.',
+      price: 38000,
+      desc: 'BLACK / S·M·L·XL',
+      art: 'linear-gradient(148deg,#0d0a1a,#2a1456,#0c0c0b)',
+      images: [
+        'products/omix-tee-buddha-beat-main.jpg',
+        'products/omix-tee-buddha-beat-fit1.jpg',
+        'products/omix-tee-buddha-beat-fit2.jpg',
+        'products/omix-tee-buddha-beat-fit3.jpg',
+        'products/omix-tee-buddha-beat-fit4.jpg'
+      ],
+      darkImage: 'products/omix-tee-buddha-beat-dark.jpg',
+      fullcuts: [
+        { img: 'products/omix-tee-buddha-beat-fullcut-1.jpg', tag: 'OVERSIZED FIT',
+          desc: '드롭 숄더 오버핏<br />어깨부터 떨어지는 실루엣' },
+        { img: 'products/omix-tee-buddha-beat-fullcut-2.jpg', tag: 'FRONT GRAPHIC',
+          desc: 'BUDDHA BEAT<br />불상 · 연꽃 · 네온 레이저 아트워크' },
+        { img: 'products/omix-tee-buddha-beat-fullcut-3.jpg', tag: 'DAILY WEAR',
+          desc: '와이드 카고 · 청키 스니커즈와 매칭<br />사계절 레이어드 기본템' }
+      ],
+      options: { name: 'SIZE', values: ['S', 'M', 'L', 'XL'] },
+      stock: 60,
+      specs: [
+        { k: 'FABRIC',   v: '20수 코마 싱글' },
+        { k: 'FIT',      v: '오버핏' },
+        { k: 'PRINT',    v: 'DTG 풀컬러' },
+        { k: 'COLOR',    v: 'Black' },
+        { k: 'SIZE',     v: 'S · M · L · XL' },
+        { k: 'SHIPPING', v: '2–5 영업일' }
+      ]
+    },
+    {
+      id: 'omix-tee-buddha-dj',
+      name: 'BUDDHA DJ TEE',
+      label: 'OMIX APPAREL',
+      type: 'tee',
+      typeLabel: 'T-SHIRT',
+      code: 'OMIX.TS.05',
+      intro: '헤드폰과 핑크 선글라스를 쓴 불상을 흑백 일러스트로 그리고 OMIX 레터링 프레임을 두른 티셔츠입니다. DTG 프린트, 20수 코마 싱글 오버핏입니다.',
+      price: 38000,
+      desc: 'BLACK / S·M·L·XL',
+      art: 'linear-gradient(148deg,#0c0c0b,#2a0a18,#0c0c0b)',
+      images: [
+        'products/omix-tee-buddha-dj-main.jpg',
+        'products/omix-tee-buddha-dj-fit1.jpg',
+        'products/omix-tee-buddha-dj-fit2.jpg',
+        'products/omix-tee-buddha-dj-fit3.jpg',
+        'products/omix-tee-buddha-dj-fit4.jpg'
+      ],
+      darkImage: 'products/omix-tee-buddha-dj-dark.jpg',
+      fullcuts: [
+        { img: 'products/omix-tee-buddha-dj-fullcut-1.jpg', tag: 'OVERSIZED FIT',
+          desc: '드롭 숄더 오버핏<br />어깨부터 떨어지는 실루엣' },
+        { img: 'products/omix-tee-buddha-dj-fullcut-2.jpg', tag: 'FRONT GRAPHIC',
+          desc: 'BUDDHA DJ<br />헤드폰 · 핑크 선글라스 · OMIX 레터링 프레임' },
+        { img: 'products/omix-tee-buddha-dj-fullcut-3.jpg', tag: 'DAILY WEAR',
+          desc: '와이드 카고 · 청키 스니커즈와 매칭<br />사계절 레이어드 기본템' }
+      ],
+      options: { name: 'SIZE', values: ['S', 'M', 'L', 'XL'] },
+      stock: 60,
+      specs: [
+        { k: 'FABRIC',   v: '20수 코마 싱글' },
+        { k: 'FIT',      v: '오버핏' },
+        { k: 'PRINT',    v: 'DTG 풀컬러' },
+        { k: 'COLOR',    v: 'Black' },
         { k: 'SIZE',     v: 'S · M · L · XL' },
         { k: 'SHIPPING', v: '2–5 영업일' }
       ]
@@ -252,6 +388,19 @@
   /* 45000 → "₩45,000" */
   function won(n) {
     return '₩' + Number(n || 0).toLocaleString('ko-KR');
+  }
+
+  /* 경로에 한글·공백이 있어도 깨지지 않게 인코딩 */
+  function imgUrl(path) {
+    return encodeURI(path);
+  }
+
+  /* 카드 배경: 대표 사진이 있으면 사진, 없으면 art 그라데이션 */
+  function cardBg(p) {
+    if (p.images && p.images.length) {
+      return 'url("' + imgUrl(p.images[0]) + '") center / cover no-repeat, ' + p.art;
+    }
+    return p.art;
   }
 
   /* localStorage 는 프라이빗 모드 등에서 예외를 던질 수 있다 */
@@ -464,6 +613,8 @@
     COURIERS: COURIERS,
     get: get,
     won: won,
+    imgUrl: imgUrl,
+    cardBg: cardBg,
     cart: cart,
     amounts: amounts,
     needsShipping: needsShipping,

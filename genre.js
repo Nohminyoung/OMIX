@@ -79,14 +79,14 @@ document.getElementById('progressBar')?.addEventListener('click', e => {
    [4] 장르 데이터
    ───────────────────────────────────────────────────── */
 const GENRES = [
-  { name: 'Club Music',    slug: 'club'       },
-  { name: 'Mindful Roots', slug: 'mindful'    },
-  { name: 'Dance',         slug: 'dance'      },
-  { name: 'Meditation',    slug: 'meditation' },
-  { name: 'Ambient',       slug: 'ambient'    },
-  { name: 'Healing',       slug: 'healing'    },
-  { name: 'Electronic',    slug: 'electronic' },
-  { name: 'World Music',   slug: 'world'      },
+  { name: 'Club Music',    slug: 'club',       desc: '밤을 깨우는 강렬한 클럽 비트' },
+  { name: 'Mindful Roots', slug: 'mindful',    desc: '마음을 가라앉히는 전통의 소리' },
+  { name: 'Dance',         slug: 'dance',      desc: '몸이 먼저 반응하는 댄스 그루브' },
+  { name: 'Meditation',    slug: 'meditation', desc: '호흡에 집중하게 돕는 명상 음악' },
+  { name: 'Ambient',       slug: 'ambient',    desc: '공간을 잔잔하게 채우는 앰비언트' },
+  { name: 'Healing',       slug: 'healing',    desc: '지친 하루를 달래는 힐링 사운드' },
+  { name: 'Electronic',    slug: 'electronic', desc: '전자음으로 풀어낸 불교 음악' },
+  { name: 'World Music',   slug: 'world',      desc: '세계 각지의 소리를 담은 월드 뮤직' },
 ];
 const N    = GENRES.length;
 const STEP = 360 / N;   // 45°
@@ -124,6 +124,7 @@ const needleEl     = document.getElementById('lpNeedle');
 const centerInfoEl = document.getElementById('lpCenterInfo');
 const selNameEl    = document.getElementById('selGenreName');
 const selLinkEl    = document.getElementById('selMoreLink');
+const selDescEl    = document.getElementById('selGenreDesc');
 const arcSvgEl     = document.getElementById('lpArcText');
 
 
@@ -146,7 +147,7 @@ const labelEls = GENRES.map((g, i) => {
 /* 드래그 힌트 */
 const hintEl = document.createElement('div');
 hintEl.className   = 'lp-drag-hint';
-hintEl.textContent = '← Drag to Spin →';
+hintEl.textContent = '← 드래그해서 LP를 돌려보세요 →';
 stageEl.appendChild(hintEl);
 
 
@@ -257,6 +258,7 @@ function updateAll() {
     selNameEl.textContent = g.name.toUpperCase();
     selNameEl.dataset.slug = g.slug;
   }
+  if (selDescEl) selDescEl.textContent = g.desc;
   if (selLinkEl) selLinkEl.href = `chart.html?genre=${g.slug}`;
 }
 
@@ -414,6 +416,11 @@ document.addEventListener('keydown', e => {
   if (e.key === 'ArrowRight') navigateTo((activeIdx + 1) % N);
   if (e.key === 'Enter' && selLinkEl) window.location.href = selLinkEl.href;
 });
+
+
+/* 중앙 패널 ‹ › 버튼 — 드래그 없이도 장르를 하나씩 넘길 수 있게 */
+document.getElementById('selPrev')?.addEventListener('click', () => navigateTo((activeIdx - 1 + N) % N));
+document.getElementById('selNext')?.addEventListener('click', () => navigateTo((activeIdx + 1) % N));
 
 
 /* ─────────────────────────────────────────────────────

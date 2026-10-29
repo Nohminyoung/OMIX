@@ -2,7 +2,7 @@
    OMIX — products.js
    상품 데이터 단일 소스 + 장바구니/주문 저장 유틸
 
-   상품군: 티셔츠 / 포스터 / 키링 / 키캡 / 스티커
+   상품군: 티셔츠 / 포스터 / 엽서 / 키링 / 키캡 / 스티커
    store.html 의 카드와 store-detail.html 의 옵션 패널은
    모두 이 파일의 PRODUCTS 를 읽어 렌더링된다.
    상품을 추가·수정·삭제할 때는 이 파일만 고치면 된다.
@@ -21,7 +21,7 @@
      [1] 상품 데이터
 
      id        : 슬러그. store.html 의 data-product 값과 같아야 한다.
-     type      : 카테고리 필터 값 (tee / poster / keyring / keycap / sticker)
+     type      : 카테고리 필터 값 (tee / poster / postcard / keyring / keycap / sticker)
      typeLabel : 카드 아트 위에 찍히는 분류 라벨
      desc      : 카드 하단 한 줄 설명
      code      : 상세 페이지 좌측 라벨에 쓰는 품번
@@ -256,6 +256,169 @@
         { k: 'SHIPPING', v: '2–5 영업일' }
       ]
     },
+    {
+      id: 'omix-poster-concept72',
+      name: 'CONCEPT 72 POSTER',
+      label: 'OMIX PRINT',
+      type: 'poster',
+      typeLabel: 'POSTER',
+      code: 'OMIX.PT.03',
+      intro: '겹겹이 이어지는 불상의 옆얼굴 위에 MIND SOUND CONNECTION 을 오렌지 타이포로 얹은 컨셉 포스터입니다. 소리와 고요의 루프를 담았습니다.',
+      price: 18000,
+      desc: 'A2 / A3 · 무광 아트지',
+      art: 'linear-gradient(148deg,#0c0c0b,#2a1206,#0c0c0b)',
+      images: ['products/omix-poster-concept72-main.jpg'],
+      options: { name: 'SIZE', values: ['A2', 'A3'] },
+      stock: 120,
+      specs: [
+        { k: 'SIZE',     v: 'A2 420×594 / A3 297×420' },
+        { k: 'PAPER',    v: '무광 아트지 250g' },
+        { k: 'PRINT',    v: '6도 옵셋' },
+        { k: 'EDITION',  v: 'Limited 300' },
+        { k: 'PACKING',  v: '지관통 포장' },
+        { k: 'SHIPPING', v: '2–5 영업일' }
+      ]
+    },
+    {
+      id: 'omix-poster-season-opening',
+      name: 'SEASON OPENING POSTER',
+      label: 'OMIX PRINT',
+      type: 'poster',
+      typeLabel: 'POSTER',
+      code: 'OMIX.PT.04',
+      intro: '2026 OMIX SOUND TEMPLE 시즌 오프닝 포스터입니다. 사운드 웨이브로 번지는 불상과 라인업 타이포를 마젠타 단색으로 구성했습니다.',
+      price: 18000,
+      desc: 'A2 / A3 · 무광 아트지',
+      art: 'linear-gradient(148deg,#0d0306,#3a0820,#0d0306)',
+      images: ['products/omix-poster-season-opening-main.jpg'],
+      options: { name: 'SIZE', values: ['A2', 'A3'] },
+      stock: 120,
+      specs: [
+        { k: 'SIZE',     v: 'A2 420×594 / A3 297×420' },
+        { k: 'PAPER',    v: '무광 아트지 250g' },
+        { k: 'PRINT',    v: '6도 옵셋' },
+        { k: 'EDITION',  v: 'Limited 300' },
+        { k: 'PACKING',  v: '지관통 포장' },
+        { k: 'SHIPPING', v: '2–5 영업일' }
+      ]
+    },
+    {
+      id: 'omix-poster-omix-sound',
+      name: 'OMIX SOUND POSTER',
+      label: 'OMIX PRINT',
+      type: 'poster',
+      typeLabel: 'POSTER',
+      code: 'OMIX.PT.05',
+      intro: '헤드폰을 쓴 불상 뒤로 OMIX SOUND 빅 타이포를 깔아 둔 포스터입니다. 108초의 자유, 마음과 소리의 연결을 이야기합니다.',
+      price: 18000,
+      desc: 'A2 / A3 · 무광 아트지',
+      art: 'linear-gradient(148deg,#1a0408,#5a0c22,#1a0408)',
+      images: ['products/omix-poster-omix-sound-main.jpg'],
+      options: { name: 'SIZE', values: ['A2', 'A3'] },
+      stock: 120,
+      specs: [
+        { k: 'SIZE',     v: 'A2 420×594 / A3 297×420' },
+        { k: 'PAPER',    v: '무광 아트지 250g' },
+        { k: 'PRINT',    v: '6도 옵셋' },
+        { k: 'EDITION',  v: 'Limited 300' },
+        { k: 'PACKING',  v: '지관통 포장' },
+        { k: 'SHIPPING', v: '2–5 영업일' }
+      ]
+    },
+    {
+      id: 'omix-poster-beyond-mind',
+      name: 'BEYOND MIND POSTER',
+      label: 'OMIX PRINT',
+      type: 'poster',
+      typeLabel: 'POSTER',
+      code: 'OMIX.PT.06',
+      intro: 'MUSIC 헤드라인 아래 합장한 인물과 붉은 OMIX 레터링을 겹친 포스터입니다. 108 SECONDS · BEYOND MIND.',
+      price: 18000,
+      desc: 'A2 / A3 · 무광 아트지',
+      art: 'linear-gradient(148deg,#0c0606,#2a0c0c,#0c0606)',
+      images: ['products/omix-poster-beyond-mind-main.jpg'],
+      options: { name: 'SIZE', values: ['A2', 'A3'] },
+      stock: 120,
+      specs: [
+        { k: 'SIZE',     v: 'A2 420×594 / A3 297×420' },
+        { k: 'PAPER',    v: '무광 아트지 250g' },
+        { k: 'PRINT',    v: '6도 옵셋' },
+        { k: 'EDITION',  v: 'Limited 300' },
+        { k: 'PACKING',  v: '지관통 포장' },
+        { k: 'SHIPPING', v: '2–5 영업일' }
+      ]
+    },
+
+    /* ── 엽서 ──────────────────────────────────── */
+    {
+      id: 'omix-postcard-hours',
+      name: 'OMIX HOURS POSTCARD',
+      label: 'OMIX PRINT',
+      type: 'postcard',
+      typeLabel: 'POSTCARD',
+      code: 'OMIX.PC.01',
+      intro: '크롬 불상과 레드 타이포로 만든 OMIX HOURS 인터랙티브 사운드 익스피리언스 엽서입니다.',
+      price: 3000,
+      desc: '100×148 · 스노우지 300g',
+      art: 'linear-gradient(148deg,#1a0804,#3a1008,#1a0804)',
+      images: ['products/omix-postcard-hours-main.jpg'],
+      options: null,
+      stock: 300,
+      specs: [
+        { k: 'SIZE',     v: '100 × 148 mm' },
+        { k: 'PAPER',    v: '스노우지 300g' },
+        { k: 'PRINT',    v: '4도 옵셋 양면' },
+        { k: 'FINISH',   v: '무광 코팅' },
+        { k: 'PACKING',  v: 'OPP 개별 포장' },
+        { k: 'SHIPPING', v: '2–5 영업일' }
+      ]
+    },
+    {
+      id: 'omix-postcard-underground',
+      name: 'UNDERGROUND SESSION POSTCARD',
+      label: 'OMIX PRINT',
+      type: 'postcard',
+      typeLabel: 'POSTCARD',
+      code: 'OMIX.PC.02',
+      intro: '디제잉하는 불상과 승려들을 골드 일러스트로 그린 UNDERGROUND SESSION 엽서입니다. 無心無音 · 即刻解脱.',
+      price: 3000,
+      desc: '100×148 · 스노우지 300g',
+      art: 'linear-gradient(148deg,#14100a,#3a2a10,#14100a)',
+      images: ['products/omix-postcard-underground-main.jpg'],
+      options: null,
+      stock: 300,
+      specs: [
+        { k: 'SIZE',     v: '100 × 148 mm' },
+        { k: 'PAPER',    v: '스노우지 300g' },
+        { k: 'PRINT',    v: '4도 옵셋 양면' },
+        { k: 'FINISH',   v: '무광 코팅' },
+        { k: 'PACKING',  v: 'OPP 개별 포장' },
+        { k: 'SHIPPING', v: '2–5 영업일' }
+      ]
+    },
+    {
+      id: 'omix-postcard-from-om',
+      name: 'FROM OM POSTCARD',
+      label: 'OMIX PRINT',
+      type: 'postcard',
+      typeLabel: 'POSTCARD',
+      code: 'OMIX.PC.03',
+      intro: '선글라스를 쓴 불상을 스캔라인 하프톤으로 표현하고 형광 옐로 타이포를 얹은 FROM OM, INTO SOUND 엽서입니다.',
+      price: 3000,
+      desc: '100×148 · 스노우지 300g',
+      art: 'linear-gradient(148deg,#0c0c0b,#2a2c0a,#0c0c0b)',
+      images: ['products/omix-postcard-from-om-main.jpg'],
+      options: null,
+      stock: 300,
+      specs: [
+        { k: 'SIZE',     v: '100 × 148 mm' },
+        { k: 'PAPER',    v: '스노우지 300g' },
+        { k: 'PRINT',    v: '4도 옵셋 양면' },
+        { k: 'FINISH',   v: '무광 코팅' },
+        { k: 'PACKING',  v: 'OPP 개별 포장' },
+        { k: 'SHIPPING', v: '2–5 영업일' }
+      ]
+    },
 
     /* ── 키링 ──────────────────────────────────── */
     {
@@ -357,6 +520,7 @@
     { key: 'all',     label: 'ALL' },
     { key: 'tee',     label: 'T-SHIRT' },
     { key: 'poster',  label: 'POSTER' },
+    { key: 'postcard', label: 'POSTCARD' },
     { key: 'keyring', label: 'KEYRING' },
     { key: 'keycap',  label: 'KEYCAP' },
     { key: 'sticker', label: 'STICKER' }

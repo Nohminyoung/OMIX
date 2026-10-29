@@ -362,7 +362,8 @@
      ============================================================ */
   .stdet-fullcut {
     position: relative;
-    height: 75vh; overflow: hidden;
+    /* 넓은 화면에서 75vh 는 너무 납작해 인물이 잘린다 → 가로폭에 맞춰 키우되 화면 높이까지만 */
+    height: min(100vh, max(75vh, 45vw)); overflow: hidden;
     border-top: 1px solid var(--border);
     display: flex; align-items: center; justify-content: center;
   }
@@ -381,10 +382,11 @@
     text-transform: uppercase;
   }
   .stdet-fullcut-ph em { font-size: 36px; opacity: 0.08; font-style: normal; }
-  /* 실제 사진: 위아래만 패럴랙스 여유(±40px)를 두고 사진 전체 높이를 보여준다 */
+  /* 실제 사진: 머리가 잘리지 않도록 위쪽 기준으로 맞추고, 넘치는 부분은 아래에서 자른다.
+     패럴랙스 여유는 위 20px(±20px 이동) — 위로 많이 넘기면 다시 머리가 가려진다 */
   .stdet-fullcut-bg.has-photo {
-    inset: -50px 0;
-    background: center / cover no-repeat;
+    inset: -20px 0 -60px;
+    background: center top / cover no-repeat;
   }
   .stdet-fullcut-caption {
     position: absolute; bottom: 0; left: 0; right: 0;
@@ -543,12 +545,12 @@
   .stdet-modal-mlink:hover { color: var(--gray-1); }
 
   /* ── 반응형 ── */
-  @media (max-width: 860px) {
+  @media (max-width: 900px) {
     .stdet-side-label { display: none; }
     .stdet-options { width: 55%; padding: 24px 20px; }
     .stdet-related-grid { grid-template-columns: repeat(2,1fr); }
   }
-  @media (max-width: 640px) {
+  @media (max-width: 767px) {
     .stdet-options { width: 100%; }
     .stdet-related-grid { grid-template-columns: repeat(2,1fr); gap: 10px; }
   }
@@ -1102,6 +1104,9 @@
           fc.querySelector('.stdet-fullcut-tag').textContent = d.tag;
           fc.querySelector('.stdet-fullcut-desc').innerHTML  = d.desc;
         });
+      } else if (p.images && p.images.length) {
+        /* 사진은 있는데 풀컷이 없는 상품(포스터·엽서) — 가칭 플레이스홀더 대신 숨김 */
+        document.querySelectorAll('.stdet-fullcut').forEach(fc => { fc.style.display = 'none'; });
       }
 
       /* 바뀐 IMAGES 로 현재 스크롤 위치를 다시 그린다 */
@@ -1207,7 +1212,7 @@
       function tick() {
         const r = fc.getBoundingClientRect();
         const prog = (window.innerHeight - r.top) / (window.innerHeight + r.height);
-        bg.style.transform = `translateY(${(prog - 0.5) * 80}px)`;
+        bg.style.transform = `translateY(${(prog - 0.5) * 40}px)`;
       }
       window.addEventListener('scroll', tick, {passive:true});
       tick();

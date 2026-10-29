@@ -459,7 +459,7 @@
   .stack-pill { right: 24px; }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 767px) {
   .stack-card {
     width: calc(100vw - 48px);
     max-width: 360px;

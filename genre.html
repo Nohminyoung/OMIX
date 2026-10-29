@@ -79,12 +79,8 @@
 
     <!-- CHOOSE A GENRE 제목 -->
     <div class="genre-heading">
-      <!-- 에디토리얼 코너 브래킷 -->
-      <span class="stc-br stc-tl"></span>
-      <span class="stc-br stc-tr"></span>
-      <span class="stc-br stc-bl"></span>
-      <span class="stc-br stc-br-pos"></span>
       <h1 class="genre-heading-title">CHOOSE A GENRE</h1>
+      <p class="genre-heading-sub">LP를 돌리거나 장르 이름을 눌러 오늘 들을 음악을 골라보세요</p>
     </div>
 
     <!-- LP 스테이지: overflow hidden → 레코드 하단 잘림 -->
@@ -109,16 +105,18 @@
       <div class="lp-needle" id="lpNeedle"></div>
 
       <!-- 중앙 인포 박스: 현재 선택 장르 + MORE 링크 -->
+      <!-- 중앙 선택 패널: ‹ 장르명 › + 한 줄 설명 + 이동 버튼
+           (드래그를 몰라도 화살표·버튼만으로 고르고 들어갈 수 있게) -->
       <div class="lp-center-info" id="lpCenterInfo">
-        <!-- 에디토리얼 코너 브래킷 -->
-        <span class="stc-br stc-tl"></span>
-        <span class="stc-br stc-tr"></span>
-        <span class="stc-br stc-bl"></span>
-        <span class="stc-br stc-br-pos"></span>
-        <p class="sel-genre-label">SELECT GENRE</p>
-        <p class="sel-genre-name" id="selGenreName">—</p>
+        <p class="sel-genre-label">NOW SELECTED</p>
+        <div class="sel-genre-row">
+          <button class="sel-nav" id="selPrev" type="button" aria-label="이전 장르">‹</button>
+          <p class="sel-genre-name" id="selGenreName">—</p>
+          <button class="sel-nav" id="selNext" type="button" aria-label="다음 장르">›</button>
+        </div>
+        <p class="sel-genre-desc" id="selGenreDesc"></p>
         <a class="sel-more-link" id="selMoreLink" href="chart.html">
-          MORE
+          이 장르 들으러 가기 <span aria-hidden="true">→</span>
         </a>
       </div>
 

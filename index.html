@@ -77,10 +77,8 @@
     <a href="index.html" class="nav-logo-center" id="navLogoCenter"><img src="logo.png" alt="OMIX" class="logo-img" /></a>
     <div class="nav-sns">
       <a href="cart.html" class="nav-link nav-cart-link">CART <span class="cart-badge">0</span></a>
-      <a href="#" class="nav-sns-link" aria-label="Spotify"    target="_blank"><i class="fab fa-spotify"></i></a>
       <a href="#" class="nav-sns-link" aria-label="Instagram"  target="_blank"><i class="fab fa-instagram"></i></a>
-      <a href="#" class="nav-sns-link" aria-label="YouTube"    target="_blank"><i class="fab fa-youtube"></i></a>
-      <a href="#" class="nav-sns-link" aria-label="SoundCloud" target="_blank"><i class="fab fa-soundcloud"></i></a>
+      <a href="https://www.youtube.com/@OMIX-BUDDHIST" class="nav-sns-link" aria-label="YouTube"    target="_blank" rel="noopener"><i class="fab fa-youtube"></i></a>
     </div>
     <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
   </nav>
@@ -334,13 +332,15 @@
       <div class="idx-vid-mq-track" id="idxVidMqTrack" aria-hidden="true"></div>
       <span class="sr-only">Latest Mix / Void Mandala / Watch Now /</span>
     </div>
-    <div class="idx-video-frame">
+    <!-- ▶ 누르면 그 자리에서 유튜브 영상 재생 (누르기 전엔 유튜브를 불러오지 않아 페이지가 가볍다)
+         영상 바꾸려면 data-yt 의 영상 ID 만 바꾸면 된다 (youtube.com/watch?v=영상ID) -->
+    <div class="idx-video-frame" id="idxVideoFrame" data-yt="ewVedfwJ7ug">
       <span class="stc-br stc-tl"></span>
       <span class="stc-br stc-tr"></span>
       <span class="stc-br stc-bl"></span>
       <span class="stc-br stc-br-pos"></span>
       <img src="background_img.jpg" alt="Latest Mix" />
-      <a href="my-player.html" class="idx-video-play">▶</a>
+      <a href="https://www.youtube.com/watch?v=ewVedfwJ7ug" class="idx-video-play" id="idxVideoPlay" target="_blank" rel="noopener" aria-label="영상 재생">▶</a>
     </div>
     <p class="idx-video-cap">OMIX Studio · DJ Haein × OMIX</p>
   </section>
@@ -390,10 +390,8 @@
       <a href="my-player.html" class="idx-footer-link">My Player</a>
     </nav>
     <div class="idx-footer-sns">
-      <a href="#" class="nav-sns-link" style="font-size:20px"><i class="fab fa-spotify"></i></a>
       <a href="#" class="nav-sns-link" style="font-size:20px"><i class="fab fa-instagram"></i></a>
-      <a href="#" class="nav-sns-link" style="font-size:20px"><i class="fab fa-youtube"></i></a>
-      <a href="#" class="nav-sns-link" style="font-size:20px"><i class="fab fa-soundcloud"></i></a>
+      <a href="https://www.youtube.com/@OMIX-BUDDHIST" class="nav-sns-link" style="font-size:20px" target="_blank" rel="noopener" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
     </div>
   </footer>
 
@@ -866,5 +864,37 @@
   <script src="transition.js"></script>
   <script src="exhibit-config.js"></script>
   <script src="card-overlay.js"></script>
+  <script src="omix-extras.js"></script>
+  <script>
+  /* ── Latest Mix: ▶ 클릭 → 프레임 안에서 유튜브 재생 ── */
+  (function () {
+    const frame = document.getElementById('idxVideoFrame');
+    const btn   = document.getElementById('idxVideoPlay');
+    if (!frame || !btn) return;
+    const id = frame.dataset.yt;
+
+    /* 사이트 음악(배경음악·미니 플레이어)이 영상과 겹치지 않게 모두 멈춘다 */
+    function stopSiteAudio() {
+      document.querySelectorAll('audio').forEach(a => { if (!a.paused) a.pause(); });
+    }
+
+    btn.addEventListener('click', e => {
+      e.preventDefault();
+      stopSiteAudio();
+      /* 첫 클릭에 배경음악이 '이어서 재생'되도록 걸려 있어서, 한 번 더 확실히 멈춘다 */
+      setTimeout(stopSiteAudio, 300);
+
+      const iframe = document.createElement('iframe');
+      iframe.className = 'idx-video-embed';
+      iframe.src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0&modestbranding=1&playsinline=1`;
+      iframe.title = 'OMIX Latest Mix';
+      iframe.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+      iframe.allowFullscreen = true;
+      iframe.referrerPolicy = 'strict-origin-when-cross-origin';
+      frame.appendChild(iframe);
+      frame.classList.add('is-playing');
+    });
+  })();
+  </script>
 </body>
 </html>

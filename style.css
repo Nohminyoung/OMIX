@@ -1015,7 +1015,7 @@ body.cursor-merged .cursor-dot { width: 7px; height: 7px; }
   background: linear-gradient(90deg, var(--red), var(--red-dk));
   transition: width 0.5s linear;
 }
-.progress-times { display: flex; justify-content: space-between; font-size: 10px; color: var(--gray-3); }
+.progress-times { display: flex; justify-content: space-between; font-size: 11px; color: var(--gray-2); font-variant-numeric: tabular-nums; }
 
 /* 볼륨 — 스피커 버튼(누르면 음소거) + 슬라이더.
    슬라이더는 재생바처럼 왼쪽부터 현재 값만큼 빨간 선이 차고(--vol, player-ui.js),
@@ -2106,14 +2106,21 @@ body.cursor-merged .cursor-dot { width: 7px; height: 7px; }
 .pill-artist { font-size: 10px; color: var(--gray-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 /* 장르 태그 (카드 내부) */
 .genre-tag { display: inline-block; font-size: 9px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; padding: 3px 9px; border-radius: 100px; }
-.genre-tag.club       { background: rgba(249,21,54,0.14);  color: #F91536; border: 1px solid rgba(249,21,54,0.3); }
-.genre-tag.mindful    { background: rgba(166,71,255,0.14); color: #A647FF; border: 1px solid rgba(166,71,255,0.3); }
-.genre-tag.dance      { background: rgba(251,146,60,0.14); color: #fb923c; border: 1px solid rgba(251,146,60,0.3); }
-.genre-tag.meditation { background: rgba(20,184,166,0.14); color: #14b8a6; border: 1px solid rgba(20,184,166,0.3); }
-.genre-tag.ambient    { background: rgba(56,189,248,0.14); color: #38bdf8; border: 1px solid rgba(56,189,248,0.3); }
-.genre-tag.healing    { background: rgba(74,222,128,0.14); color: #4ade80; border: 1px solid rgba(74,222,128,0.3); }
-.genre-tag.electronic { background: rgba(240,171,252,0.14);color: #f0abfc; border: 1px solid rgba(240,171,252,0.3); }
-.genre-tag.world      { background: rgba(251,191,36,0.14); color: #fbbf24; border: 1px solid rgba(251,191,36,0.3); }
+/* 장르 색은 3가지만 쓴다
+   ① 비트 계열(CLUB·DANCE·ELECTRONIC)   → 포인트 컬러(테마 색 바꾸면 같이 바뀜)
+   ② 명상 계열(MEDITATION·MINDFUL·HEALING) → 보라
+   ③ 사운드스케이프(AMBIENT·WORLD)        → 회색 */
+.genre-tag.club, .genre-tag.dance, .genre-tag.electronic {
+  color: var(--red);
+  background: color-mix(in srgb, var(--red) 14%, transparent);
+  border: 1px solid color-mix(in srgb, var(--red) 32%, transparent);
+}
+.genre-tag.meditation, .genre-tag.mindful, .genre-tag.healing {
+  color: #B98AFF; background: rgba(166,71,255,0.14); border: 1px solid rgba(166,71,255,0.32);
+}
+.genre-tag.ambient, .genre-tag.world {
+  color: var(--gray-1); background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.16);
+}
 
 /* ── 장르 섹션 헤더 (차트 리스트 내) ── */
 .genre-section-header {
@@ -3857,13 +3864,14 @@ body.cursor-merged .cursor-dot { width: 7px; height: 7px; }
 
 /* ── 767px 이하 (모바일) ── */
 /* 공통 nav — 1024px 이하부터 햄버거로 전환 (그 위 폭에서만 메뉴 · 로고 · SNS 3열이 한 줄에 다 들어간다).
-   로고는 항상 중앙(2열), 햄버거는 우측(3열)에 고정
+   로고는 항상 중앙(2열), 햄버거는 좌측(1열)에 고정
    (nav-menu/nav-sns가 display:none이 되면 grid 자동 배치에서 완전히 제외되어
    남은 두 요소가 앞쪽 트랙부터 채워지므로, 명시적으로 그리드 위치를 지정) */
 @media (max-width: 1024px) {
   .nav-menu, .nav-sns { display: none; }
   .nav-logo-center { grid-column: 2; }
-  .hamburger { display: flex; grid-column: 3; justify-self: end; margin-left: 0; }
+  .hamburger { display: flex; grid-column: 1; grid-row: 1; justify-self: start; margin-left: -8px; }
+  .nav-logo-center { grid-row: 1; }
 }
 
 @media (max-width: 767px) {
@@ -4966,7 +4974,7 @@ body:has(.idx-hero-disc-wrap.is-scratching) .cursor {
    [26-1] 모바일 햄버거 드롭다운
    기본 .nav-menu.mobile-open 은 방향만 세로로 바꿀 뿐
    정렬·간격 규칙이 없어 항목이 왼쪽에 붙어 빽빽하게 나온다.
-   → 우측 정렬 + 구분선 + 행간 확보
+   → 좌측 정렬(햄버거 버튼이 좌측) + 구분선 + 행간 확보
    ===================================================== */
 @media (max-width: 1024px) {
 
@@ -4987,7 +4995,7 @@ body:has(.idx-hero-disc-wrap.is-scratching) .cursor {
     display: block;
     width: 100%;
     padding: 15px 2px;
-    text-align: right;
+    text-align: left;
     font-size: 15px !important;
     letter-spacing: 0.1em;
     border-radius: 0;
@@ -5001,15 +5009,15 @@ body:has(.idx-hero-disc-wrap.is-scratching) .cursor {
     background: transparent;
     color: var(--white);
   }
-  /* 드롭다운은 글자가 오른쪽 정렬이라 음파도 글자 끝 밑으로 */
+  /* 드롭다운은 글자가 왼쪽 정렬이라 음파도 글자 시작 밑으로 */
   .nav-menu.mobile-open .nav-link.active::after {
-    left: auto; right: 2px; bottom: 6px; transform: none;
+    left: 2px; right: auto; bottom: 6px; transform: none;
   }
 
   /* CART 는 flex 라 text-align 이 먹지 않는다 */
   .nav-menu.mobile-open .nav-cart-link {
     display: flex;
-    justify-content: flex-end;
+    justify-content: flex-start;
     color: var(--white);
   }
 }
@@ -5400,3 +5408,51 @@ body:has(.mini-player) .to-top { bottom: calc(var(--player-h) + 20px); }
    ② 한글만 있는 .shop-btn 은 그래도 1.1px 떠 보여 shop.css 에서 위·아래 padding 을 비대칭으로 보정 */
 .stpc-add-btn, .product-add-btn, .stc-badge, .idx-cta-badge, .meta-badge,
 .idx-store-btn, .idx-btn, .stdet-opt-buy-btn, .stdet-opt-wish-btn, .sd-cta-btn { line-height: 1.22; }
+
+
+/* =====================================================
+   [차트 레이아웃 통일] 콘텐츠 최대 폭 + 가운데 정렬
+   week15 방식 그대로: 내용 폭을 --chart-max 로 고정하고 남는 공간이 좌우 여백이 된다.
+   LP 영역 · 필터 바 · 곡 목록의 왼쪽/오른쪽 끝이 모두 같은 선에 맞는다.
+   (데스크톱만 — 900px 이하는 기존 모바일 여백 그대로)
+   ===================================================== */
+:root {
+  --chart-max: 1200px;   /* 콘텐츠 최대 폭 — 이 값만 바꾸면 차트 전체 폭이 바뀐다 */
+  --chart-pad: 32px;     /* 카드 박스 안쪽 여백 */
+  --chart-min-gap: 24px; /* 화면이 좁을 때 최소 바깥 여백 */
+}
+@media (min-width: 901px) {
+  /* 박스형 섹션(LP 영역 · 곡 목록): 박스 = 콘텐츠 + 안쪽 여백 32px 양쪽 */
+  .chart-strip-wrap,
+  .chart-list-section {
+    max-width: none;
+    margin-inline: max(var(--chart-min-gap), calc((100% - var(--chart-max) - var(--chart-pad) * 2) / 2));
+  }
+  .chart-strip-header { padding-inline: var(--chart-pad); }
+  .chart-strip        { padding-inline: var(--chart-pad); scroll-padding-inline: var(--chart-pad); }
+  .chart-list-section { padding-inline: var(--chart-pad); }
+
+  /* 필터 바: 배경은 화면 끝까지, 안의 내용만 같은 선에 맞춘다 */
+  .chart-filter-bar {
+    padding-inline: max(calc(var(--chart-min-gap) + var(--chart-pad)), calc((100% - var(--chart-max)) / 2));
+  }
+}
+
+/* 카드 스트립 양끝 — 배경색 덮개(.strip-fade-*) 대신 투명도 마스크로 자연스럽게 사라지게.
+   덮개 색(--bg)이 실제 배경과 달라 양쪽에 세로 선처럼 보이던 문제 수정 */
+.strip-fade-left, .strip-fade-right { display: none; }
+#chartStrip {
+  --strip-fade: 96px;
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 var(--strip-fade), #000 calc(100% - var(--strip-fade)), transparent 100%);
+          mask-image: linear-gradient(to right, transparent 0, #000 var(--strip-fade), #000 calc(100% - var(--strip-fade)), transparent 100%);
+}
+@media (max-width: 900px) { #chartStrip { --strip-fade: 36px; } }
+
+/* 홈 Latest Mix — 유튜브 영상 (▶ 누른 뒤) */
+.idx-video-embed {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  border: 0; z-index: 2; background: #000;
+}
+.idx-video-frame.is-playing img,
+.idx-video-frame.is-playing .idx-video-play { display: none; }
+.idx-video-frame .stc-br { z-index: 3; pointer-events: none; }

@@ -149,10 +149,32 @@ let playingIdx  = -1;   /* 현재 재생 중인 트랙 인덱스 (필터된 배�
 /* =====================================================
    [5] 필터·정렬 적용된 트랙 목록 반환
    ===================================================== */
+/* 검색어 — 공백·대소문자 무시 ("hangroove" 로도 'Han Groove Riot' 이 찾아지게) */
+let searchQuery = '';
+const normQ = s => String(s).toLowerCase().replace(/\s+/g, '');
+
+function matchesSearch(t) {
+  if (!searchQuery) return true;
+  const q = normQ(searchQuery);
+  return normQ(t.title).includes(q)
+      || normQ(t.artist).includes(q)
+      || normQ(GENRE_LABEL[t.genre] || t.genre).includes(q);
+}
+
+/* 검색어와 일치하는 부분을 <mark> 로 강조 (공백 없는 검색어는 원문 그대로 비교) */
+function hl(text) {
+  const safe = String(text).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const q = searchQuery.trim();
+  if (!q) return safe;
+  const re = new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'ig');
+  return safe.replace(re, '<mark>$1</mark>');
+}
+
 function getFiltered() {
   let list = activeGenre === 'all'
     ? [...ALL_TRACKS]
     : ALL_TRACKS.filter(t => t.genre === activeGenre);
+  list = list.filter(matchesSearch);
 
   if (activeSort === 'plays') {
     /* 재생수: 숫자 추출 후 내림차순 */
@@ -186,7 +208,10 @@ const stripEl = document.getElementById('chartStrip');
 function buildStrip() {
   if (!stripEl) return;
   const tracks = getFiltered();
+  /* 카드를 다시 그려도 보고 있던 가로 위치는 유지 (카드 눌러 재생할 때 맨 앞으로 튀지 않게) */
+  const keepScroll = stripEl.scrollLeft;
   stripEl.innerHTML = '';
+  requestAnimationFrame(() => { stripEl.scrollLeft = keepScroll; });
 
   tracks.forEach((t, i) => {
     const [c1, c2] = GRADS[t.g];
@@ -215,18 +240,18 @@ function buildStrip() {
         </div>
       </div>
       <div class="sc-info">
-        <p class="sc-title">${t.title}</p>
-        <p class="sc-artist">${t.artist}</p>
+        <p class="sc-title">${hl(t.title)}</p>
+        <p class="sc-artist">${hl(t.artist)}</p>
         <span class="sc-genre genre-tag ${t.genre}">${GENRE_LABEL[t.genre]}</span>
       </div>`;
 
     card.addEventListener('click', (e) => {
-      /* Ctrl/Cmd+click or middle-click → open in new tab */
-      if (e.ctrlKey || e.metaKey || e.button === 1) {
+      /* Ctrl/Cmd+클릭만 곡 상세를 새 탭으로, 그냥 클릭은 바로 재생 */
+      if (e.ctrlKey || e.metaKey) {
         window.open(`song-detail.html?track=${t.detailIdx ?? (t.rank - 1)}`, '_blank');
-      } else {
-        window.location.href = `song-detail.html?track=${t.detailIdx ?? (t.rank - 1)}`;
+        return;
       }
+      playTrack(i);
     });
     stripEl.appendChild(card);
   });
@@ -265,8 +290,8 @@ function buildRow(t, i) {
       <div class="track-art-playing">▶</div>
     </div>
     <div class="track-info">
-      <p class="track-title">${t.title}</p>
-      <p class="track-artist">${t.artist}</p>
+      <p class="track-title">${hl(t.title)}</p>
+      <p class="track-artist">${hl(t.artist)}</p>
     </div>
     <div class="track-genre-wrap">
       <span class="genre-tag ${t.genre}">${GENRE_LABEL[t.genre]}</span>
@@ -274,26 +299,30 @@ function buildRow(t, i) {
     <span class="track-plays">${t.plays}</span>
     <span class="track-dur">${t.dur}</span>
     <div class="track-actions">
+      <button class="ox-share-btn track-share-btn" data-ox-share-trigger aria-label="공유하기" title="공유하기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg></button>
       ${addBtnHtml(t)}
       <button class="track-play-btn" aria-label="재생">${isPlay ? '⏸' : '▶'}</button>
     </div>`;
 
   row.addEventListener('click', (e) => {
+    /* 공유 버튼: 공유 팝오버만 열고 상세 페이지로 넘어가지 않는다 */
+    const shareBtn = e.target.closest('.track-share-btn');
+    if (shareBtn) {
+      window.OmixShare?.open(shareData(t), shareBtn);
+      return;
+    }
     /* + 버튼: My Playlist에 담기만 하고 상세 페이지로 넘어가지 않는다 */
     if (e.target.closest('.track-add-btn')) {
       addToMyPlaylist(t);
       return;
     }
-    /* If clicking the play button, just play — don't navigate */
-    if (e.target.classList.contains('track-play-btn')) {
-      playTrack(i);
+    /* Ctrl/Cmd+클릭만 곡 상세를 새 탭으로 */
+    if (e.ctrlKey || e.metaKey) {
+      window.open(`song-detail.html?track=${t.detailIdx ?? (t.rank - 1)}`, '_blank');
       return;
     }
-    if (e.ctrlKey || e.metaKey || e.button === 1) {
-      window.open(`song-detail.html?track=${t.detailIdx ?? (t.rank - 1)}`, '_blank');
-    } else {
-      window.location.href = `song-detail.html?track=${t.detailIdx ?? (t.rank - 1)}`;
-    }
+    /* 줄 어디를 눌러도 상세 페이지로 넘어가지 않고 바로 재생 (다시 누르면 일시정지) */
+    playTrack(i);
   });
   return row;
 }
@@ -346,12 +375,46 @@ function showPlaylistToast(t, isNew) {
   toastTimer = setTimeout(() => toast.classList.remove('is-visible'), 4000);
 }
 
+/* 공유할 곡 정보 — 링크는 곡 상세 페이지 */
+function shareData(t) {
+  const [c1, c2] = GRADS[t.g];
+  return {
+    title:  t.title,
+    artist: t.artist,
+    text:   `${t.title} — ${t.artist} | OMIX 차트 #${t.rank}`,
+    url:    `song-detail.html?track=${t.detailIdx ?? (t.rank - 1)}`,
+    bg:     `linear-gradient(135deg,${c1} 0%,${c2} 100%)`,
+  };
+}
+
+/* 미니 플레이어 공유 아이콘 → 지금 재생 중인 곡 */
+window.OmixShare = window.OmixShare || {};
+window.OmixShare.current = () => {
+  const t = getFiltered()[playingIdx]
+         || ALL_TRACKS.find(x => x.title === playerNameEl?.textContent.trim());
+  return t ? shareData(t) : null;
+};
+
 function buildList() {
   if (!listEl) return;
   const tracks = getFiltered();
   listEl.innerHTML = '';
 
   if (countEl) countEl.textContent = tracks.length + ' TRACKS';
+
+  if (!tracks.length) {
+    const empty = document.createElement('div');
+    empty.className = 'chart-search-empty';
+    empty.innerHTML = searchQuery
+      ? `<strong>'${hl(searchQuery)}'</strong> 검색 결과가 없어요.<br>곡명이나 아티스트 이름을 다시 확인해 주세요.<br><button type="button">전체 차트 보기</button>`
+      : `이 장르에는 아직 곡이 없어요.`;
+    empty.querySelector('button')?.addEventListener('click', () => {
+      setSearch('');
+      document.querySelector('#genreFilterGroup [data-genre="all"]')?.click();
+    });
+    listEl.appendChild(empty);
+    return;
+  }
 
   /* 장르로 섹션을 나누지 않고, 활성 정렬 기준(순위/재생수/길이) 순서 그대로 한 줄로 표시 */
   tracks.forEach((t, i) => listEl.appendChild(buildRow(t, i)));
@@ -379,9 +442,39 @@ document.getElementById('genreFilterGroup')
       btn.classList.add('active');
       activeGenre = btn.dataset.genre;
       playingIdx  = -1;   /* 필터 변경 시 재생 초기화 */
+      setGenreDropdown(false);
+      updateGenreDropdownLabel();
       render();
     });
   });
+
+/* 장르 드롭다운 — 버튼 하나에 현재 장르를 보여 주고, 누르면 패널이 열린다 */
+const genreDd      = document.getElementById('genreDropdown');
+const genreDdBtn   = document.getElementById('genreDdBtn');
+const genreDdValue = document.getElementById('genreDdValue');
+
+function setGenreDropdown(open) {
+  if (!genreDd) return;
+  genreDd.classList.toggle('is-open', open);
+  genreDdBtn?.setAttribute('aria-expanded', String(open));
+}
+function updateGenreDropdownLabel() {
+  if (!genreDd) return;
+  const isAll = activeGenre === 'all';
+  if (genreDdValue) genreDdValue.textContent = isAll ? 'ALL' : (GENRE_LABEL[activeGenre] || activeGenre).toUpperCase();
+  genreDd.dataset.genre = activeGenre;   /* 장르 색(3묶음) 표시용 */
+  genreDd.classList.toggle('is-filtered', !isAll);
+}
+genreDdBtn?.addEventListener('click', e => {
+  e.stopPropagation();
+  setGenreDropdown(!genreDd.classList.contains('is-open'));
+});
+document.addEventListener('click', e => {
+  if (genreDd?.classList.contains('is-open') && !genreDd.contains(e.target)) setGenreDropdown(false);
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && genreDd?.classList.contains('is-open')) { setGenreDropdown(false); genreDdBtn?.focus(); }
+});
 
 
 /* =====================================================
@@ -399,6 +492,57 @@ document.getElementById('sortFilterGroup')
       render();
     });
   });
+
+
+/* =====================================================
+   [10-B] 곡 검색
+   필터 바(스크롤 시 상단 고정) 안의 검색창 — 입력하는 즉시 스트립·리스트를 거른다.
+   인트로(카세트)에 있을 때 검색을 시작하면 결과 리스트가 보이는 위치까지 내려준다.
+   ===================================================== */
+const searchInput = document.getElementById('chartSearch');
+const searchWrap  = document.getElementById('chartSearchWrap');
+
+function setSearch(q) {
+  searchQuery = q;
+  if (searchInput && searchInput.value !== q) searchInput.value = q;
+  searchWrap?.classList.toggle('has-value', !!q);
+  playingIdx = -1;
+  render();
+}
+
+function scrollListIntoView() {
+  const bar  = document.getElementById('chartFilterBar');
+  const list = document.querySelector('.chart-list-section');
+  if (!bar || !list) return;
+  const barH   = bar.offsetHeight;
+  const stickT = parseFloat(getComputedStyle(bar).top) || 0;
+  const target = list.getBoundingClientRect().top + window.scrollY - stickT - barH - 8;
+  if (window.scrollY < target - 4) window.scrollTo({ top: target, behavior: 'smooth' });
+}
+
+if (searchInput) {
+  let scrolledOnce = false;
+  searchInput.addEventListener('input', () => {
+    setSearch(searchInput.value.trim() ? searchInput.value : '');
+    if (searchQuery && !scrolledOnce) { scrolledOnce = true; scrollListIntoView(); }
+    if (!searchQuery) scrolledOnce = false;
+  });
+  searchInput.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { setSearch(''); searchInput.blur(); }
+    if (e.key === 'Enter')  { e.preventDefault(); scrollListIntoView(); searchInput.blur(); }
+  });
+  document.getElementById('chartSearchClear')?.addEventListener('click', () => {
+    setSearch('');
+    searchInput.focus();
+  });
+  /* "/" 키 → 어디서든 검색창으로 */
+  document.addEventListener('keydown', e => {
+    if (e.key !== '/' || e.ctrlKey || e.metaKey) return;
+    if (/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName) || e.target.isContentEditable) return;
+    e.preventDefault();
+    searchInput.focus();
+  });
+}
 
 
 /* =====================================================

@@ -34,7 +34,9 @@
                  없으면 images[0] 을 쓴다. (카드에선 어둡게 → 호버 시 밝게)
      fullcuts  : 상세 페이지 풀컷 패럴랙스 3칸. [{ img, tag, desc }]
                  img 는 가로로 넓힌 사진(2:1), desc 는 <br /> 허용.
-                 없으면 플레이스홀더 그대로.     ===================================================== */
+                 없으면 플레이스홀더 그대로.
+     aiModel   : true 면 images[1..] 과 fullcuts 가 AI 로 생성한 모델 착용 목업.
+                 상세 페이지에 'AI 생성 착용 목업' 배지와 안내 문구가 붙는다.     ===================================================== */
   const PRODUCTS = [
     /* ── 티셔츠 ────────────────────────────────── */
     {
@@ -56,6 +58,7 @@
         'products/omix-tee-logo-fit4.jpg'
       ],
       darkImage: 'products/omix-tee-logo-dark.jpg',
+      aiModel: true,
       fullcuts: [
         { img: 'products/omix-tee-logo-fullcut-1.jpg', tag: 'OVERSIZED FIT',
           desc: '드롭 숄더 오버핏<br />어깨부터 떨어지는 실루엣' },
@@ -115,6 +118,7 @@
         'products/omix-tee-108-fit4.jpg'
       ],
       darkImage: 'products/omix-tee-108-dark.jpg',
+      aiModel: true,
       fullcuts: [
         { img: 'products/omix-tee-108-fullcut-1.jpg', tag: 'OVERSIZED FIT',
           desc: '드롭 숄더 오버핏<br />어깨부터 떨어지는 실루엣' },
@@ -153,6 +157,7 @@
         'products/omix-tee-buddha-beat-fit4.jpg'
       ],
       darkImage: 'products/omix-tee-buddha-beat-dark.jpg',
+      aiModel: true,
       fullcuts: [
         { img: 'products/omix-tee-buddha-beat-fullcut-1.jpg', tag: 'OVERSIZED FIT',
           desc: '드롭 숄더 오버핏<br />어깨부터 떨어지는 실루엣' },
@@ -191,6 +196,7 @@
         'products/omix-tee-buddha-dj-fit4.jpg'
       ],
       darkImage: 'products/omix-tee-buddha-dj-dark.jpg',
+      aiModel: true,
       fullcuts: [
         { img: 'products/omix-tee-buddha-dj-fullcut-1.jpg', tag: 'OVERSIZED FIT',
           desc: '드롭 숄더 오버핏<br />어깨부터 떨어지는 실루엣' },

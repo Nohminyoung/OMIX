@@ -4,6 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>OMIX — Chart</title>
+  <meta name="description" content="OMIX 주간 차트 — 불교 × 일렉트로닉 음악 TOP 50" />
+  <meta property="og:type" content="music.playlist" />
+  <meta property="og:title" content="OMIX TOP 50 — Weekly Chart" />
+  <meta property="og:description" content="불교 × 일렉트로닉 음악, 이번 주 OMIX 차트를 들어보세요" />
+  <meta property="og:image" content="logo.png" />
   <link rel="icon" href="symbol.png" type="image/png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -38,10 +43,8 @@
     <a href="index.html" class="nav-logo-center"><img src="logo.png" alt="OMIX" class="logo-img" /></a>
     <div class="nav-sns">
       <a href="cart.html" class="nav-link nav-cart-link">CART <span class="cart-badge">0</span></a>
-      <a href="#" class="nav-sns-link" aria-label="Spotify"    target="_blank"><i class="fab fa-spotify"></i></a>
       <a href="#" class="nav-sns-link" aria-label="Instagram"  target="_blank"><i class="fab fa-instagram"></i></a>
-      <a href="#" class="nav-sns-link" aria-label="YouTube"    target="_blank"><i class="fab fa-youtube"></i></a>
-      <a href="#" class="nav-sns-link" aria-label="SoundCloud" target="_blank"><i class="fab fa-soundcloud"></i></a>
+      <a href="https://www.youtube.com/@OMIX-BUDDHIST" class="nav-sns-link" aria-label="YouTube"    target="_blank" rel="noopener"><i class="fab fa-youtube"></i></a>
     </div>
     <button class="hamburger" id="hamburger">
       <span></span><span></span><span></span>
@@ -196,19 +199,41 @@
          ════════════════════════════════════════════════════ -->
     <div class="chart-filter-bar" id="chartFilterBar">
 
-      <!-- 좌측: 장르 필터 탭 -->
-      <div class="filter-bar-left">
-        <span class="filter-bar-label">GENRE</span>
-        <div class="filter-chip-group" id="genreFilterGroup">
-          <button class="filter-chip active" data-genre="all">ALL</button>
-          <button class="filter-chip" data-genre="club">CLUB</button>
-          <button class="filter-chip" data-genre="mindful">MINDFUL</button>
-          <button class="filter-chip" data-genre="dance">DANCE</button>
-          <button class="filter-chip" data-genre="meditation">MEDITATION</button>
-          <button class="filter-chip" data-genre="ambient">AMBIENT</button>
-          <button class="filter-chip" data-genre="healing">HEALING</button>
-          <button class="filter-chip" data-genre="electronic">ELECTRONIC</button>
-          <button class="filter-chip" data-genre="world">WORLD</button>
+      <!-- 곡 검색 — 필터 바가 스크롤 시 상단에 고정되므로 검색창도 항상 위에 보인다
+           ( / 키로 바로 포커스, Esc 로 지우기 ) -->
+      <div class="filter-bar-search" id="chartSearchWrap" role="search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+        <input type="search" id="chartSearch" placeholder="곡명, 아티스트 검색" aria-label="곡 검색" autocomplete="off" />
+        <button type="button" class="filter-search-clear" id="chartSearchClear" aria-label="검색어 지우기">✕</button>
+        <span class="filter-search-kbd" aria-hidden="true">/</span>
+      </div>
+
+      <!-- 장르 — 버튼 하나로 접어 두고, 누르면 패널에서 고른다 (장르 색 3묶음 그대로) -->
+      <div class="genre-dd" id="genreDropdown">
+        <button type="button" class="genre-dd-btn" id="genreDdBtn" aria-haspopup="true" aria-expanded="false" aria-controls="genreFilterGroup">
+          <span class="genre-dd-label">GENRE</span>
+          <span class="genre-dd-value" id="genreDdValue">ALL</span>
+          <svg class="genre-dd-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="genre-dd-panel" id="genreFilterGroup" role="menu">
+          <button class="filter-chip genre-dd-all active" data-genre="all">ALL GENRES</button>
+          <p class="genre-dd-group-title"><span class="genre-dd-dot is-beat"></span>BEAT</p>
+          <div class="genre-dd-row">
+            <button class="filter-chip" data-genre="club">CLUB</button>
+            <button class="filter-chip" data-genre="dance">DANCE</button>
+            <button class="filter-chip" data-genre="electronic">ELECTRONIC</button>
+          </div>
+          <p class="genre-dd-group-title"><span class="genre-dd-dot is-calm"></span>MEDITATIVE</p>
+          <div class="genre-dd-row">
+            <button class="filter-chip" data-genre="meditation">MEDITATION</button>
+            <button class="filter-chip" data-genre="mindful">MINDFUL</button>
+            <button class="filter-chip" data-genre="healing">HEALING</button>
+          </div>
+          <p class="genre-dd-group-title"><span class="genre-dd-dot is-scape"></span>SOUNDSCAPE</p>
+          <div class="genre-dd-row">
+            <button class="filter-chip" data-genre="ambient">AMBIENT</button>
+            <button class="filter-chip" data-genre="world">WORLD</button>
+          </div>
         </div>
       </div>
 
@@ -338,6 +363,7 @@
 
   </div>
 
+  <script src="omix-extras.js"></script>
   <script src="my-playlist.js"></script>
   <script src="chart.js"></script>
   <script src="now-playing-panel.js"></script>

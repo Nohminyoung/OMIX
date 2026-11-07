@@ -9,17 +9,25 @@
    상세·결제 페이지는 들어온 메뉴를 가리킨다: 곡 상세 → Chart, 상품 상세 → Store, 결제 → Cart */
 (function () {
   const PARENT = {
-    'song-detail.html':    'chart.html',
-    'store-detail.html':   'store.html',
-    'checkout.html':       'cart.html',
-    'order-complete.html': 'cart.html'
+    'song-detail':    'chart',
+    'store-detail':   'store',
+    'checkout':       'cart',
+    'order-complete': 'cart'
   };
 
+  /* 'store.html' · '/store' · './store.html?x=1' → 'store'
+     (Netlify 'Pretty URLs' 가 배포 때 링크와 주소에서 .html 을 떼므로 둘 다 같은 페이지로 본다) */
+  function pageName(href) {
+    const p = String(href || '').split(/[?#]/)[0].split('/').pop().replace(/\.html?$/i, '');
+    return p || 'index';
+  }
+
   function mark() {
-    const page = location.pathname.split('/').pop() || 'index.html';
+    const page = pageName(location.pathname);
     const target = PARENT[page] || page;
     document.querySelectorAll('.nav a.nav-link').forEach(a => {
-      if (a.getAttribute('href') !== target) return;
+      const href = a.getAttribute('href') || '';
+      if (/^[a-z]+:/i.test(href) || pageName(href) !== target) return;
       a.classList.add('active');
       a.setAttribute('aria-current', 'page');
     });

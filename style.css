@@ -5544,3 +5544,18 @@ body:has(.mini-player) .to-top { bottom: calc(var(--player-h) + 20px); }
   -webkit-mask: url("logo.png") center / contain no-repeat;
           mask: url("logo.png") center / contain no-repeat;
 }
+
+/* 스토어 아래쪽 전체 상품 카드 — 위쪽 큰 피처드 카드와 같은 크기·글자로
+   (카드 비율 7:8, 사진이 남는 높이를 채운다. 휴대폰 1열은 기존 3:4 사진 그대로) */
+.pc-title { font-size: clamp(18px, 2.2vw, 28px); line-height: 0.97; }
+.pc-price { font-size: 18px; }
+.pc-header { gap: 10px; }
+@media (min-width: 768px) {
+  .product-card { aspect-ratio: 7 / 8; }
+}
+/* 노트북 폭은 4열이면 사진이 다시 작아지므로 3열로 */
+@media (min-width: 901px) and (max-width: 1399px) {
+  .store-grid { grid-template-columns: repeat(3, 1fr); }
+  .product-card:nth-child(4n) { border-right: 1px solid var(--border); }
+  .product-card:nth-child(3n) { border-right: none; }
+}

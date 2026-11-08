@@ -219,7 +219,7 @@ body.cursor-merged .cursor-dot { width: 7px; height: 7px; }
   display: flex; align-items: center; justify-content: center;
 }
 .logo-img {
-  display: block; height: 38px; width: auto;
+  display: block; width: 110px; height: auto;
 }
 
 /* RIGHT: SNS 아이콘 */
@@ -2731,13 +2731,13 @@ body.cursor-merged .cursor-dot { width: 7px; height: 7px; }
 .store-nav-right { display: flex; align-items: center; gap: 14px; flex-shrink: 0; }
 .store-search-box {
   display: flex; align-items: center; gap: 8px;
-  border: 1px solid var(--border); border-radius: 100px;
-  padding: 8px 16px; width: 200px;
-  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(249,21,54,0.5); border-radius: 100px;
+  padding: 8px 16px; width: 240px;
+  background: rgba(255,255,255,0.04);
   transition: border-color 0.2s, width 0.2s, background 0.2s;
 }
-.store-search-box:focus-within { border-color: rgba(249,21,54,0.5); width: 240px; background: rgba(255,255,255,0.04); }
-.store-search-box i { font-size: 11px; color: var(--gray-3); flex-shrink: 0; }
+.store-search-box:focus-within { border-color: var(--red); }
+.store-search-box svg { width: 13px; height: 13px; color: var(--gray-2); flex-shrink: 0; }
 .store-search-box input {
   background: transparent; border: none; outline: none; color: var(--white);
   font-family: var(--font); font-size: 12px; letter-spacing: 0.02em; width: 100%;
@@ -5490,3 +5490,57 @@ body:has(.mini-player) .to-top { bottom: calc(var(--player-h) + 20px); }
 /* 홈 OMIX ON STAGE — 전체 자간(-0.04em)에서 겹치던 글자쌍만 벌린다 (I·X, S·T) */
 .idx-ev-kern-i { letter-spacing: 0.015em; }  /* 글자 200px 일 때 +3px */
 .idx-ev-kern-s { letter-spacing: 0.015em; }  /* 글자 200px 일 때 +3px */
+
+
+/* =====================================================
+   [상단 메뉴] 콘텐츠와 같은 1200px 선에 맞춘다
+   배경·전광판 띠는 화면 끝까지 그대로, 메뉴·로고·우측 묶음만 안으로.
+   CHART 글자 왼쪽 끝이 선에 오도록 메뉴 묶음을 링크 여백만큼 당긴다.
+   (햄버거로 바뀌는 1024px 이하는 기존 그대로)
+   ===================================================== */
+@media (min-width: 1025px) {
+  .nav {
+    padding-inline: max(calc(var(--chart-min-gap) + var(--chart-pad)), calc((100% - var(--chart-max)) / 2));
+  }
+  .nav-menu .nav-link { padding-inline: 12px; }
+  .nav-menu { margin-left: -12px; }
+}
+
+/* STORE · CART 는 오른쪽 묶음에 — 왼쪽 메뉴의 Store 는 햄버거 메뉴에서만 보인다 */
+@media (min-width: 1025px) {
+  .nav-store-item { display: none; }
+}
+/* 좁은 노트북 폭 — 1200px 선 안에서 메뉴가 로고에 붙지 않게 글자·간격을 줄인다 */
+@media (min-width: 1280px) and (max-width: 1399px) {
+  .nav .nav-link { font-size: 15px !important; }
+  .nav-menu .nav-link { padding-inline: 10px; }
+  .nav-menu { margin-left: -10px; }
+}
+@media (min-width: 1025px) and (max-width: 1279px) {
+  .nav .nav-link { font-size: 13px !important; }
+  .nav-menu .nav-link { padding-inline: 6px; }
+  .nav-menu { margin-left: -6px; }
+}
+
+/* 오른쪽 STORE → CART → LOGIN 글자 간격을 왼쪽 메뉴와 같게 (1400px 이상 26px) */
+@media (min-width: 1025px) {
+  .nav-sns .nav-link { padding-inline: 12px; }
+  .nav-sns .nav-cart-link { margin-left: -12px; }
+}
+@media (min-width: 1280px) and (max-width: 1399px) {
+  .nav-sns .nav-link { padding-inline: 10px; }
+  .nav-sns .nav-cart-link { margin-right: -2px; }
+}
+@media (min-width: 1025px) and (max-width: 1279px) {
+  .nav-sns .nav-link { padding-inline: 6px; }
+  .nav-sns .nav-cart-link { margin-right: -6px; }
+}
+
+/* 상단 가운데 로고 — logo.png 의 모양대로 테마 색을 입힌다 (테마 버튼으로 바꾸면 같이 바뀜).
+   이미지 자체는 박스 밖으로 밀어 숨기고, 박스 크기는 원본 비율을 그대로 쓴다 */
+.nav-logo-center .logo-img {
+  object-position: -9999px 0;
+  background: var(--red);
+  -webkit-mask: url("logo.png") center / contain no-repeat;
+          mask: url("logo.png") center / contain no-repeat;
+}

@@ -21,17 +21,17 @@
 .ox-login-btn svg { width: 15px; height: 15px; flex-shrink: 0; }
 .ox-login-item { display: none; }
 
-/* 내비 우측 정렬: [Instagram][YouTube] │ CART  LOGIN
-   (HTML 은 CART 가 먼저지만 순서만 CSS 로 바꾼다) */
+/* 내비 우측 정렬: [Instagram][YouTube] │ STORE  CART  LOGIN
+   (HTML 순서와 달라도 보이는 순서만 CSS 로 정한다) */
 .nav-sns { gap: 14px; }
 .nav-sns .nav-sns-link { order: 1; }
-.nav-sns .nav-cart-link {
-  order: 2;
-  margin-left: 6px; padding-left: 20px;
-  border-left: 1px solid rgba(255,255,255,0.12);
-  border-radius: 0;
+.nav-sns .nav-store-link { order: 2; margin-left: 12px; }
+.nav-sns .nav-store-link::before {   /* SNS 와 메뉴 사이 구분선 */
+  content: ''; position: absolute; left: -12px; top: 50%; transform: translateY(-50%);
+  width: 1px; height: 18px; background: rgba(255,255,255,0.12);
 }
-.nav-sns .ox-login-btn { order: 3; }
+.nav-sns .nav-cart-link { order: 3; }
+.nav-sns .ox-login-btn { order: 4; }
 @media (max-width: 900px) {
   .ox-login-item { display: block; }
   .nav-menu.mobile-open .ox-login-btn {

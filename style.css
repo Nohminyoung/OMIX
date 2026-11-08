@@ -2731,7 +2731,7 @@ body.cursor-merged .cursor-dot { width: 7px; height: 7px; }
 .store-nav-right { display: flex; align-items: center; gap: 14px; flex-shrink: 0; }
 .store-search-box {
   display: flex; align-items: center; gap: 8px;
-  border: 1px solid rgba(249,21,54,0.5); border-radius: 100px;
+  border: 1px solid color-mix(in srgb, var(--red) 50%, transparent); border-radius: 100px;
   padding: 8px 16px; width: 240px;
   background: rgba(255,255,255,0.04);
   transition: border-color 0.2s, width 0.2s, background 0.2s;

@@ -3596,7 +3596,7 @@ body.cursor-merged .cursor-dot { width: 7px; height: 7px; }
 .playlist-title {
   font-size: 13px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase;
 }
-.playlist-count { font-size: 11px; color: var(--gray-3); }
+.playlist-count { font-size: 13px; color: var(--gray-3); }
 /* 에디토리얼 왼쪽 레드 라인 */
 .playlist-header::before {
   content: '';
@@ -3646,7 +3646,7 @@ body.cursor-merged .cursor-dot { width: 7px; height: 7px; }
 .pt-info { min-width: 0; }
 .pt-name { font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .pt-artist { font-size: 11px; color: var(--gray-3); margin-top: 1px; }
-.pt-time { font-size: 11px; color: var(--gray-3); flex-shrink: 0; }
+.pt-time { font-size: 13px; color: var(--gray-3); flex-shrink: 0; }
 
 /* ── 우 패널: 라이브러리 & 스탯 ── */
 .panel-library { padding: 24px 20px; overflow-y: auto; }
@@ -3654,7 +3654,7 @@ body.cursor-merged .cursor-dot { width: 7px; height: 7px; }
 /* 주간 리스닝 스탯 */
 .library-section { margin-bottom: 32px; }
 .lib-section-title {
-  font-size: 10px; font-weight: 700; letter-spacing: 0.25em; text-transform: uppercase;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;
   color: var(--gray-3); margin-bottom: 14px; padding-bottom: 10px;
   border-bottom: 1px solid var(--border);
   /* 에디토리얼: 점 + 라인 프리픽스 */
@@ -3662,7 +3662,8 @@ body.cursor-merged .cursor-dot { width: 7px; height: 7px; }
 }
 .lib-section-title::before {
   content: '';
-  position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+  /* 아래 여백(10px)을 빼고 글자 줄의 세로 중앙에 맞춘다 */
+  position: absolute; left: 0; top: calc(50% - 4.5px); transform: translateY(-50%);
   width: 4px; height: 4px; border-radius: 50%;
   background: var(--red); opacity: 0.7;
 }
@@ -3677,8 +3678,8 @@ body.cursor-merged .cursor-dot { width: 7px; height: 7px; }
 }
 .lib-stat-icon { font-size: 22px; flex-shrink: 0; }
 .lib-stat-info { min-width: 0; }
-.lib-stat-val { font-size: 18px; font-weight: 800; line-height: 1; }
-.lib-stat-label { font-size: 10px; color: var(--gray-3); letter-spacing: 0.1em; text-transform: uppercase; margin-top: 2px; }
+.lib-stat-val { font-size: 22px; font-weight: 800; line-height: 1; }
+.lib-stat-label { font-size: 12px; color: var(--gray-3); letter-spacing: 0.1em; text-transform: uppercase; margin-top: 2px; }
 
 /* 저장된 트랙 미니 리스트 */
 .saved-track {
@@ -3694,8 +3695,8 @@ body.cursor-merged .cursor-dot { width: 7px; height: 7px; }
   background: var(--bg-subtle);
 }
 .saved-track-info { min-width: 0; flex: 1; }
-.saved-track-name { font-size: 12px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.saved-track-artist { font-size: 10px; color: var(--gray-3); }
+.saved-track-name { font-size: 14px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.saved-track-artist { font-size: 12px; color: var(--gray-3); }
 .saved-track-like { font-size: 14px; color: var(--red); flex-shrink: 0; }
 
 /* QR로 받은 트랙 — saved-track 행을 그대로 쓰고 LIVE 배지·현재 재생 강조만 추가 */
@@ -5456,3 +5457,36 @@ body:has(.mini-player) .to-top { bottom: calc(var(--player-h) + 20px); }
 .idx-video-frame.is-playing img,
 .idx-video-frame.is-playing .idx-video-play { display: none; }
 .idx-video-frame .stc-br { z-index: 3; pointer-events: none; }
+
+
+/* =====================================================
+   [홈 아래쪽 레이아웃] 차트와 같은 1200px + 가운데 정렬 (--chart-max 공용)
+   LP 이후 섹션의 글·목록·푸터를 같은 선에 맞춘다.
+   그대로 화면 끝까지 쓰는 것: 섹션 구분선, 스크롤 대형 글자(.idx-line), 전광판, ON 흰 띠 배경
+   (데스크톱만 — 900px 이하는 기존 모바일 여백 그대로)
+   ===================================================== */
+@media (min-width: 901px) {
+  :root { --home-gutter: max(calc(var(--chart-min-gap) + var(--chart-pad)), calc((100% - var(--chart-max)) / 2)); }
+
+  /* 3. LP */
+  .idx-lp-section { padding-inline: var(--home-gutter); }
+  .idx-lp-carousel { max-width: var(--chart-max); }
+
+  /* 안쪽 글만 들여쓰기 */
+  .idx-event-list,
+  .idx-footer,
+  .idx-ev-line,
+  .idx-ev-line.inv { padding-inline: var(--home-gutter); }
+
+  /* 줄(구분선)까지 콘텐츠 폭에 맞추기 */
+  .idx-kb-intro,
+  .idx-tracks-header,
+  .idx-track-row { margin-inline: var(--home-gutter); padding-inline: 0; }
+
+  /* 트랙 줄 hover 배경은 글자에 붙지 않게 양옆으로 16px 더 */
+  .idx-track-row:hover { box-shadow: -16px 0 0 rgba(255,255,255,0.03), 16px 0 0 rgba(255,255,255,0.03); }
+}
+
+/* 홈 OMIX ON STAGE — 전체 자간(-0.04em)에서 겹치던 글자쌍만 벌린다 (I·X, S·T) */
+.idx-ev-kern-i { letter-spacing: 0.015em; }  /* 글자 200px 일 때 +3px */
+.idx-ev-kern-s { letter-spacing: 0.015em; }  /* 글자 200px 일 때 +3px */

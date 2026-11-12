@@ -32,6 +32,9 @@
                  없으면 art 그라데이션으로 대신 칠한다.
      darkImage : 스토어 목록 카드용 — 배경을 카드색으로 지운 사진.
                  없으면 images[0] 을 쓴다. (카드에선 어둡게 → 호버 시 밝게)
+     sheet     : 상세 페이지 흰 배경 큰 섹션에 크게 보여 줄 전체 시트. { img, tag, desc }
+     shots     : 상세 페이지 PRODUCT SHOTS 가로 스크롤 컷. [{ img, label }] (3:4)
+                 없으면 그 섹션을 숨긴다.
      fullcuts  : 상세 페이지 풀컷 패럴랙스 3칸. [{ img, tag, desc }]
                  img 는 가로로 넓힌 사진(2:1), desc 는 <br /> 허용.
                  없으면 플레이스홀더 그대로.
@@ -58,6 +61,13 @@
         'products/omix-tee-logo-fit4.jpg'
       ],
       darkImage: 'products/omix-tee-logo-dark.jpg',
+      shots: [
+        { img: 'products/omix-tee-logo-shot-1.jpg', label: 'FRONT VIEW' },
+        { img: 'products/omix-tee-logo-shot-2.jpg', label: 'FRONT GRAPHIC' },
+        { img: 'products/omix-tee-logo-shot-3.jpg', label: 'NECK LABEL' },
+        { img: 'products/omix-tee-logo-shot-4.jpg', label: 'SLEEVE' },
+        { img: 'products/omix-tee-logo-shot-5.jpg', label: 'HEM DETAIL' }
+      ],
       aiModel: true,
       fullcuts: [
         { img: 'products/omix-tee-logo-fullcut-1.jpg', tag: 'OVERSIZED FIT',
@@ -118,6 +128,13 @@
         'products/omix-tee-108-fit4.jpg'
       ],
       darkImage: 'products/omix-tee-108-dark.jpg',
+      shots: [
+        { img: 'products/omix-tee-108-shot-1.jpg', label: 'FRONT VIEW' },
+        { img: 'products/omix-tee-108-shot-2.jpg', label: 'FRONT GRAPHIC' },
+        { img: 'products/omix-tee-108-shot-3.jpg', label: 'NECK LABEL' },
+        { img: 'products/omix-tee-108-shot-4.jpg', label: 'SLEEVE' },
+        { img: 'products/omix-tee-108-shot-5.jpg', label: 'HEM DETAIL' }
+      ],
       aiModel: true,
       fullcuts: [
         { img: 'products/omix-tee-108-fullcut-1.jpg', tag: 'OVERSIZED FIT',
@@ -157,6 +174,13 @@
         'products/omix-tee-buddha-beat-fit4.jpg'
       ],
       darkImage: 'products/omix-tee-buddha-beat-dark.jpg',
+      shots: [
+        { img: 'products/omix-tee-buddha-beat-shot-1.jpg', label: 'FRONT VIEW' },
+        { img: 'products/omix-tee-buddha-beat-shot-2.jpg', label: 'FRONT GRAPHIC' },
+        { img: 'products/omix-tee-buddha-beat-shot-3.jpg', label: 'NECK LABEL' },
+        { img: 'products/omix-tee-buddha-beat-shot-4.jpg', label: 'SLEEVE' },
+        { img: 'products/omix-tee-buddha-beat-shot-5.jpg', label: 'HEM DETAIL' }
+      ],
       aiModel: true,
       fullcuts: [
         { img: 'products/omix-tee-buddha-beat-fullcut-1.jpg', tag: 'OVERSIZED FIT',
@@ -196,6 +220,13 @@
         'products/omix-tee-buddha-dj-fit4.jpg'
       ],
       darkImage: 'products/omix-tee-buddha-dj-dark.jpg',
+      shots: [
+        { img: 'products/omix-tee-buddha-dj-shot-1.jpg', label: 'FRONT VIEW' },
+        { img: 'products/omix-tee-buddha-dj-shot-2.jpg', label: 'FRONT GRAPHIC' },
+        { img: 'products/omix-tee-buddha-dj-shot-3.jpg', label: 'NECK LABEL' },
+        { img: 'products/omix-tee-buddha-dj-shot-4.jpg', label: 'SLEEVE' },
+        { img: 'products/omix-tee-buddha-dj-shot-5.jpg', label: 'HEM DETAIL' }
+      ],
       aiModel: true,
       fullcuts: [
         { img: 'products/omix-tee-buddha-dj-fullcut-1.jpg', tag: 'OVERSIZED FIT',
@@ -217,6 +248,103 @@
       ]
     },
 
+    /* ── 맨투맨 ────────────────────────────────── */
+    {
+      id: 'omix-mtm-logo',
+      name: 'OMIX LOGO SWEATSHIRT',
+      label: 'OMIX APPAREL',
+      type: 'sweat',
+      typeLabel: 'SWEATSHIRT',
+      code: 'OMIX.SW.01',
+      intro: '왼쪽 가슴에 OMIX 오벌 로고 하나만 얹은 피그먼트 워싱 맨투맨입니다. 빈티지하게 바랜 블랙 컬러에 드롭 숄더 오버핏으로, 어떤 하의와도 무난하게 어울립니다.',
+      price: 59000,
+      desc: 'WASHED BLACK / S·M·L·XL',
+      art: 'linear-gradient(148deg,#0c0c0b,#1a1a18,#0c0c0b)',
+      images: [
+        'products/omix-mtm-logo-main.jpg',
+        'products/omix-mtm-logo-fit1.jpg',
+        'products/omix-mtm-logo-fit2.jpg',
+        'products/omix-mtm-logo-fit3.jpg',
+        'products/omix-mtm-logo-fit4.jpg',
+        'products/omix-mtm-logo-fit5.jpg',
+        'products/omix-mtm-logo-fit6.jpg'
+      ],
+      shots: [
+        { img: 'products/omix-mtm-logo-shot-1.jpg', label: 'FRONT VIEW' },
+        { img: 'products/omix-mtm-logo-shot-2.jpg', label: 'CHEST LOGO' },
+        { img: 'products/omix-mtm-logo-shot-3.jpg', label: 'NECK LABEL' },
+        { img: 'products/omix-mtm-logo-shot-4.jpg', label: 'RIB CUFF' },
+        { img: 'products/omix-mtm-logo-shot-5.jpg', label: 'WASHED TEXTURE' }
+      ],
+      aiModel: true,
+      fullcuts: [
+        { img: 'products/omix-mtm-logo-fullcut-1.jpg', tag: 'OVERSIZED FIT',
+          desc: '드롭 숄더 오버핏<br />여유 있게 떨어지는 맨투맨 실루엣' },
+        { img: 'products/omix-mtm-logo-fullcut-2.jpg', tag: 'CHEST LOGO',
+          desc: 'OMIX 오벌 로고<br />좌측 가슴 원포인트' },
+        { img: 'products/omix-mtm-logo-fullcut-3.jpg', tag: 'DAILY WEAR',
+          desc: '와이드 카고 · 청키 스니커즈와 매칭<br />간절기 · 겨울 레이어드 기본템' }
+      ],
+      options: { name: 'SIZE', values: ['S', 'M', 'L', 'XL'] },
+      stock: 40,
+      specs: [
+        { k: 'FABRIC',   v: '면 기모 쭈리' },
+        { k: 'FIT',      v: '드롭 숄더 오버핏' },
+        { k: 'PRINT',    v: '실크스크린 1도 (좌측 가슴)' },
+        { k: 'COLOR',    v: 'Washed Black' },
+        { k: 'SIZE',     v: 'S · M · L · XL' },
+        { k: 'SHIPPING', v: '2–5 영업일' }
+      ]
+    },
+    {
+      id: 'omix-cha-logo',
+      name: 'INNER PEACE SWEATSHIRT',
+      label: 'OMIX APPAREL',
+      type: 'sweat',
+      typeLabel: 'SWEATSHIRT',
+      code: 'OMIX.SW.02',
+      intro: '선글라스를 쓴 불상과 카세트·바이닐을 콜라주한 그래픽 위에 "INNER PEACE, LOUD SOUND / Find your own rhythm." 레터링을 올린 피그먼트 워싱 맨투맨입니다. 드롭 숄더 오버핏입니다.',
+      price: 65000,
+      desc: 'WASHED BLACK / S·M·L·XL',
+      art: 'linear-gradient(148deg,#1a0806,#3a1408,#0c0c0b)',
+      images: [
+        'products/omix-cha-logo-main.jpg',
+        'products/omix-cha-logo-fit1.jpg',
+        'products/omix-cha-logo-fit2.jpg',
+        'products/omix-cha-logo-fit3.jpg',
+        'products/omix-cha-logo-fit4.jpg',
+        'products/omix-cha-logo-fit5.jpg',
+        'products/omix-cha-logo-fit6.jpg'
+      ],
+      darkImage: 'products/omix-cha-logo-dark.jpg',
+      shots: [
+        { img: 'products/omix-cha-logo-shot-1.jpg', label: 'FRONT VIEW' },
+        { img: 'products/omix-cha-logo-shot-2.jpg', label: 'FRONT GRAPHIC' },
+        { img: 'products/omix-cha-logo-shot-3.jpg', label: 'NECK LABEL' },
+        { img: 'products/omix-cha-logo-shot-4.jpg', label: 'RIB CUFF' },
+        { img: 'products/omix-cha-logo-shot-5.jpg', label: 'WASHED TEXTURE' }
+      ],
+      aiModel: true,
+      fullcuts: [
+        { img: 'products/omix-cha-logo-fullcut-1.jpg', tag: 'OVERSIZED FIT',
+          desc: '드롭 숄더 오버핏<br />여유 있게 떨어지는 맨투맨 실루엣' },
+        { img: 'products/omix-cha-logo-fullcut-2.jpg', tag: 'FRONT GRAPHIC',
+          desc: 'INNER PEACE, LOUD SOUND<br />불상 · 카세트 · 바이닐 콜라주' },
+        { img: 'products/omix-cha-logo-fullcut-3.jpg', tag: 'DAILY WEAR',
+          desc: '와이드 카고 · 청키 스니커즈와 매칭<br />간절기 · 겨울 레이어드 기본템' }
+      ],
+      options: { name: 'SIZE', values: ['S', 'M', 'L', 'XL'] },
+      stock: 40,
+      specs: [
+        { k: 'FABRIC',   v: '면 기모 쭈리' },
+        { k: 'FIT',      v: '드롭 숄더 오버핏' },
+        { k: 'PRINT',    v: 'DTG 풀컬러 (전면)' },
+        { k: 'COLOR',    v: 'Washed Black' },
+        { k: 'SIZE',     v: 'S · M · L · XL' },
+        { k: 'SHIPPING', v: '2–5 영업일' }
+      ]
+    },
+
     /* ── 포스터 ────────────────────────────────── */
     {
       id: 'omix-poster-mandala',
@@ -226,7 +354,7 @@
       typeLabel: 'POSTER',
       code: 'OMIX.PT.01',
       intro: '공(空)의 개념을 시각화한 만다라 그래픽 포스터입니다. 무광 아트지 250g에 6도 옵셋으로 인쇄했으며 300장 한정입니다.',
-      price: 18000,
+      price: 10000,
       desc: 'A2 / A3 · 무광 아트지',
       art: 'linear-gradient(148deg,#1a0408,#3a0c18,#0d0306)',
       options: { name: 'SIZE', values: ['A2', 'A3'] },
@@ -248,7 +376,7 @@
       typeLabel: 'POSTER',
       code: 'OMIX.PT.02',
       intro: '108 사운드 시리즈의 타이포그래피 포스터입니다. 무광 아트지 250g, 6도 옵셋 인쇄, 300장 한정으로 제작했습니다.',
-      price: 18000,
+      price: 10000,
       desc: 'A2 / A3 · 무광 아트지',
       art: 'linear-gradient(148deg,#0d0a1a,#2a1456,#1a0a2e)',
       options: { name: 'SIZE', values: ['A2', 'A3'] },
@@ -270,7 +398,7 @@
       typeLabel: 'POSTER',
       code: 'OMIX.PT.03',
       intro: '겹겹이 이어지는 불상의 옆얼굴 위에 MIND SOUND CONNECTION 을 오렌지 타이포로 얹은 컨셉 포스터입니다. 소리와 고요의 루프를 담았습니다.',
-      price: 18000,
+      price: 10000,
       desc: 'A2 / A3 · 무광 아트지',
       art: 'linear-gradient(148deg,#0c0c0b,#2a1206,#0c0c0b)',
       images: ['products/omix-poster-concept72-main.jpg'],
@@ -293,7 +421,7 @@
       typeLabel: 'POSTER',
       code: 'OMIX.PT.04',
       intro: '2026 OMIX SOUND TEMPLE 시즌 오프닝 포스터입니다. 사운드 웨이브로 번지는 불상과 라인업 타이포를 마젠타 단색으로 구성했습니다.',
-      price: 18000,
+      price: 10000,
       desc: 'A2 / A3 · 무광 아트지',
       art: 'linear-gradient(148deg,#0d0306,#3a0820,#0d0306)',
       images: ['products/omix-poster-season-opening-main.jpg'],
@@ -316,7 +444,7 @@
       typeLabel: 'POSTER',
       code: 'OMIX.PT.05',
       intro: '헤드폰을 쓴 불상 뒤로 OMIX SOUND 빅 타이포를 깔아 둔 포스터입니다. 108초의 자유, 마음과 소리의 연결을 이야기합니다.',
-      price: 18000,
+      price: 10000,
       desc: 'A2 / A3 · 무광 아트지',
       art: 'linear-gradient(148deg,#1a0408,#5a0c22,#1a0408)',
       images: ['products/omix-poster-omix-sound-main.jpg'],
@@ -339,7 +467,7 @@
       typeLabel: 'POSTER',
       code: 'OMIX.PT.06',
       intro: 'MUSIC 헤드라인 아래 합장한 인물과 붉은 OMIX 레터링을 겹친 포스터입니다. 108 SECONDS · BEYOND MIND.',
-      price: 18000,
+      price: 10000,
       desc: 'A2 / A3 · 무광 아트지',
       art: 'linear-gradient(148deg,#0c0606,#2a0c0c,#0c0606)',
       images: ['products/omix-poster-beyond-mind-main.jpg'],
@@ -477,22 +605,84 @@
     /* ── 스티커 ────────────────────────────────── */
     {
       id: 'omix-sticker-pack',
-      name: 'OMIX STICKER PACK',
+      name: 'OMIX ICON STICKER PACK',
       label: 'OMIX GOODS',
       type: 'sticker',
       typeLabel: 'STICKER',
       code: 'OMIX.ST.01',
-      intro: 'OMIX 그래픽 8종을 모은 방수 스티커 세트입니다. 유광 코팅 PVC 소재라 노트북·케이스에 붙여도 쉽게 상하지 않습니다.',
-      price: 8000,
-      desc: '8종 세트 · 방수 PVC',
+      intro: '붐박스 붓다, OMIX MIX 108 카세트, OMIX ZONE 사인, 체리 붓다 등 OMIX 아이콘 그래픽 9종을 모은 방수 스티커 팩입니다. 유광 코팅 PVC 소재라 노트북·케이스에 붙여도 쉽게 상하지 않습니다.',
+      price: 5000,
+      desc: '9종 세트 · 방수 PVC',
       art: 'linear-gradient(148deg,#0a140a,#0a2010,#0a140a)',
+      images: [
+        'products/omix-sticker-pack-main.jpg'
+      ],
+      darkImage: 'products/omix-sticker-pack-dark.jpg',
+      sheet: { img: 'products/omix-sticker-pack-sheet.jpg', tag: 'FULL SHEET',
+               desc: 'OMIX 아이콘 9종 · 다이컷<br />한 장에 모두 담긴 전체 시트' },
       options: null,
       stock: 300,
       specs: [
-        { k: 'CONTENTS', v: '8종 세트' },
+        { k: 'CONTENTS', v: '9종 세트' },
         { k: 'MATERIAL', v: '방수 PVC' },
         { k: 'FINISH',   v: '유광 코팅' },
         { k: 'SIZE',     v: '40–80 mm' },
+        { k: 'CUT',      v: '다이컷' },
+        { k: 'SHIPPING', v: '2–5 영업일' }
+      ]
+    },
+    {
+      id: 'omix-sticker-records',
+      name: 'OMIX RECORDS STICKER PACK',
+      label: 'OMIX GOODS',
+      type: 'sticker',
+      typeLabel: 'STICKER',
+      code: 'OMIX.ST.03',
+      intro: 'OMIX 디스크 아트 7종과 MUSIC FLATFORM 패스, OMIX! 로고, OMIX EDITION 바코드까지 10종을 담은 레코드 테마 스티커 팩입니다.',
+      price: 5000,
+      desc: '10종 세트 · 방수 PVC',
+      art: 'linear-gradient(148deg,#0a0418,#18083a,#0c0520)',
+      images: [
+        'products/omix-sticker-records-main.jpg'
+      ],
+      darkImage: 'products/omix-sticker-records-dark.jpg',
+      sheet: { img: 'products/omix-sticker-records-sheet.jpg', tag: 'FULL SHEET',
+               desc: '디스크 아트 7종 + 로고 3종<br />한 장에 모두 담긴 전체 시트' },
+      options: null,
+      stock: 300,
+      specs: [
+        { k: 'CONTENTS', v: '10종 세트' },
+        { k: 'MATERIAL', v: '방수 PVC' },
+        { k: 'FINISH',   v: '유광 코팅' },
+        { k: 'SIZE',     v: '40–90 mm' },
+        { k: 'CUT',      v: '다이컷' },
+        { k: 'SHIPPING', v: '2–5 영업일' }
+      ]
+    },
+    {
+      id: 'omix-sticker-buddha',
+      name: 'BUDDHA STICKER PACK',
+      label: 'OMIX GOODS',
+      type: 'sticker',
+      typeLabel: 'STICKER',
+      code: 'OMIX.ST.04',
+      intro: '"성불하자" 와불, ABSOLUTE BUDDHA, "성불하라고" 근육 붓다, I ♥ OMIX 좌불 등 위트 있는 붓다 밈 스티커 5종 팩입니다.',
+      price: 5000,
+      desc: '5종 세트 · 방수 PVC',
+      art: 'linear-gradient(148deg,#14100a,#3a2a10,#14100a)',
+      images: [
+        'products/omix-sticker-buddha-main.jpg'
+      ],
+      darkImage: 'products/omix-sticker-buddha-dark.jpg',
+      sheet: { img: 'products/omix-sticker-buddha-sheet.jpg', tag: 'FULL SHEET',
+               desc: '붓다 밈 5종 · 다이컷<br />한 장에 모두 담긴 전체 시트' },
+      options: null,
+      stock: 300,
+      specs: [
+        { k: 'CONTENTS', v: '5종 세트' },
+        { k: 'MATERIAL', v: '방수 PVC' },
+        { k: 'FINISH',   v: '유광 코팅' },
+        { k: 'SIZE',     v: '50–100 mm' },
         { k: 'CUT',      v: '다이컷' },
         { k: 'SHIPPING', v: '2–5 영업일' }
       ]
@@ -505,7 +695,7 @@
       typeLabel: 'STICKER',
       code: 'OMIX.ST.02',
       intro: '만다라 그래픽 5종을 홀로그램 PET에 인쇄한 스티커 세트입니다. 보는 각도에 따라 색이 달라집니다.',
-      price: 6000,
+      price: 5000,
       desc: '5종 세트 · 홀로그램',
       art: 'linear-gradient(148deg,#0d0a1a,#1a0a2e,#0d0a1a)',
       options: null,
@@ -525,6 +715,7 @@
   const CATEGORIES = [
     { key: 'all',     label: 'ALL' },
     { key: 'tee',     label: 'T-SHIRT' },
+    { key: 'sweat',   label: 'SWEATSHIRT' },
     { key: 'poster',  label: 'POSTER' },
     { key: 'postcard', label: 'POSTCARD' },
     { key: 'keyring', label: 'KEYRING' },

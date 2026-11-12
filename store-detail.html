@@ -370,12 +370,40 @@
     text-transform: uppercase; text-align: center; padding: 16px;
   }
   .stdet-cut-ph em { font-size: 28px; opacity: 0.1; font-style: normal; }
+  .stdet-cut img {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+    pointer-events: none; user-select: none;
+  }
   .stdet-cut-lbl {
     position: absolute; bottom: 0; left: 0; right: 0;
     padding: 28px 14px 12px;
     background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 100%);
     font-size: 9px; font-weight: 700; letter-spacing: 0.18em;
     text-transform: uppercase; color: rgba(255,255,255,0.55);
+  }
+
+  /* ── 전체 시트 (흰 배경 큰 페이지) — products.js 의 sheet 가 있을 때만 ── */
+  .stdet-sheet {
+    display: none;
+    background: #000; color: #fff;
+    padding: clamp(56px, 8vw, 110px) max(16px, 5vw);
+    border-top: 1px solid var(--border);
+  }
+  .stdet-sheet.show { display: block; }
+  .stdet-sheet-hdr {
+    max-width: 640px; margin: 0 auto 28px;
+    display: flex; align-items: flex-end; justify-content: space-between; gap: 16px;
+  }
+  .stdet-sheet-tag {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.28em;
+    text-transform: uppercase; color: var(--red);
+  }
+  .stdet-sheet-desc { font-size: 12px; color: rgba(255,255,255,0.55); line-height: 1.5; text-align: right; }
+  .stdet-sheet img {
+    display: block; width: 100%; max-width: 640px; height: auto; margin: 0 auto;
+    border-radius: 6px;
+    box-shadow: 0 40px 80px -30px rgba(255,255,255,0.08);
+    user-select: none; pointer-events: none;
   }
 
   /* ============================================================
@@ -571,9 +599,47 @@
     .stdet-options { width: 55%; padding: 24px 20px; }
     .stdet-related-grid { grid-template-columns: repeat(2,1fr); }
   }
+  /* 사진 넘김 버튼 — 모바일에서만 보인다 */
+  .stdet-img-nav {
+    display: none;
+    position: absolute; top: 50%; z-index: 3;
+    width: 36px; height: 36px; margin-top: -18px;
+    align-items: center; justify-content: center;
+    border-radius: 50%; border: 1px solid rgba(255,255,255,0.18);
+    background: rgba(0,0,0,0.45); color: #fff;
+    font-size: 20px; line-height: 1;
+  }
+  .stdet-img-nav.prev { left: 10px; }
+  .stdet-img-nav.next { right: 10px; }
+
   @media (max-width: 767px) {
-    .stdet-options { width: 100%; }
     .stdet-related-grid { grid-template-columns: repeat(2,1fr); gap: 10px; }
+
+    /* 모바일은 좌우 분할 애니메이션 대신 세로로 쌓는다:
+       사진(좌우 스와이프로 넘김) → 옵션 패널 → 하단 바 */
+    .stdet-hero { height: auto; }
+    .stdet-sticky {
+      position: relative; top: auto; height: auto; overflow: visible;
+      display: flex; flex-direction: column; align-items: stretch;
+      padding: 20px 20px 0;
+    }
+    .stdet-progress-bar, .stdet-scroll-hint, .stdet-side-label { display: none; }
+    .stdet-img-scene { position: relative; inset: auto; transform: none !important; }
+    .stdet-img-card {
+      width: 100%; max-width: 440px; margin: 0 auto;
+      transform: none !important; touch-action: pan-y;
+    }
+    .stdet-img-nav { display: flex; }
+    .stdet-img-card.single .stdet-img-nav { display: none; }
+    .stdet-options {
+      position: relative; inset: auto; width: 100%;
+      opacity: 1 !important; transform: none !important;
+      pointer-events: all; overflow: visible;
+      padding: 28px 0 32px;
+    }
+    .stdet-bar { position: relative; margin: 0 -20px; padding: 14px 20px; gap: 12px; }
+    .stdet-bar-name { display: none; }
+    .stdet-bar-price { margin-left: auto; }
   }
   </style>
   <script src="transition-head.js"></script>
@@ -702,6 +768,8 @@
             <img class="stdet-img-photo" id="stdetPhoto" alt="" />
             <span class="stdet-ai-badge" id="stdetAiBadge">AI 생성 착용 목업</span>
             <span class="stdet-img-counter" id="stdetCounter">1 / 4</span>
+            <button class="stdet-img-nav prev" id="stdetImgPrev" aria-label="이전 사진">‹</button>
+            <button class="stdet-img-nav next" id="stdetImgNext" aria-label="다음 사진">›</button>
           </div>
         </div>
 
@@ -783,6 +851,14 @@
     </section>
 
     <!-- ── 풀컷 패럴랙스 ── -->
+    <section class="stdet-sheet" id="stdetSheet">
+      <div class="stdet-sheet-hdr">
+        <span class="stdet-sheet-tag"></span>
+        <p class="stdet-sheet-desc"></p>
+      </div>
+      <img alt="" loading="lazy" draggable="false" />
+    </section>
+
     <div class="stdet-fullcut">
       <div class="stdet-fullcut-bg" id="stdetFc1">
         <div class="stdet-fullcut-ph"><em>🖼</em><span>product-void-mandala-fullcut-1.jpg</span></div>
@@ -962,7 +1038,49 @@
 
     let lastP = -1;
 
+    /* 사진 한 장 표시 (스크롤·스와이프 공용) */
+    function showImg(idx) {
+      const imgData = IMAGES[idx];
+      counter.textContent = imgData.label;
+      aiBadge.classList.toggle('show', !!imgData.ai);
+      imgCard.classList.toggle('single', IMAGES.length < 2);
+      if (imgData.src) {
+        if (photo.getAttribute('src') !== imgData.src) photo.src = imgData.src;
+      } else {
+        const ph = imgCard.querySelector('.stdet-img-ph span');
+        if (ph) ph.textContent = imgData.ph;
+      }
+    }
+
+    /* 모바일(767px 이하): 스크롤 애니메이션 없이 세로로 쌓고, 사진은 스와이프/버튼으로 넘긴다 */
+    const mobileMQ = window.matchMedia('(max-width: 767px)');
+    let mIdx = 0;
+    function mobileGo(step) {
+      mIdx = (mIdx + step + IMAGES.length) % IMAGES.length;
+      showImg(mIdx);
+    }
+    document.getElementById('stdetImgPrev').addEventListener('click', () => mobileGo(-1));
+    document.getElementById('stdetImgNext').addEventListener('click', () => mobileGo(1));
+    let touchX = null, touchY = null;
+    imgCard.addEventListener('touchstart', e => { touchX = e.touches[0].clientX; touchY = e.touches[0].clientY; }, { passive: true });
+    imgCard.addEventListener('touchend', e => {
+      if (touchX === null || !mobileMQ.matches) return;
+      const dx = e.changedTouches[0].clientX - touchX, dy = e.changedTouches[0].clientY - touchY;
+      touchX = null;
+      if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) mobileGo(dx < 0 ? 1 : -1);
+    }, { passive: true });
+    mobileMQ.addEventListener('change', () => { lastP = -1; onScroll(); });
+
     function onScroll() {
+      if (mobileMQ.matches) {
+        scene.style.transform = ''; imgCard.style.transform = '';
+        options.style.opacity = ''; options.style.transform = '';
+        options.classList.add('active');
+        mIdx = Math.min(mIdx, IMAGES.length - 1);
+        showImg(mIdx);
+        lastP = -1;
+        return;
+      }
       const rect = hero.getBoundingClientRect();
       const heroH = hero.offsetHeight;
       const raw = -rect.top;
@@ -1007,17 +1125,7 @@
          사진은 실제로 스크롤 가능한 구간(hero − 화면 높이) 기준으로 나눠야
          마지막 장까지 보인다. */
       const imgP = Math.max(0, Math.min(1, raw / Math.max(1, heroH - window.innerHeight)));
-      const imgIdx = Math.min(Math.floor(imgP * IMAGES.length), IMAGES.length - 1);
-      const imgData = IMAGES[imgIdx];
-      counter.textContent = imgData.label;
-      aiBadge.classList.toggle('show', !!imgData.ai);
-      // 실제 사진이 있으면 사진을, 없으면 ph 텍스트를 교체
-      if (imgData.src) {
-        if (photo.getAttribute('src') !== imgData.src) photo.src = imgData.src;
-      } else {
-        const ph = imgCard.querySelector('.stdet-img-ph span');
-        if (ph) ph.textContent = imgData.ph;
-      }
+      showImg(Math.min(Math.floor(imgP * IMAGES.length), IMAGES.length - 1));
 
       /* 배경 미세 변화 */
       const bgA = lerp(0.06, 0.03, splitT);
@@ -1139,6 +1247,34 @@
       } else if (p.images && p.images.length) {
         /* 사진은 있는데 풀컷이 없는 상품(포스터·엽서) — 가칭 플레이스홀더 대신 숨김 */
         document.querySelectorAll('.stdet-fullcut').forEach(fc => { fc.style.display = 'none'; });
+      }
+
+      /* ── 전체 시트 — products.js 의 sheet 로 흰 배경 큰 페이지를 채움 ── */
+      const sheetSec = q('#stdetSheet');
+      if (sheetSec && p.sheet) {
+        sheetSec.querySelector('.stdet-sheet-tag').textContent = p.sheet.tag || 'FULL SHEET';
+        sheetSec.querySelector('.stdet-sheet-desc').innerHTML  = p.sheet.desc || '';
+        const sImg = sheetSec.querySelector('img');
+        sImg.src = S.imgUrl(p.sheet.img);
+        sImg.alt = p.name + ' — ' + (p.sheet.tag || 'FULL SHEET');
+        sheetSec.classList.add('show');
+      }
+
+      /* ── PRODUCT SHOTS — products.js 의 shots 로 채움, 없으면 섹션 숨김 ── */
+      const cutsSec = q('.stdet-cuts');
+      if (cutsSec) {
+        if (p.shots && p.shots.length) {
+          q('#stdetCutsScroll').innerHTML = p.shots.map(sh =>
+            '<div class="stdet-cut">' +
+              '<img src="' + S.imgUrl(sh.img) + '" alt="' + p.name + ' — ' + sh.label + '" loading="lazy" draggable="false" />' +
+              '<div class="stdet-cut-lbl">' + sh.label + '</div>' +
+            '</div>'
+          ).join('');
+          const cnt = q('.stdet-cuts-count');
+          if (cnt) cnt.textContent = p.shots.length + ' CUTS';
+        } else {
+          cutsSec.style.display = 'none';
+        }
       }
 
       /* 바뀐 IMAGES 로 현재 스크롤 위치를 다시 그린다 */

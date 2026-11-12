@@ -65,11 +65,15 @@
 
   /* ── 카드마다 채우기 ── */
   const CARD_SEL = '.st-hero-card, .st-product-card, .product-card';
+  const hasPhoto = p => !!(p.images && p.images.length);
 
   document.querySelectorAll('[data-product]').forEach(btn => {
     const card = btn.closest(CARD_SEL);
     const p    = S.get(btn.dataset.product);
     if (!card || !p) return;
+
+    /* 사진이 아직 없는 상품은 스토어 목록에서 뺀다 — products.js 에 images 를 넣으면 자동으로 나타남 */
+    if (!hasPhoto(p) && card.classList.contains('product-card')) { card.remove(); return; }
 
     /* 카테고리 필터가 읽는 값 */
     card.dataset.type = p.type;
@@ -82,6 +86,14 @@
       setText(card, '.st-hero-art-meta span', p.typeLabel + ' · 2026');
       setText(card, '.st-hero-genres', p.desc);
       setText(card, '.st-price', S.won(p.price));
+      /* 대표 사진이 있으면 아트 블록을 사진으로 채운다 */
+      if (hasPhoto(p)) {
+        const block = card.querySelector('.st-hero-art-block');
+        if (block) {
+          block.style.background = '#020003 url("' + S.imgUrl(p.darkImage || p.images[0]) + '") center 30% / cover no-repeat';
+          block.classList.add('has-photo');
+        }
+      }
 
     } else if (card.classList.contains('st-product-card')) {
       /* 우측 2×2 피처드 카드 */
@@ -104,6 +116,14 @@
       setPhoto(card, '.pc-header', '.pc-art', p);
     }
   });
+
+  /* 보여 줄 상품이 하나도 없는 카테고리 버튼은 숨긴다 (ALL 은 항상) */
+  if (filterWrap) {
+    const types = new Set([...document.querySelectorAll('#storeGrid .product-card')].map(c => c.dataset.type));
+    filterWrap.querySelectorAll('.filter-btn').forEach(b => {
+      if (b.dataset.filter !== 'all' && !types.has(b.dataset.filter)) b.remove();
+    });
+  }
 
   /* 히어로 타이틀은 단어마다 줄바꿈 + 품번 한 줄 */
   function name0(p) {
@@ -226,6 +246,21 @@ function applyStoreFilters() {
 
     card.style.display = (matchesFilter && matchesSearch) ? '' : 'none';
   });
+
+  /* 필터·검색 중에는 상단 LATEST/피처드 구역을 숨겨 결과가 바로 보이게 한다
+     (그 구역은 필터 대상이 아니라 그대로 두면 눌러도 화면이 안 바뀌는 것처럼 보인다) */
+  const editorial = document.querySelector('.st-editorial');
+  if (editorial) editorial.style.display = (activeFilter === 'all' && !searchQuery) ? '' : 'none';
+}
+
+/* 결과 그리드 맨 위가 고정 필터 바 바로 아래에 오도록 스크롤 */
+function scrollToResults() {
+  const grid = document.getElementById('storeGrid');
+  const bar  = document.querySelector('.store-filters-wrap');
+  if (!grid) return;
+  const offset = bar ? bar.getBoundingClientRect().bottom : 0;
+  const top = grid.getBoundingClientRect().top + window.scrollY - offset;
+  window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
 }
 
 filterBtns.forEach(btn => {
@@ -235,6 +270,8 @@ filterBtns.forEach(btn => {
     btn.classList.add('active');
     activeFilter = btn.dataset.filter;
     applyStoreFilters();
+    if (activeFilter === 'all' && !searchQuery) window.scrollTo({ top: 0, behavior: 'smooth' });
+    else scrollToResults();
   });
 });
 

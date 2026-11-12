@@ -4,3 +4,6 @@ server/uploads/
 server/cards.json
 server/.env
 .env
+
+# 사이트에서 쓰지 않는 원본·보관 이미지 (로컬 전용)
+_보관/

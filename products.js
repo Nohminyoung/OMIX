@@ -345,6 +345,194 @@
       ]
     },
 
+    {
+      id: 'omix-headset-logo',
+      name: 'OMIX MUSIC SWEATSHIRT',
+      label: 'OMIX APPAREL',
+      type: 'sweat',
+      typeLabel: 'SWEATSHIRT',
+      code: 'OMIX.SW.03',
+      intro: '헤드폰 형태로 감싼 옴(ॐ) 심볼과 OMIX MUSIC 레터링의 원형 로고를 왼쪽 가슴에 얹은 피그먼트 워싱 맨투맨입니다. 드롭 숄더 오버핏입니다.',
+      price: 59000,
+      desc: 'WASHED BLACK / S·M·L·XL',
+      art: 'linear-gradient(148deg,#0c0c0b,#1a1a18,#0c0c0b)',
+      images: [
+        'products/omix-headset-logo-main.jpg',
+        'products/omix-headset-logo-fit1.jpg',
+        'products/omix-headset-logo-fit2.jpg',
+        'products/omix-headset-logo-fit3.jpg',
+        'products/omix-headset-logo-fit4.jpg',
+        'products/omix-headset-logo-fit5.jpg',
+        'products/omix-headset-logo-fit6.jpg'
+      ],
+      shots: [
+        { img: 'products/omix-headset-logo-shot-1.jpg', label: 'FRONT VIEW' },
+        { img: 'products/omix-headset-logo-shot-2.jpg', label: 'CHEST LOGO' },
+        { img: 'products/omix-headset-logo-shot-3.jpg', label: 'NECK LABEL' },
+        { img: 'products/omix-headset-logo-shot-4.jpg', label: 'RIB CUFF' },
+        { img: 'products/omix-headset-logo-shot-5.jpg', label: 'WASHED TEXTURE' }
+      ],
+      aiModel: true,
+      fullcuts: [
+        { img: 'products/omix-headset-logo-fullcut-1.jpg', tag: 'OVERSIZED FIT',
+          desc: '드롭 숄더 오버핏<br />여유 있게 떨어지는 맨투맨 실루엣' },
+        { img: 'products/omix-headset-logo-fullcut-2.jpg', tag: 'CHEST LOGO',
+          desc: 'OMIX MUSIC 옴 심볼 로고<br />좌측 가슴 원포인트' },
+        { img: 'products/omix-headset-logo-fullcut-3.jpg', tag: 'DAILY WEAR',
+          desc: '와이드 카고 · 청키 스니커즈와 매칭<br />간절기 · 겨울 레이어드 기본템' }
+      ],
+      options: { name: 'SIZE', values: ['S', 'M', 'L', 'XL'] },
+      stock: 40,
+      specs: [
+        { k: 'FABRIC',   v: '면 기모 쭈리' },
+        { k: 'FIT',      v: '드롭 숄더 오버핏' },
+        { k: 'PRINT',    v: '실크스크린 1도 (좌측 가슴)' },
+        { k: 'COLOR',    v: 'Washed Black' },
+        { k: 'SIZE',     v: 'S · M · L · XL' },
+        { k: 'SHIPPING', v: '2–5 영업일' }
+      ]
+    },
+    {
+      id: 'omix-angel-logo',
+      name: 'HEADPHONE BUDDHA SWEATSHIRT',
+      label: 'OMIX APPAREL',
+      type: 'sweat',
+      typeLabel: 'SWEATSHIRT',
+      code: 'OMIX.SW.04',
+      intro: '헤드폰을 쓴 채 구름 위에 앉은 불상과 날개처럼 번지는 잉크 스플래시를 전면에 크게 올린 피그먼트 워싱 맨투맨입니다. 드롭 숄더 오버핏입니다.',
+      price: 65000,
+      desc: 'WASHED BLACK / S·M·L·XL',
+      art: 'linear-gradient(148deg,#141414,#2a2a28,#0c0c0b)',
+      images: [
+        'products/omix-angel-logo-main.jpg',
+        'products/omix-angel-logo-fit1.jpg',
+        'products/omix-angel-logo-fit2.jpg',
+        'products/omix-angel-logo-fit3.jpg',
+        'products/omix-angel-logo-fit4.jpg',
+        'products/omix-angel-logo-fit5.jpg',
+        'products/omix-angel-logo-fit6.jpg'
+      ],
+      shots: [
+        { img: 'products/omix-angel-logo-shot-1.jpg', label: 'FRONT VIEW' },
+        { img: 'products/omix-angel-logo-shot-2.jpg', label: 'FRONT GRAPHIC' },
+        { img: 'products/omix-angel-logo-shot-3.jpg', label: 'NECK LABEL' },
+        { img: 'products/omix-angel-logo-shot-4.jpg', label: 'RIB CUFF' },
+        { img: 'products/omix-angel-logo-shot-5.jpg', label: 'RIB HEM' }
+      ],
+      aiModel: true,
+      fullcuts: [
+        { img: 'products/omix-angel-logo-fullcut-1.jpg', tag: 'OVERSIZED FIT',
+          desc: '드롭 숄더 오버핏<br />여유 있게 떨어지는 맨투맨 실루엣' },
+        { img: 'products/omix-angel-logo-fullcut-2.jpg', tag: 'FRONT GRAPHIC',
+          desc: '헤드폰을 쓴 불상<br />구름 · 잉크 스플래시 그래픽' },
+        { img: 'products/omix-angel-logo-fullcut-3.jpg', tag: 'DAILY WEAR',
+          desc: '와이드 카고 · 청키 스니커즈와 매칭<br />간절기 · 겨울 레이어드 기본템' }
+      ],
+      options: { name: 'SIZE', values: ['S', 'M', 'L', 'XL'] },
+      stock: 40,
+      specs: [
+        { k: 'FABRIC',   v: '면 기모 쭈리' },
+        { k: 'FIT',      v: '드롭 숄더 오버핏' },
+        { k: 'PRINT',    v: 'DTG 풀컬러 (전면)' },
+        { k: 'COLOR',    v: 'Washed Black' },
+        { k: 'SIZE',     v: 'S · M · L · XL' },
+        { k: 'SHIPPING', v: '2–5 영업일' }
+      ]
+    },
+    {
+      id: 'omix-red-logo',
+      name: 'FROM OM INTO SOUND SWEATSHIRT',
+      label: 'OMIX APPAREL',
+      type: 'sweat',
+      typeLabel: 'SWEATSHIRT',
+      code: 'OMIX.SW.05',
+      intro: '레드 OMIX 볼드 레터링에 헤드폰 오브젝트를 얹고, 아래에 "From om, Into sound" 스크립트를 더한 피그먼트 워싱 차콜 맨투맨입니다. 드롭 숄더 오버핏입니다.',
+      price: 59000,
+      desc: 'WASHED CHARCOAL / S·M·L·XL',
+      art: 'linear-gradient(148deg,#2a2a2a,#3a1010,#1a1a1a)',
+      images: [
+        'products/omix-red-logo-main.jpg',
+        'products/omix-red-logo-fit1.jpg',
+        'products/omix-red-logo-fit2.jpg',
+        'products/omix-red-logo-fit3.jpg',
+        'products/omix-red-logo-fit4.jpg',
+        'products/omix-red-logo-fit5.jpg',
+        'products/omix-red-logo-fit6.jpg'
+      ],
+      shots: [
+        { img: 'products/omix-red-logo-shot-1.jpg', label: 'FRONT VIEW' },
+        { img: 'products/omix-red-logo-shot-2.jpg', label: 'FRONT LETTERING' },
+        { img: 'products/omix-red-logo-shot-3.jpg', label: 'NECK LABEL' },
+        { img: 'products/omix-red-logo-shot-4.jpg', label: 'RIB CUFF' },
+        { img: 'products/omix-red-logo-shot-5.jpg', label: 'WASHED TEXTURE' }
+      ],
+      aiModel: true,
+      fullcuts: [
+        { img: 'products/omix-red-logo-fullcut-1.jpg', tag: 'OVERSIZED FIT',
+          desc: '드롭 숄더 오버핏<br />여유 있게 떨어지는 맨투맨 실루엣' },
+        { img: 'products/omix-red-logo-fullcut-2.jpg', tag: 'FRONT LETTERING',
+          desc: '레드 OMIX 볼드 레터링<br />From om, Into sound' },
+        { img: 'products/omix-red-logo-fullcut-3.jpg', tag: 'DAILY WEAR',
+          desc: '와이드 카고 · 청키 스니커즈와 매칭<br />간절기 · 겨울 레이어드 기본템' }
+      ],
+      options: { name: 'SIZE', values: ['S', 'M', 'L', 'XL'] },
+      stock: 40,
+      specs: [
+        { k: 'FABRIC',   v: '면 기모 쭈리' },
+        { k: 'FIT',      v: '드롭 숄더 오버핏' },
+        { k: 'PRINT',    v: '실크스크린 2도 (전면)' },
+        { k: 'COLOR',    v: 'Washed Charcoal' },
+        { k: 'SIZE',     v: 'S · M · L · XL' },
+        { k: 'SHIPPING', v: '2–5 영업일' }
+      ]
+    },
+    {
+      id: 'omix-pinkaura-logo',
+      name: 'PINK AURA SWEATSHIRT',
+      label: 'OMIX APPAREL',
+      type: 'sweat',
+      typeLabel: 'SWEATSHIRT',
+      code: 'OMIX.SW.06',
+      intro: '홀로그램 그라데이션 OMIX 레터링 아래로 헤드폰을 쓴 핑크 네온 불상이 떠오르는 그래픽의 피그먼트 워싱 차콜 맨투맨입니다. 드롭 숄더 오버핏입니다.',
+      price: 65000,
+      desc: 'WASHED CHARCOAL / S·M·L·XL',
+      art: 'linear-gradient(148deg,#2a2a2a,#3a0c2a,#1a1a1a)',
+      images: [
+        'products/omix-pinkaura-logo-main.jpg',
+        'products/omix-pinkaura-logo-fit1.jpg',
+        'products/omix-pinkaura-logo-fit2.jpg',
+        'products/omix-pinkaura-logo-fit3.jpg',
+        'products/omix-pinkaura-logo-fit4.jpg',
+        'products/omix-pinkaura-logo-fit5.jpg',
+        'products/omix-pinkaura-logo-fit6.jpg'
+      ],
+      shots: [
+        { img: 'products/omix-pinkaura-logo-shot-1.jpg', label: 'FRONT VIEW' },
+        { img: 'products/omix-pinkaura-logo-shot-2.jpg', label: 'FRONT GRAPHIC' },
+        { img: 'products/omix-pinkaura-logo-shot-3.jpg', label: 'NECK LABEL' },
+        { img: 'products/omix-pinkaura-logo-shot-4.jpg', label: 'RIB CUFF' },
+        { img: 'products/omix-pinkaura-logo-shot-5.jpg', label: 'RIB HEM' }
+      ],
+      aiModel: true,
+      fullcuts: [
+        { img: 'products/omix-pinkaura-logo-fullcut-1.jpg', tag: 'OVERSIZED FIT',
+          desc: '드롭 숄더 오버핏<br />여유 있게 떨어지는 맨투맨 실루엣' },
+        { img: 'products/omix-pinkaura-logo-fullcut-2.jpg', tag: 'FRONT GRAPHIC',
+          desc: '핑크 네온 불상<br />홀로그램 OMIX 레터링' },
+        { img: 'products/omix-pinkaura-logo-fullcut-3.jpg', tag: 'DAILY WEAR',
+          desc: '와이드 카고 · 청키 스니커즈와 매칭<br />간절기 · 겨울 레이어드 기본템' }
+      ],
+      options: { name: 'SIZE', values: ['S', 'M', 'L', 'XL'] },
+      stock: 40,
+      specs: [
+        { k: 'FABRIC',   v: '면 기모 쭈리' },
+        { k: 'FIT',      v: '드롭 숄더 오버핏' },
+        { k: 'PRINT',    v: 'DTG 풀컬러 (전면)' },
+        { k: 'COLOR',    v: 'Washed Charcoal' },
+        { k: 'SIZE',     v: 'S · M · L · XL' },
+        { k: 'SHIPPING', v: '2–5 영업일' }
+      ]
+    },
     /* ── 포스터 ────────────────────────────────── */
     {
       id: 'omix-poster-mandala',

@@ -356,24 +356,24 @@
     </div>
     <div class="idx-event-list">
       <div class="idx-event-row reveal-up">
-        <span class="idx-e-date">Jul 12, 2026</span>
+        <span class="idx-e-date">Jul 12, 2028 <em class="idx-e-tbc">예정</em></span>
         <div><p class="idx-e-name">AUM Club Seoul</p><p class="idx-e-loc">Seoul, Korea</p></div>
-        <div class="idx-e-btns"><button class="idx-e-btn">RSVP</button><button class="idx-e-btn fill">GET TICKETS</button></div>
+        <div class="idx-e-btns"><button class="idx-e-btn">RSVP</button><button class="idx-e-btn fill">COMING SOON</button></div>
       </div>
       <div class="idx-event-row reveal-up delay-1">
-        <span class="idx-e-date">Aug 03, 2026</span>
+        <span class="idx-e-date">Aug 03, 2028 <em class="idx-e-tbc">예정</em></span>
         <div><p class="idx-e-name">Zandari Festa</p><p class="idx-e-loc">Seoul, Korea</p></div>
-        <div class="idx-e-btns"><button class="idx-e-btn">RSVP</button><button class="idx-e-btn fill">GET TICKETS</button></div>
+        <div class="idx-e-btns"><button class="idx-e-btn">RSVP</button><button class="idx-e-btn fill">COMING SOON</button></div>
       </div>
       <div class="idx-event-row reveal-up delay-2">
-        <span class="idx-e-date">Sep 20, 2026</span>
+        <span class="idx-e-date">Sep 20, 2028 <em class="idx-e-tbc">예정</em></span>
         <div><p class="idx-e-name">Berghain</p><p class="idx-e-loc">Berlin, Germany</p></div>
-        <div class="idx-e-btns"><button class="idx-e-btn">RSVP</button><button class="idx-e-btn fill">GET TICKETS</button></div>
+        <div class="idx-e-btns"><button class="idx-e-btn">RSVP</button><button class="idx-e-btn fill">COMING SOON</button></div>
       </div>
       <div class="idx-event-row reveal-up delay-3">
-        <span class="idx-e-date">Oct 08, 2026</span>
+        <span class="idx-e-date">Oct 08, 2028 <em class="idx-e-tbc">예정</em></span>
         <div><p class="idx-e-name">Fabric London</p><p class="idx-e-loc">London, UK</p></div>
-        <div class="idx-e-btns"><button class="idx-e-btn">RSVP</button><button class="idx-e-btn fill">GET TICKETS</button></div>
+        <div class="idx-e-btns"><button class="idx-e-btn">RSVP</button><button class="idx-e-btn fill">COMING SOON</button></div>
       </div>
     </div>
   </section>
@@ -757,17 +757,6 @@
       [scrollCta, soundNote].forEach(el=>{
         if(el) el.style.opacity = fadeP;
       });
-
-      if(navLogo){
-        const logoP = clamp01((textP - 0.6) / 0.35);
-        if(logoP > 0){
-          navLogo.classList.add('nav-logo-visible');
-          navLogo.style.opacity = String(logoP);
-        } else {
-          navLogo.classList.remove('nav-logo-visible');
-          navLogo.style.opacity = '0';
-        }
-      }
 
       /* 2) LP 디스크: 글자가 거의 사라질 즈음(progress 0.08)부터 0.7까지 슬리브 안으로
          내려간다. 슬리브가 판보다 위(z-index)에 있어서 내려갈수록 판이 입구로 삼켜진다 */

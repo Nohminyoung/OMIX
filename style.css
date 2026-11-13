@@ -3994,7 +3994,9 @@ body.cursor-merged .cursor-dot { width: 7px; height: 7px; }
     gap: 8px;
     padding: 18px 0;
   }
-  .idx-events .idx-e-btns { margin-top: 4px; }
+  /* 버튼을 왼쪽에만 몰아두면 오른쪽이 텅 비어 보여서 두 버튼이 줄 폭을 반씩 나눠 채운다 */
+  .idx-events .idx-e-btns { margin-top: 4px; display: grid; grid-template-columns: 1fr 1fr; }
+  .idx-events .idx-e-btn { text-align: center; padding-block: 14px; }
 }
 
 /* ── 480px 이하 (소형 모바일) ── */
@@ -4204,16 +4206,6 @@ body.cursor-merged .cursor-dot { width: 7px; height: 7px; }
 .idx-hero-audio-btn:hover  { color: var(--red); transform: scale(1.12); }
 .idx-hero-audio-btn:active { transform: scale(0.95); }
 
-/* 인덱스 페이지에서만: 네비 로고 초기 숨김 */
-body.page-index #navLogoCenter {
-  opacity: 0;
-  transition: opacity 0.4s ease;
-  pointer-events: none;
-}
-body.page-index #navLogoCenter.nav-logo-visible {
-  opacity: 1;
-  pointer-events: auto;
-}
 /* ── 히어로 LP 디스크 — 슬리브 입구 위로 윗부분(지름의 54%, 센터 홀까지)이 보이게 놓이고,
    턴테이블처럼 항상 회전. 스크롤하면 스크롤 스크립트가 슬리브 안으로 내려보낸다 ── */
 .idx-hero-disc-wrap {
@@ -4942,6 +4934,12 @@ body:has(.idx-hero-disc-wrap.is-scratching) .cursor {
 }
 .idx-event-row:last-child { border-bottom: none; }
 .idx-e-date { font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gray-3); }
+/* 아직 확정되지 않은 공연 표시 */
+.idx-e-tbc {
+  display: inline-block; margin-left: 8px; padding: 2px 7px; vertical-align: 1px;
+  font-style: normal; font-size: 10px; font-weight: 700; letter-spacing: 0.04em;
+  color: var(--red); border: 1px solid var(--red); border-radius: 2px;
+}
 .idx-e-name { font-size: 18px; font-weight: 700; letter-spacing: -0.01em; text-transform: uppercase; }
 .idx-e-loc  { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gray-3); margin-top: 2px; }
 .idx-e-btns { display: flex; gap: 8px; }

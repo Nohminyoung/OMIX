@@ -4845,6 +4845,13 @@ body:has(.idx-hero-disc-wrap.is-scratching) .cursor {
 .idx-kb-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 0.3em; text-transform: uppercase; color: var(--red); margin-bottom: 12px; }
 .idx-kb-head { font-size: clamp(32px, 5vw, 64px); font-weight: 900; letter-spacing: -0.03em; text-transform: uppercase; line-height: 0.95; }
 .idx-kb-desc { font-size: 13px; font-weight: 300; line-height: 1.9; color: var(--gray-2); word-break: keep-all; }
+/* 모바일 — 두 칸으로 나누면 설명글이 한 단어씩 세로로 쌓이니 제목 아래로 내린다 */
+@media (max-width: 768px) {
+  .idx-kb-section { padding-top: 56px; }
+  .idx-kb-intro { grid-template-columns: 1fr; gap: 20px; padding: 0 20px 40px; }
+  .idx-kb-head { font-size: clamp(36px, 11vw, 52px); }
+  .idx-kb-desc { font-size: 14px; line-height: 1.8; }
+}
 .idx-stagger { position: relative; padding: 20px 0; }
 .idx-line {
   display: block; font-size: clamp(72px, 13.5vw, 200px); font-weight: 900;

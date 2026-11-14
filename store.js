@@ -90,7 +90,7 @@
       if (hasPhoto(p)) {
         const block = card.querySelector('.st-hero-art-block');
         if (block) {
-          block.style.background = '#020003 url("' + S.imgUrl(p.darkImage || p.images[0]) + '") center 30% / cover no-repeat';
+          block.style.background = '#020003 url("' + S.imgUrl(p.darkImage || p.images[0]) + '") center bottom / contain no-repeat';
           block.classList.add('has-photo');
         }
       }
@@ -125,9 +125,9 @@
     });
   }
 
-  /* 히어로 타이틀은 단어마다 줄바꿈 + 품번 한 줄 */
+  /* 히어로 타이틀은 2줄: 상품명 한 줄 + 품번 한 줄 */
   function name0(p) {
-    return p.name.split(' ').join('<br />') + '<br />' + p.code;
+    return p.name + '<br />' + p.code;
   }
 })();
 
@@ -235,6 +235,16 @@ const storeSearchInput = document.getElementById('storeSearchInput');
 let activeFilter = 'all';
 let searchQuery  = '';
 
+/* 상단 LATEST/피처드 구역에 이미 나온 상품 — ALL 화면에선 아래 그리드에서 다시 보여 주지 않는다
+   (필터·검색 중에는 상단 구역이 숨으므로 그때는 그리드에 보여 준다) */
+const featuredIds = new Set(
+  [...document.querySelectorAll('.st-editorial [data-product]')].map(b => b.dataset.product)
+);
+const isFeatured = card => {
+  const btn = card.querySelector('[data-product]');
+  return !!btn && featuredIds.has(btn.dataset.product);
+};
+
 function applyStoreFilters() {
   productCards.forEach(card => {
     const type  = card.dataset.type;
@@ -244,7 +254,9 @@ function applyStoreFilters() {
     const matchesFilter = activeFilter === 'all' || type === activeFilter;
     const matchesSearch = !searchQuery || title.includes(searchQuery) || label.includes(searchQuery);
 
-    card.style.display = (matchesFilter && matchesSearch) ? '' : 'none';
+    const dupOfTop = activeFilter === 'all' && !searchQuery && isFeatured(card);
+
+    card.style.display = (matchesFilter && matchesSearch && !dupOfTop) ? '' : 'none';
   });
 
   /* 필터·검색 중에는 상단 LATEST/피처드 구역을 숨겨 결과가 바로 보이게 한다
@@ -262,6 +274,8 @@ function scrollToResults() {
   const top = grid.getBoundingClientRect().top + window.scrollY - offset;
   window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
 }
+
+applyStoreFilters();
 
 filterBtns.forEach(btn => {
   btn.addEventListener('click', () => {

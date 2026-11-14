@@ -2551,7 +2551,7 @@ body.cursor-merged .cursor-dot { width: 7px; height: 7px; }
 /* 히어로 타이틀 */
 .st-hero-top { flex-shrink: 0; margin-bottom: 8px; }
 .st-hero-title {
-  font-size: clamp(36px, 4.5vw, 64px);
+  font-size: clamp(24px, 3.2vw, 48px);  /* 상품명이 한 줄에 들어가도록 */
   font-weight: 900; line-height: 0.96;
   letter-spacing: -0.03em; text-transform: uppercase;
   color: var(--white);
@@ -3956,7 +3956,7 @@ body.cursor-merged .cursor-dot { width: 7px; height: 7px; }
   .st-product-grid { grid-template-columns: 1fr; }
   .st-product-card { border-right: none; }
   .stpc-body { padding: 24px 20px 20px; }
-  .st-hero-title { font-size: clamp(28px, 8vw, 40px); }
+  .st-hero-title { font-size: clamp(20px, 6vw, 34px); }  /* 상품명 한 줄 + 품번 한 줄 */
   .store-grid { grid-template-columns: 1fr; }
   .product-card { border-right: none; }
   .product-card-inner { padding: 24px 20px 0; }

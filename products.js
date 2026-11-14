@@ -774,7 +774,7 @@
       typeLabel: 'KEYRING',
       code: 'OMIX.KR.02',
       intro: '레드 디스크 위에 블랙 연꽃 패턴과 OMIX 로고를 얹은 미니 CD 키링입니다. 투명 아크릴 케이스에 담겨 있습니다.',
-      price: 15000,
+      price: 3000,
       desc: 'MINI CD / RED LOTUS',
       art: 'linear-gradient(148deg,#1a0408,#3a0810,#1a0408)',
       images: [
@@ -804,7 +804,7 @@
       typeLabel: 'KEYRING',
       code: 'OMIX.KR.03',
       intro: '흑백 기하학 원과 연꽃, 초승달 문양을 담은 모노크롬 미니 CD 키링입니다. 투명 아크릴 케이스에 담겨 있습니다.',
-      price: 15000,
+      price: 3000,
       desc: 'MINI CD / MONOCHROME',
       art: 'linear-gradient(148deg,#0c0c0b,#2a2a2a,#0c0c0b)',
       images: [
@@ -834,7 +834,7 @@
       typeLabel: 'KEYRING',
       code: 'OMIX.KR.04',
       intro: '불상 얼굴의 절반을 와이어프레임으로 그린 레드·크림 미니 CD 키링입니다. 투명 아크릴 케이스에 담겨 있습니다.',
-      price: 15000,
+      price: 3000,
       desc: 'MINI CD / RED · CREAM',
       art: 'linear-gradient(148deg,#1a0804,#3a1008,#1a0804)',
       images: [
@@ -864,7 +864,7 @@
       typeLabel: 'KEYRING',
       code: 'OMIX.KR.05',
       intro: '푸른 오로라 사운드웨이브를 담은 미니 CD 키링입니다. NFC 태그가 들어 있어 휴대폰을 대면 OMIX 사운드로 연결됩니다.',
-      price: 18000,
+      price: 3000,
       desc: 'MINI CD / NFC · BLUE',
       art: 'linear-gradient(148deg,#040a1a,#0a1a3a,#040a1a)',
       images: [
@@ -895,7 +895,7 @@
       typeLabel: 'KEYRING',
       code: 'OMIX.KR.06',
       intro: '옴(ॐ) 심볼과 흑백 그래픽, from om, into sound 문구를 담은 미니 CD 키링입니다. NFC 태그가 들어 있어 휴대폰을 대면 OMIX 사운드로 연결됩니다.',
-      price: 18000,
+      price: 3000,
       desc: 'MINI CD / NFC · MONO',
       art: 'linear-gradient(148deg,#0c0c0b,#262626,#0c0c0b)',
       images: [
@@ -926,7 +926,7 @@
       typeLabel: 'KEYRING',
       code: 'OMIX.KR.07',
       intro: '흑백 사운드웨이브 위에 OMIX 라벨을 얹은 미니 CD 키링입니다. NFC 태그가 들어 있어 휴대폰을 대면 OMIX 사운드로 연결됩니다.',
-      price: 18000,
+      price: 3000,
       desc: 'MINI CD / NFC · MONO',
       art: 'linear-gradient(148deg,#0c0c0b,#2c2c2c,#0c0c0b)',
       images: [
@@ -957,7 +957,7 @@
       typeLabel: 'KEYRING',
       code: 'OMIX.KR.08',
       intro: '키캡 세 개를 투명 케이스에 세로로 꽂은 키링입니다. OMIX · AUM · MUSIC · 번뇌·집착·자비 네 가지 디자인 중에서 고를 수 있습니다.',
-      price: 16000,
+      price: 6000,
       desc: 'KEYCAP × 3 / 4 DESIGNS',
       art: 'linear-gradient(148deg,#0c0c0b,#1a1e2a,#0c0c0b)',
       images: [

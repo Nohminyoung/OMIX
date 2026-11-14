@@ -3966,6 +3966,8 @@ body.cursor-merged .cursor-dot { width: 7px; height: 7px; }
      한 줄 전체 폭이라 넓은 폰·가로 화면에서 너무 길어지지 않도록 화면 높이로 상한 */
   .st-product-card.has-photo .card-photo,
   .product-card.has-photo .card-photo { flex: none; min-height: 0; aspect-ratio: 3 / 4; max-height: 70vh; }
+  /* 모바일은 호버가 없으니 어둡게 하지 않고 원본 밝기로 */
+  .card-photo { filter: none; }
   /* about */
   .about-mission, .about-how, .about-stats, .about-philosophy { padding-left: 20px; padding-right: 20px; }
   .about-how-grid { grid-template-columns: 1fr; gap: 12px; }

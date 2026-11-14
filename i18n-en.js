@@ -535,7 +535,31 @@ window.OMIX_EN = {
   "플레이리스트에서 빼기": "Remove from playlist",
   "빼기": "Remove",
   "✓ 장바구니에 담았습니다": "✓ Added to cart",
-  "헤드폰을 쓴 불상 뒤로 OMIX SOUND 빅 타이포를 깔아 둔 포스터입니다. 108초의 자유, 마음과 소리의 연결을 이야기합니다.": "A poster with big OMIX SOUND type behind a Buddha in headphones. It speaks of 108 seconds of freedom and the connection between mind and sound."
+  "헤드폰을 쓴 불상 뒤로 OMIX SOUND 빅 타이포를 깔아 둔 포스터입니다. 108초의 자유, 마음과 소리의 연결을 이야기합니다.": "A poster with big OMIX SOUND type behind a Buddha in headphones. It speaks of 108 seconds of freedom and the connection between mind and sound.",
+
+  /* 키링 (미니 CD · 키캡) */
+  "레드 디스크 위에 블랙 연꽃 패턴과 OMIX 로고를 얹은 미니 CD 키링입니다. 투명 아크릴 케이스에 담겨 있습니다.": "A mini CD keyring with a black lotus pattern and the OMIX logo on a red disc, held in a clear acrylic case.",
+  "흑백 기하학 원과 연꽃, 초승달 문양을 담은 모노크롬 미니 CD 키링입니다. 투명 아크릴 케이스에 담겨 있습니다.": "A monochrome mini CD keyring with geometric circles, a lotus and crescent motifs, held in a clear acrylic case.",
+  "불상 얼굴의 절반을 와이어프레임으로 그린 레드·크림 미니 CD 키링입니다. 투명 아크릴 케이스에 담겨 있습니다.": "A red-and-cream mini CD keyring with half of the Buddha's face drawn as a wireframe, held in a clear acrylic case.",
+  "푸른 오로라 사운드웨이브를 담은 미니 CD 키링입니다. NFC 태그가 들어 있어 휴대폰을 대면 OMIX 사운드로 연결됩니다.": "A mini CD keyring with a blue aurora soundwave. It has a built-in NFC tag: tap your phone to connect to OMIX sound.",
+  "옴(ॐ) 심볼과 흑백 그래픽, from om, into sound 문구를 담은 미니 CD 키링입니다. NFC 태그가 들어 있어 휴대폰을 대면 OMIX 사운드로 연결됩니다.": "A mini CD keyring with the Om (ॐ) symbol, black-and-white graphics and the line \"from om, into sound\". It has a built-in NFC tag: tap your phone to connect to OMIX sound.",
+  "흑백 사운드웨이브 위에 OMIX 라벨을 얹은 미니 CD 키링입니다. NFC 태그가 들어 있어 휴대폰을 대면 OMIX 사운드로 연결됩니다.": "A mini CD keyring with an OMIX label over a black-and-white soundwave. It has a built-in NFC tag: tap your phone to connect to OMIX sound.",
+  "키캡 세 개를 투명 케이스에 세로로 꽂은 키링입니다. OMIX · AUM · MUSIC · 번뇌·집착·자비 네 가지 디자인 중에서 고를 수 있습니다.": "A keyring with three keycaps stacked in a clear case. Choose from four designs: OMIX · AUM · MUSIC · Defilement·Attachment·Compassion.",
+  "투명 아크릴 미니 CD 케이스": "Clear acrylic mini CD case",
+  "투명 아크릴 프레임": "Clear acrylic frame",
+  "레드 연꽃 패턴": "Red lotus pattern",
+  "모노크롬 로터스 문양": "Monochrome lotus motif",
+  "하프 와이어프레임 불상": "Half-wireframe Buddha",
+  "블루 오로라 사운드웨이브": "Blue aurora soundwave",
+  "옴 심볼 흑백 그래픽": "Om symbol, black-and-white graphic",
+  "흑백 사운드웨이브": "Black-and-white soundwave",
+  "NFC 태그 내장": "Built-in NFC tag",
+  "실버 키링 + 회전 고리": "Silver key ring + swivel clasp",
+  "실버 키링 + 볼체인": "Silver key ring + ball chain",
+  "3구 키캡 (Cherry MX 호환)": "3 keycaps (Cherry MX compatible)",
+  "번뇌·집착·자비": "Defilement·Attachment·Compassion",
+  "번뇌 · 집착 · 자비": "Defilement · Attachment · Compassion",
+  "OMIX · AUM · MUSIC · 번뇌·집착·자비": "OMIX · AUM · MUSIC · Defilement·Attachment·Compassion"
 };
 
 /* 숫자·가격·이름이 섞인 문장 — [정규식, (전체, 캡처1, 캡처2, …, t) => 영어]

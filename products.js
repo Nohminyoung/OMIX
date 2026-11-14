@@ -766,6 +766,222 @@
       ]
     },
 
+    {
+      id: 'omix-keyring-red-lotus',
+      name: 'RED LOTUS CD KEYRING',
+      label: 'OMIX GOODS',
+      type: 'keyring',
+      typeLabel: 'KEYRING',
+      code: 'OMIX.KR.02',
+      intro: '레드 디스크 위에 블랙 연꽃 패턴과 OMIX 로고를 얹은 미니 CD 키링입니다. 투명 아크릴 케이스에 담겨 있습니다.',
+      price: 15000,
+      desc: 'MINI CD / RED LOTUS',
+      art: 'linear-gradient(148deg,#1a0408,#3a0810,#1a0408)',
+      images: [
+        'products/omix-keyring-red-lotus-main.jpg',
+        'products/omix-keyring-red-lotus-2.jpg'
+      ],
+      shots: [
+        { img: 'products/omix-keyring-red-lotus-shot-1.jpg', label: 'DISC ART' },
+        { img: 'products/omix-keyring-red-lotus-shot-2.jpg', label: 'CLEAR CASE' },
+        { img: 'products/omix-keyring-red-lotus-shot-3.jpg', label: 'KEY RING' }
+      ],
+      options: null,
+      stock: 100,
+      specs: [
+        { k: 'CASE',     v: '투명 아크릴 미니 CD 케이스' },
+        { k: 'DISC',     v: '레드 연꽃 패턴' },
+        { k: 'HARDWARE', v: '실버 키링 + 회전 고리' },
+        { k: 'PACKING',  v: 'OPP 개별 포장' },
+        { k: 'SHIPPING', v: '2–5 영업일' }
+      ]
+    },
+    {
+      id: 'omix-keyring-mono-lotus',
+      name: 'MONO LOTUS CD KEYRING',
+      label: 'OMIX GOODS',
+      type: 'keyring',
+      typeLabel: 'KEYRING',
+      code: 'OMIX.KR.03',
+      intro: '흑백 기하학 원과 연꽃, 초승달 문양을 담은 모노크롬 미니 CD 키링입니다. 투명 아크릴 케이스에 담겨 있습니다.',
+      price: 15000,
+      desc: 'MINI CD / MONOCHROME',
+      art: 'linear-gradient(148deg,#0c0c0b,#2a2a2a,#0c0c0b)',
+      images: [
+        'products/omix-keyring-mono-lotus-main.jpg',
+        'products/omix-keyring-mono-lotus-2.jpg'
+      ],
+      shots: [
+        { img: 'products/omix-keyring-mono-lotus-shot-1.jpg', label: 'DISC ART' },
+        { img: 'products/omix-keyring-mono-lotus-shot-2.jpg', label: 'CLEAR CASE' },
+        { img: 'products/omix-keyring-mono-lotus-shot-3.jpg', label: 'KEY RING' }
+      ],
+      options: null,
+      stock: 100,
+      specs: [
+        { k: 'CASE',     v: '투명 아크릴 미니 CD 케이스' },
+        { k: 'DISC',     v: '모노크롬 로터스 문양' },
+        { k: 'HARDWARE', v: '실버 키링 + 회전 고리' },
+        { k: 'PACKING',  v: 'OPP 개별 포장' },
+        { k: 'SHIPPING', v: '2–5 영업일' }
+      ]
+    },
+    {
+      id: 'omix-keyring-buddha-wire',
+      name: 'WIREFRAME BUDDHA CD KEYRING',
+      label: 'OMIX GOODS',
+      type: 'keyring',
+      typeLabel: 'KEYRING',
+      code: 'OMIX.KR.04',
+      intro: '불상 얼굴의 절반을 와이어프레임으로 그린 레드·크림 미니 CD 키링입니다. 투명 아크릴 케이스에 담겨 있습니다.',
+      price: 15000,
+      desc: 'MINI CD / RED · CREAM',
+      art: 'linear-gradient(148deg,#1a0804,#3a1008,#1a0804)',
+      images: [
+        'products/omix-keyring-buddha-wire-main.jpg',
+        'products/omix-keyring-buddha-wire-2.jpg'
+      ],
+      shots: [
+        { img: 'products/omix-keyring-buddha-wire-shot-1.jpg', label: 'DISC ART' },
+        { img: 'products/omix-keyring-buddha-wire-shot-2.jpg', label: 'CLEAR CASE' },
+        { img: 'products/omix-keyring-buddha-wire-shot-3.jpg', label: 'KEY RING' }
+      ],
+      options: null,
+      stock: 100,
+      specs: [
+        { k: 'CASE',     v: '투명 아크릴 미니 CD 케이스' },
+        { k: 'DISC',     v: '하프 와이어프레임 불상' },
+        { k: 'HARDWARE', v: '실버 키링 + 회전 고리' },
+        { k: 'PACKING',  v: 'OPP 개별 포장' },
+        { k: 'SHIPPING', v: '2–5 영업일' }
+      ]
+    },
+    {
+      id: 'omix-keyring-blue-aurora',
+      name: 'BLUE AURORA NFC CD KEYRING',
+      label: 'OMIX GOODS',
+      type: 'keyring',
+      typeLabel: 'KEYRING',
+      code: 'OMIX.KR.05',
+      intro: '푸른 오로라 사운드웨이브를 담은 미니 CD 키링입니다. NFC 태그가 들어 있어 휴대폰을 대면 OMIX 사운드로 연결됩니다.',
+      price: 18000,
+      desc: 'MINI CD / NFC · BLUE',
+      art: 'linear-gradient(148deg,#040a1a,#0a1a3a,#040a1a)',
+      images: [
+        'products/omix-keyring-blue-aurora-main.jpg',
+        'products/omix-keyring-blue-aurora-2.jpg'
+      ],
+      shots: [
+        { img: 'products/omix-keyring-blue-aurora-shot-1.jpg', label: 'DISC ART' },
+        { img: 'products/omix-keyring-blue-aurora-shot-2.jpg', label: 'CLEAR CASE' },
+        { img: 'products/omix-keyring-blue-aurora-shot-3.jpg', label: 'KEY RING' }
+      ],
+      options: null,
+      stock: 100,
+      specs: [
+        { k: 'CASE',     v: '투명 아크릴 미니 CD 케이스' },
+        { k: 'DISC',     v: '블루 오로라 사운드웨이브' },
+        { k: 'NFC',      v: 'NFC 태그 내장' },
+        { k: 'HARDWARE', v: '실버 키링 + 회전 고리' },
+        { k: 'PACKING',  v: 'OPP 개별 포장' },
+        { k: 'SHIPPING', v: '2–5 영업일' }
+      ]
+    },
+    {
+      id: 'omix-keyring-om-sound',
+      name: 'OM SOUND NFC CD KEYRING',
+      label: 'OMIX GOODS',
+      type: 'keyring',
+      typeLabel: 'KEYRING',
+      code: 'OMIX.KR.06',
+      intro: '옴(ॐ) 심볼과 흑백 그래픽, from om, into sound 문구를 담은 미니 CD 키링입니다. NFC 태그가 들어 있어 휴대폰을 대면 OMIX 사운드로 연결됩니다.',
+      price: 18000,
+      desc: 'MINI CD / NFC · MONO',
+      art: 'linear-gradient(148deg,#0c0c0b,#262626,#0c0c0b)',
+      images: [
+        'products/omix-keyring-om-sound-main.jpg',
+        'products/omix-keyring-om-sound-2.jpg'
+      ],
+      shots: [
+        { img: 'products/omix-keyring-om-sound-shot-1.jpg', label: 'DISC ART' },
+        { img: 'products/omix-keyring-om-sound-shot-2.jpg', label: 'CLEAR CASE' },
+        { img: 'products/omix-keyring-om-sound-shot-3.jpg', label: 'KEY RING' }
+      ],
+      options: null,
+      stock: 100,
+      specs: [
+        { k: 'CASE',     v: '투명 아크릴 미니 CD 케이스' },
+        { k: 'DISC',     v: '옴 심볼 흑백 그래픽' },
+        { k: 'NFC',      v: 'NFC 태그 내장' },
+        { k: 'HARDWARE', v: '실버 키링 + 회전 고리' },
+        { k: 'PACKING',  v: 'OPP 개별 포장' },
+        { k: 'SHIPPING', v: '2–5 영업일' }
+      ]
+    },
+    {
+      id: 'omix-keyring-mono-wave',
+      name: 'MONO WAVE NFC CD KEYRING',
+      label: 'OMIX GOODS',
+      type: 'keyring',
+      typeLabel: 'KEYRING',
+      code: 'OMIX.KR.07',
+      intro: '흑백 사운드웨이브 위에 OMIX 라벨을 얹은 미니 CD 키링입니다. NFC 태그가 들어 있어 휴대폰을 대면 OMIX 사운드로 연결됩니다.',
+      price: 18000,
+      desc: 'MINI CD / NFC · MONO',
+      art: 'linear-gradient(148deg,#0c0c0b,#2c2c2c,#0c0c0b)',
+      images: [
+        'products/omix-keyring-mono-wave-main.jpg',
+        'products/omix-keyring-mono-wave-2.jpg'
+      ],
+      shots: [
+        { img: 'products/omix-keyring-mono-wave-shot-1.jpg', label: 'DISC ART' },
+        { img: 'products/omix-keyring-mono-wave-shot-2.jpg', label: 'CLEAR CASE' },
+        { img: 'products/omix-keyring-mono-wave-shot-3.jpg', label: 'KEY RING' }
+      ],
+      options: null,
+      stock: 100,
+      specs: [
+        { k: 'CASE',     v: '투명 아크릴 미니 CD 케이스' },
+        { k: 'DISC',     v: '흑백 사운드웨이브' },
+        { k: 'NFC',      v: 'NFC 태그 내장' },
+        { k: 'HARDWARE', v: '실버 키링 + 회전 고리' },
+        { k: 'PACKING',  v: 'OPP 개별 포장' },
+        { k: 'SHIPPING', v: '2–5 영업일' }
+      ]
+    },
+    {
+      id: 'omix-keyring-keycap',
+      name: 'KEYCAP KEYRING',
+      label: 'OMIX GOODS',
+      type: 'keyring',
+      typeLabel: 'KEYRING',
+      code: 'OMIX.KR.08',
+      intro: '키캡 세 개를 투명 케이스에 세로로 꽂은 키링입니다. OMIX · AUM · MUSIC · 번뇌·집착·자비 네 가지 디자인 중에서 고를 수 있습니다.',
+      price: 16000,
+      desc: 'KEYCAP × 3 / 4 DESIGNS',
+      art: 'linear-gradient(148deg,#0c0c0b,#1a1e2a,#0c0c0b)',
+      images: [
+        'products/omix-keyring-keycap-main.jpg',
+        'products/omix-keyring-keycap-2.jpg'
+      ],
+      shots: [
+        { img: 'products/omix-keyring-keycap-shot-1.jpg', label: 'OMIX' },
+        { img: 'products/omix-keyring-keycap-shot-2.jpg', label: 'AUM' },
+        { img: 'products/omix-keyring-keycap-shot-3.jpg', label: 'MUSIC' },
+        { img: 'products/omix-keyring-keycap-shot-4.jpg', label: '번뇌 · 집착 · 자비' }
+      ],
+      options: { name: 'DESIGN', values: ['OMIX', 'AUM', 'MUSIC', '번뇌·집착·자비'] },
+      stock: 100,
+      specs: [
+        { k: 'KEYCAP',   v: '3구 키캡 (Cherry MX 호환)' },
+        { k: 'CASE',     v: '투명 아크릴 프레임' },
+        { k: 'DESIGN',   v: 'OMIX · AUM · MUSIC · 번뇌·집착·자비' },
+        { k: 'HARDWARE', v: '실버 키링 + 볼체인' },
+        { k: 'PACKING',  v: 'OPP 개별 포장' },
+        { k: 'SHIPPING', v: '2–5 영업일' }
+      ]
+    },
+
     /* ── 키캡 ──────────────────────────────────── */
     {
       id: 'omix-keycap-artisan',

@@ -4629,6 +4629,18 @@ body:has(.idx-hero-disc-wrap.is-scratching) .cursor {
 }
 .hud-pill { width: calc(var(--SH) * 0.2); height: calc(var(--SH) * 0.1); border: 1px solid var(--line); border-radius: 99px; }
 .hud-ring { width: calc(var(--SH) * 0.1); height: calc(var(--SH) * 0.1); border: 1px solid var(--line); border-radius: 50%; }
+/* 언어 전환 알약 버튼 (🌐 한국어 / English) — 재생 버튼과 같은 높이·선 */
+.hud-lang {
+  display: inline-flex; align-items: center; gap: 6px;
+  height: calc(var(--SH) * 0.12); min-height: 30px;
+  padding: 0 14px 0 11px;
+  border: 1px solid var(--txt); border-radius: 99px; background: none;
+  color: var(--txt); font-family: inherit; white-space: nowrap; cursor: pointer;
+  font-size: clamp(11px, calc(var(--SH) * 0.042), 13px); font-weight: 700; letter-spacing: 0.02em;
+  transition: color 0.2s, border-color 0.2s;
+}
+.hud-lang svg { width: 1.25em; height: 1.25em; flex-shrink: 0; }
+.hud-lang:hover { color: var(--red); border-color: var(--red); }
 
 /* 패널 4: CTA + 사운드 안내 + 바코드 */
 .hud-cta { display: flex; flex-direction: column; gap: calc(var(--SH) * 0.025); }

@@ -923,6 +923,483 @@ La-la-la, stay with me
 La-la-la, here and now
 오늘 우리 함께 만든
 끝나지 않을 paradise` },
+    /* ── 2026.11 추가곡 ── */
+    { title: 'CUT THE THREAD', artist: 'OMIX Studio', duration: '3:06', genre: 'ELECTRONIC', label: 'OMIX.LP.03', year: '2026',
+      lyrics: `[Intro - Whispered Male Vocal]
+(One deep Om resonance)
+(Dark electric guitar riff)
+
+Om—
+
+Oh-oh, oh-oh
+Here we go again
+
+[Verse 1 - Fast Rhythmic Vocals]
+Four in the morning, I'm losing sleep
+Running from the things I keep
+Every thought is another fight
+Every dream keeps me up at night
+
+I've been chasing a perfect life
+Turning all my hopes into lies
+Got a thousand voices in my head
+Telling me to start again
+
+[Pre-Chorus - Rising Emotion]
+I built these walls around my heart
+Now they're tearing me apart
+If everything is meant to change
+Why am I still afraid?
+
+[Chorus - Explosive Male Vocals]
+Cut the thread, cut the thread!
+All these voices in my head!
+I was holding on to smoke
+Till it left me out of breath!
+
+Let it fall, let it fade!
+I won't carry yesterday!
+When the whole world pulls me back
+I won't live that life again!
+
+Oh-oh-oh, oh-oh-oh
+I'm not going back again!
+Oh-oh-oh, oh-oh-oh
+I'm finally breaking free!
+
+[Verse 2 - Fast Melodic Rap]
+Another day, another mistake
+Another promise that I couldn't make
+I was running just to feel alive
+But I left my own heart behind
+
+Everybody wants a little more
+Always looking for another door
+Got the money, got the fame
+Still the feeling stays the same
+
+Round and round, I'm losing time
+Trying to make the whole world mine
+Then I saw the truth inside
+Everything will change with time
+
+[Pre-Chorus]
+I don't need another crown
+I can put this burden down
+All the things I couldn't save
+I can finally let them change
+
+[Chorus - Powerful Vocals]
+Cut the thread, cut the thread!
+All these voices in my head!
+I was holding on to smoke
+Till it left me out of breath!
+
+Let it fall, let it fade!
+I won't carry yesterday!
+When the whole world pulls me back
+I won't live that life again!
+
+[Bridge - Emotional Breakdown]
+(Drums stop, clean guitar)
+
+Maybe I was chasing shadows
+Maybe I was scared to fall
+Maybe all the things I wanted
+Never mattered after all
+
+(Drums gradually build)
+
+I don't have to win this fight
+Just to know that I'm alive
+
+[Final Chorus - Explosive Full Band]
+Cut the thread, cut the thread!
+Leave the ghosts inside my head!
+I was holding on to smoke
+Now I'm breathing free again!
+
+Let it fall, let it fade!
+I don't need another chain!
+Even if the world keeps changing
+I won't lose myself again!
+
+Oh-oh-oh, oh-oh-oh
+I'm not going back again!
+Oh-oh-oh, oh-oh-oh
+I'm finally breaking free!
+
+[Outro - Soft Male Vocal]
+(Distorted guitars fade)
+
+Nothing stays
+Nothing's mine
+I let go
+And I feel alive` },
+    { title: '그냥, 여기 (Just Here)', artist: 'OMIX Studio', duration: '3:06', genre: 'HEALING', label: 'OMIX.LP.03', year: '2026',
+      lyrics: `[Intro: deep monk Om chant, singing bowl resonance, temple bell]
+(Ommm~ Ommm~)
+(Yeah, 오늘은 아무것도 안 해도 돼)
+
+[Verse 1: Male Vocal]
+알람은 꺼 두고 휴대폰도 엎어놔
+햇살이 창문 틈에 살짝 내려앉아
+해야 할 일 리스트 오늘은 비워 둬
+비워야 채워진다고 스님이 그랬어
+Sunday morning, 맨발로 걸어
+절 마당 같은 우리 집 베란다 위
+바람이 불면 풍경이 울려
+That's the only alarm I need
+
+[Pre-Chorus]
+바쁘게 쫓던 것들
+다 내려놓으니까 보여
+Baby, it was you
+All along, right here
+
+[Chorus]
+바라는 건 없어, 그냥 여기 너랑
+Just breathe in, breathe out, 오늘은 그냥 이렇게
+갖고 싶은 것도 없어, 그냥 여기 너랑
+지금 이 순간이 극락이야, yeah
+(Ooh, 그냥 여기) Nowhere to go
+(Ooh, 그냥 여기) Nothing to hold
+
+[Verse 2: Female Vocal]
+커피 대신 녹차 한 잔
+식기 전에 천천히 한 모금
+어제 걱정 내일 걱정 다 구름처럼
+흘러가게 둬, 우린 하늘처럼
+너는 나를 꽉 잡지 않아서 좋아
+그래서 난 어디도 안 가
+Free like a bird, 근데 네 곁에 앉아
+That's my 열반, babe
+
+[Verse 3: Male Rap]
+Yeah, 108 problems, 근데 오늘은 zero
+번뇌는 퇴근, 내 마음은 day off
+비싼 차도 시계도 결국엔 다 무상
+지갑 말고 마음이 꽉 찬 게 진짜 부자
+발우공양처럼 남김없이 오늘을 먹어
+고마워 햇살, 고마워 너
+Count my blessings, 염주 돌리듯
+하나, 둘, 셋, 다 너
+
+[Chorus]
+바라는 건 없어, 그냥 여기 너랑
+Just breathe in, breathe out, 오늘은 그냥 이렇게
+갖고 싶은 것도 없어, 그냥 여기 너랑
+지금 이 순간이 극락이야, yeah
+(Ooh, 그냥 여기) Nowhere to go
+(Ooh, 그냥 여기) Nothing to hold
+
+[Bridge: Whispered, singing bowl]
+(Om mani padme hum)
+여기가 거기야, 지금이 그때야
+멀리서 찾지 마
+(Om mani padme hum)
+
+[Final Chorus: Male and Female Duet]
+바라는 건 없어, 그냥 여기 너랑
+Just breathe in, breathe out, 오늘은 그냥 이렇게
+갖고 싶은 것도 없어, 그냥 여기 너랑
+지금 이 순간이 극락이야, yeah
+
+[Outro]
+그냥 여기, 너랑
+(Ommm~)
+[temple bell fades out]` },
+    { title: '인연', artist: 'OMIX Studio', duration: '3:19', genre: 'MINDFUL', label: 'OMIX.LP.03', year: '2026',
+      lyrics: `[Intro: deep monk Om chant, singing bowl resonance, temple bell]
+(Ommm~ Ommm~)
+
+[Verse 1]
+새벽 네 시 목탁 소리에 눈을 떠
+창밖엔 연꽃처럼 피어난 너
+Baby, I don't need no gold, no fame
+네 숨결 하나면 충분해 매일
+가진 거 다 내려놔도 괜찮아
+빈손이라 더 가볍게 안아
+This love ain't 집착, it's free
+바람처럼 와서 머물다 가도 돼
+
+[Pre-Chorus]
+Oh, everything's changing, 모든 게 흘러가
+꽃도 지고 달도 기울어 가
+But right here, right now
+이 순간만큼은 진짜야
+
+[Chorus]
+Let it go, let it flow
+인연이면 또 만나게 돼
+Hold me light, hold me free
+연꽃 위에 너와 나
+천 번을 돌아와도
+I'll find you every time
+Let it go, let it flow
+그게 내가 널 사랑하는 법
+
+[Verse 2: Rap]
+백팔 번 절하듯 널 생각해
+번뇌는 많아도 답은 늘 너였네
+욕심은 비워, 마음은 채워
+자비란 게 뭔지 너를 보며 배워
+Drop the ego, 내려놔 my pride
+업보 같은 과거는 이젠 bye bye
+We ain't chasing nothing, baby, we just breathe
+들숨에 너, 날숨에 peace
+
+[Pre-Chorus]
+Oh, everything's changing, 모든 게 흘러가
+꽃도 지고 달도 기울어 가
+But right here, right now
+이 순간만큼은 진짜야
+
+[Chorus]
+Let it go, let it flow
+인연이면 또 만나게 돼
+Hold me light, hold me free
+연꽃 위에 너와 나
+천 번을 돌아와도
+I'll find you every time
+Let it go, let it flow
+그게 내가 널 사랑하는 법
+
+[Bridge: whispered, singing bowl]
+(Om mani padme hum)
+색즉시공, 공즉시색
+비어 있어서 더 꽉 찬 너
+(Om mani padme hum)
+Nothing lasts, that's why it's beautiful
+
+[Final Chorus]
+Let it go, let it flow
+인연이면 또 만나게 돼
+Hold me light, hold me free
+연꽃 위에 너와 나
+Let it go, let it flow
+그게 내가 널 사랑하는 법
+
+[Outro]
+그게 내가 널 사랑하는 법
+(Ommm~)
+[temple bell fades out]` },
+    { title: '흘러 (FLOW)', artist: 'OMIX Studio', duration: '4:28', genre: 'MEDITATION', label: 'OMIX.LP.03', year: '2026',
+      lyrics: `[Intro]
+(Deep, low Om resonance, once)
+(Clean electric guitar riff)
+
+옴—
+
+[Verse 1]
+불 꺼진 창에 비친
+수많은 나의 얼굴
+어디로 가고 있는지
+아무도 말해 주지 않아
+
+손끝에 닿은 빛을
+두 손에 가득 담아
+놓치지 않으려 할수록
+멀어지는 걸 알고 있어
+
+[Pre-Chorus]
+끝없이 돌아가는
+이 세상의 한가운데
+나는 무엇을 붙잡고
+여기까지 온 걸까
+
+(Building drums and guitars)
+
+[Chorus]
+흘러가, 흘러가
+끝이 없는 이 밤을 지나
+아무것도 남지 않아도
+나는 다시 피어나
+
+날아가, 날아가
+나를 묶어 두었던 마음아
+모든 것이 변해 간대도
+우린 계속 살아가
+
+Oh-oh-oh, oh-oh-oh
+그대로 흘러가
+
+Oh-oh-oh, oh-oh-oh
+다시 피어나
+
+[Instrumental Break]
+(Catchy distorted guitar riff)
+(Energetic drums and analog synth)
+
+[Verse 2]
+어제의 나는 오늘
+어디에 숨어 있을까
+변하지 않는 무언가를
+왜 그리 찾아 헤맸을까
+
+끝없이 쌓인 생각
+끝없이 많은 욕심
+모두 내 것이라 믿었던
+그 순간마저 흩어져
+
+[Pre-Chorus]
+사라지는 모든 게
+두렵기만 했었는데
+비워 낸 두 손 사이로
+새로운 바람이 불어와
+
+[Chorus]
+흘러가, 흘러가
+끝이 없는 이 밤을 지나
+아무것도 남지 않아도
+나는 다시 피어나
+
+날아가, 날아가
+나를 묶어 두었던 마음아
+모든 것이 변해 간대도
+우린 계속 살아가
+
+Oh-oh-oh, oh-oh-oh
+그대로 흘러가
+
+Oh-oh-oh, oh-oh-oh
+다시 피어나
+
+[Bridge]
+(Drums fade, atmospheric guitar)
+
+우리가 바라던 영원은
+처음부터 없었을지도 몰라
+흩어진 마음의 조각들이
+저마다 빛을 내고 있어
+
+(Gradually building)
+
+끝나지 않을 것 같던 밤도
+언젠가는 지나갈 테니까
+더는 붙잡지 않을 거야
+이제는 나를 놓아줄게
+
+[Final Chorus]
+(Explosive full band)
+(Powerful emotional male vocals)
+
+흘러가! 흘러가!
+어디로든 나를 데려가!
+수없이 무너진다 해도
+나는 다시 일어나!
+
+날아가! 날아가!
+더는 두려워하지 않아!
+영원한 건 하나도 없지만
+우린 계속 살아가!
+
+Oh-oh-oh, oh-oh-oh
+그대로 흘러가!
+
+Oh-oh-oh, oh-oh-oh
+다시 피어나!
+
+[Outro]
+(Repeating guitar riff)
+(Fading analog synth)
+
+흘러가
+흘러가
+
+아무것도
+붙잡지 않은 채
+
+다시 피어나` },
+    { title: 'Tanha', artist: 'OMIX Studio', duration: '2:12', genre: 'DANCE', label: 'OMIX.LP.03', year: '2026',
+      lyrics: `[Intro: deep monk Om chant, singing bowl resonance, temple bell]
+(Ommm~ Ommm~)
+(Yeah... let it go)
+
+[Beat Drop]
+
+[Hook]
+Tanha, tanha, tanha, tanha
+Tanha, tanha, tanha, tanha
+Want more, want more (tanha)
+Never enough, never enough (tanha)
+
+[Verse 1]
+Wake up, I want it, grab it, then it's gone
+New whip, new chain, still that empty song
+Likes going up (yeah), but I'm sinking down (yeah)
+Dancing in a burning house, never hear the sound (tanha)
+
+[Hook]
+Tanha, tanha, tanha, tanha
+Tanha, tanha, tanha, tanha
+Want more, want more (tanha)
+Never enough, never enough (tanha)
+
+[Verse 2: high-pitched playful flow]
+Greed, greed, greed, it pull me (what)
+A hundred and eight chains, they so heavy (what)
+Spin it like mala beads, spin it, spin it (spin)
+Round and round, samsara, I'm in it (yeah)
+
+[Bridge: beat cuts out, only singing bowl]
+When the fire goes out, that's nirvana
+(Om mani padme hum)
+Blow it out, blow it out, that's nirvana
+
+[Beat Drop]
+
+[Hook]
+Tanha, tanha, tanha, tanha
+Tanha, tanha, tanha, tanha
+Want more, want more (tanha)
+Never enough, never enough (tanha)
+
+[Outro]
+(Ommm~)
+[temple bell fades out]` },
+    { title: 'nothing', artist: 'OMIX Studio', duration: '2:09', genre: 'CLUB', label: 'OMIX.LP.03', year: '2026',
+      lyrics: `nothing
+[Intro: deep monk Om chant, singing bowl resonance, temple bell]
+(Ommm~ Ommm~)
+(Gone... it's all gone)
+
+[Hook]
+It's all gone, it all fades (gone)
+Gold chain rust in the rain (gone)
+Kings turn to dust in the grave (gone)
+Open your hand, that's the way (yeah)
+
+[Verse 1]
+3 a.m., city cold, wind cutting through the block
+Everybody climbing, but they never stay on top
+Yesterday's king is a headline today
+Love and the hate, both clouds, they drift away (gone)
+Designer bag, designer whip, all scrap in the end
+That tower you built is just sand in the wind
+I don't grip, so I don't slip
+Can't rob a man of what he don't keep (yeah)
+
+[Hook]
+It's all gone, it all fades (gone)
+Gold chain rust in the rain (gone)
+Kings turn to dust in the grave (gone)
+Open your hand, that's the way (yeah)
+
+[Verse 2]
+I don't chase, I let go, that's my weapon
+Man's screaming in my face, I just breathe, I'm resting
+Scarier than a blade is a mind that's empty
+Man with nothing to lose, you can't tempt me
+Today's opp is tomorrow's stranger
+Today's me, tomorrow's someone stranger
+Scared of change? Nah, I'm calm with it
+Floating on the river, let it flow, I'm with it
+
+[Outro]
+Musang... it's all gone
+(Ommm~)
+[temple bell fades out]` },
   ];
 
   /* chart.js 등 다른 스크립트에서 같은 가사 데이터를 재사용할 수 있도록 전역에 노출 */

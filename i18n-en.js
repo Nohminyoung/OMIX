@@ -17,6 +17,9 @@ window.OMIX_EN = {
   "파도에 맡겨": "Pado-e Matgyeo",
   "무상(無常)": "Musang (無常)",
   "잔상(殘像)": "Jansang (殘像)",
+  "인연": "Inyeon",
+  "흘러 (FLOW)": "Heulleo (FLOW)",
+  "그냥, 여기 (Just Here)": "Geunyang, Yeogi (Just Here)",
   "공즉 (DEMO)": "Gongjeuk (DEMO)",
   "DJ 선음": "DJ Seoneum",
 

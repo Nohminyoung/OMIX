@@ -45,18 +45,8 @@ if (nav) {
    [3] 트랙 데이터
    플레이리스트 트랙 목록 — 이름, 아티스트, 시간, 이모지, 배경색
    ===================================================== */
-const DEFAULT_TRACKS = [
-  { name: 'Han Groove Riot',      artist: 'OMIX Studio', time: '2:57', sec: 177, emoji: '🎵', bg: 'linear-gradient(135deg, #1a0408 0%, #300a12 50%, #0a0408 100%)', audioSrc: 'music/Han%20Groove%20Riot.mp3',      cover: 'covers/Han%20Groove%20Riot.jpg' },
-  { name: 'Karma Game',           artist: 'OMIX Studio', time: '5:00', sec: 300, emoji: '🎧', bg: 'linear-gradient(135deg, #0d0a1a 0%, #1a0a2e 50%, #0d0a1a 100%)', audioSrc: 'music/Karma%20Game.mp3',           cover: 'covers/Karma%20Game.jpg' },
-  { name: 'Mix Attack',           artist: 'OMIX Studio', time: '2:56', sec: 176, emoji: '💿', bg: 'linear-gradient(135deg, #0a0a1a 0%, #14082a 50%, #0a0a1a 100%)', audioSrc: 'music/Mix%20Attack.mp3',           cover: 'covers/Mix%20Attack.jpg' },
-  { name: 'No Score, Just Soul',  artist: 'OMIX Studio', time: '5:01', sec: 301, emoji: '🔴', bg: 'linear-gradient(135deg, #1a0408 0%, #2a0810 50%, #1a0408 100%)', audioSrc: 'music/No%20Score,%20Just%20Soul.mp3', cover: 'covers/No%20Score,%20Just%20Soul.jpg' },
-  { name: 'Temple Echo Loop',     artist: 'OMIX Studio', time: '4:09', sec: 249, emoji: '🎶', bg: 'linear-gradient(135deg, #0a140a 0%, #0a2010 50%, #0a140a 100%)', audioSrc: 'music/Temple%20Echo%20Loop.mp3',   cover: 'covers/Temple%20Echo%20Loop.jpg' },
-  { name: '공즉',                 artist: 'OMIX Studio', time: '2:53', sec: 173, emoji: '🥁', bg: 'linear-gradient(135deg, #1a0808 0%, #2a0a0a 50%, #1a0808 100%)', audioSrc: 'music/공즉.mp3',                    cover: 'covers/공즉.jpg' },
-  { name: '무명등',               artist: 'OMIX Studio', time: '2:55', sec: 175, emoji: '🪷', bg: 'linear-gradient(135deg, #0a0a1a 0%, #1a1028 50%, #0a0a1a 100%)', audioSrc: 'music/무명등.mp3',                  cover: 'covers/무명등.jpg' },
-  { name: '사계윤회',             artist: 'OMIX Studio', time: '2:30', sec: 150, emoji: '🌀', bg: 'linear-gradient(135deg, #0a0a0a 0%, #1a1218 50%, #0a0a0a 100%)', audioSrc: 'music/사계윤회.mp3',                cover: 'covers/사계윤회.jpg' },
-  { name: '업보 Bounce',          artist: 'OMIX Studio', time: '3:14', sec: 194, emoji: '✨', bg: 'linear-gradient(135deg, #0c0a1a 0%, #1a1230 50%, #0c0a1a 100%)', audioSrc: 'music/업보%20Bounce.mp3',           cover: 'covers/업보%20Bounce.jpg' },
-  { name: '파도에 맡겨',          artist: 'OMIX Studio', time: '4:09', sec: 249, emoji: '🎴', bg: 'linear-gradient(135deg, #1a0808 0%, #280a0a 50%, #1a0808 100%)', audioSrc: 'music/파도에%20맡겨.mp3',           cover: 'covers/파도에%20맡겨.jpg' },
-];
+/* 기본 10곡은 my-playlist.js(OmixPlaylist.DEFAULTS)에 있다 — 하단 재생목록 패널도 같은 목록을 쓴다 */
+const DEFAULT_TRACKS = OmixPlaylist.DEFAULTS.map(fromStored);
 
 /* 플레이리스트 — my-playlist.js 저장소(localStorage)에 순서대로 저장된 곡 목록.
    첫 방문 때 위 기본 10곡이 들어가고, 이후 차트에서 담은 곡·순서 변경·빼기가 그대로 유지된다 */
@@ -745,6 +735,38 @@ const playIdx   = playParam ? TRACKS.findIndex(t => t.audioSrc === playParam) : 
 if (!TRACKS.length) clearPlayer();
 else if (playIdx >= 0) loadTrack(playIdx, true);
 else loadTrack(liveIdx >= 0 ? liveIdx : currentIdx);
+
+
+/* =====================================================
+   [18] 하단 재생목록 패널(now-playing-panel.js) 연동
+   패널의 My Playlist 탭에서 곡 재생·빼기·순서 변경을 하면 이 창구로 바로 반영된다
+   ===================================================== */
+window.OmixMyPlayer = {
+  currentSrc: () => (TRACKS[currentIdx] && !TRACKS[currentIdx].liveId ? TRACKS[currentIdx].audioSrc : ''),
+  playSrc(src) {
+    const i = TRACKS.findIndex(t => !t.liveId && t.audioSrc === src);
+    if (i < 0) return;
+    if (i === currentIdx && isPlaying) return;
+    if (i === currentIdx && audioEl.src) { audioEl.play().then(() => setPlayingUI(true)).catch(() => {}); return; }
+    loadTrack(i, true);
+  },
+  /* 패널이 저장소를 바꾼 뒤 호출 — 듣던 곡은 그대로 이어서 재생한다 */
+  reload() {
+    const cur    = TRACKS[currentIdx];
+    const oldIdx = currentIdx;
+    const live   = TRACKS.filter(t => t.liveId);
+    TRACKS.splice(0, TRACKS.length, ...OmixPlaylist.get().map(fromStored), ...live);
+    let i = cur ? TRACKS.indexOf(cur) : -1;
+    if (i < 0 && cur) i = TRACKS.findIndex(t => !t.liveId && t.audioSrc === cur.audioSrc);
+    if (i >= 0) currentIdx = i;
+    else if (cur) {
+      const left = TRACKS.filter(t => !t.liveId).length;
+      if (left) loadTrack(Math.min(oldIdx, left - 1), isPlaying);
+      else clearPlayer();
+    }
+    renderPlaylist();
+  }
+};
 
 
 /* =====================================================

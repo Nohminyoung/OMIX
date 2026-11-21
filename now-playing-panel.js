@@ -1480,8 +1480,11 @@ Musang... it's all gone
 
           <!-- 플레이리스트 -->
           <div class="np-pane" id="np-playlist" role="tabpanel">
-            <p class="np-pane-label">OMIX.LP.01 — 전체 트랙</p>
-            <ul class="np-track-list" id="npPlaylistList"></ul>
+            <div class="np-my-head">
+              <p class="np-pane-label">My Playlist · <span id="npMyCount">0</span> TRACKS</p>
+              <a class="np-my-link" href="my-player.html">My Player에서 열기 →</a>
+            </div>
+            <ul class="np-track-list np-my-list" id="npPlaylistList"></ul>
           </div>
 
           <!-- 최근 들은 곡 -->
@@ -1809,6 +1812,36 @@ Musang... it's all gone
   flex-shrink: 0;
 }
 
+/* My Playlist 탭 — My Player 목록과 같은 저장소 */
+.np-my-head {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 12px;
+  margin-bottom: 16px;
+}
+.np-my-head .np-pane-label { margin-bottom: 0; }
+.np-my-link {
+  font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.45);
+  text-decoration: none; white-space: nowrap;
+}
+.np-my-link:hover { color: var(--red); }
+.np-my-item { grid-template-columns: 24px 28px 1fr auto auto; gap: 10px; touch-action: pan-y; }
+.np-my-item.dragging { background: rgba(255,255,255,0.08); opacity: 0.85; }
+.np-my-drag, .np-my-remove {
+  background: none; border: 0; padding: 0;
+  color: rgba(255,255,255,0.3); cursor: grab;
+  width: 24px; height: 28px; font-size: 14px; line-height: 1;
+  display: flex; align-items: center; justify-content: center;
+  touch-action: none;
+}
+.np-my-remove { cursor: pointer; font-size: 17px; touch-action: manipulation; }
+.np-my-drag:hover, .np-my-drag:focus-visible { color: #fff; }
+.np-my-remove:hover, .np-my-remove:focus-visible { color: var(--red); }
+.np-my-empty { font-size: 13px; color: rgba(255,255,255,0.45); padding: 12px; }
+.np-my-empty a { color: var(--red); text-decoration: none; margin-left: 6px; }
+@media (hover: none) {
+  .np-my-drag, .np-my-remove { width: 32px; height: 36px; }
+  .np-my-item { grid-template-columns: 32px 22px 1fr auto 32px; }
+}
+
 /* 상세보기 버튼 (미니 플레이어 내) */
 .np-detail-btn {
   width: 32px; height: 32px; border-radius: 6px;
@@ -1856,7 +1889,8 @@ Musang... it's all gone
     const btn = document.createElement('button');
     btn.className = 'np-detail-btn';
     btn.id = 'npDetailBtn';
-    btn.setAttribute('aria-label', '곡 상세보기');
+    btn.setAttribute('aria-label', '재생목록');
+    btn.title = '재생목록';
     /* viewBox 를 잉크 범위(1~14.1 × 2~14.1) 중심에 맞춰 옮겨 버튼 정중앙에 오게 한다 */
     btn.innerHTML = `<svg width="14" height="14" viewBox="0.55 1.05 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
       <rect x="1" y="2" width="12" height="1.2" rx="0.6" fill="currentColor"/>
@@ -1869,7 +1903,14 @@ Musang... it's all gone
     const likeBtn = miniPlayer.querySelector('.player-like');
     if (likeBtn) likeBtn.insertAdjacentElement('afterend', btn);
     else miniPlayer.appendChild(btn);
-    btn.addEventListener('click', openPanel);
+    btn.addEventListener('click', () => openPanel('playlist'));
+  }
+
+  /* My Player 플레이리스트 저장소 — 이 파일만 있는 페이지에서도 쓰도록 필요하면 불러온다 */
+  if (!window.OmixPlaylist) {
+    const s = document.createElement('script');
+    s.src = 'my-playlist.js';
+    document.head.appendChild(s);
   }
 
   /* ── 요소 참조 ── */
@@ -1920,7 +1961,7 @@ Musang... it's all gone
     updateProgress(0);
 
     /* 플리 현재 트랙 하이라이트 */
-    panel.querySelectorAll('.np-track-item').forEach(el => {
+    panel.querySelectorAll('.np-track-item:not(.np-my-item)').forEach(el => {
       el.classList.toggle('current', parseInt(el.dataset.idx, 10) === idx);
     });
   }
@@ -1958,8 +1999,161 @@ Musang... it's all gone
       .filter(idx => idx >= 0);
   }
 
+  /* ── My Playlist 탭 (My Player 와 같은 목록) ──
+     행 클릭 → 재생 (My Player 페이지면 그 자리에서, 다른 페이지면 My Player 로 이동해 바로 재생)
+     ⠿ 끌기(마우스·터치) 또는 ↑↓ 키 → 순서 바꾸기 / × → 빼기. 바뀐 목록은 바로 저장된다 */
+  const myList  = document.getElementById('npPlaylistList');
+  const myCount = document.getElementById('npMyCount');
+
+  function myTracks() {
+    const P = window.OmixPlaylist;
+    return P ? P.seed() : [];
+  }
+  function saveMyTracks(list) {
+    if (!window.OmixPlaylist) return;
+    OmixPlaylist.set(list);
+    if (window.OmixMyPlayer) OmixMyPlayer.reload();
+  }
+  function myCurrentSrc(list) {
+    if (window.OmixMyPlayer) return OmixMyPlayer.currentSrc();
+    const pName = document.getElementById('playerName') || document.querySelector('.player-name');
+    const title = pName ? pName.textContent.trim() : '';
+    const hit = list.find(t => t.title === title);
+    return hit ? hit.audioSrc : '';
+  }
+  function playMyTrack(src) {
+    if (window.OmixMyPlayer) {
+      OmixMyPlayer.playSrc(src);
+      buildMyPlaylist();
+      refreshAfterRealNav();
+    } else {
+      location.href = 'my-player.html?play=' + encodeURIComponent(src);
+    }
+  }
+
+  function buildMyPlaylist() {
+    if (!myList) return;
+    const list = myTracks();
+    const cur  = myCurrentSrc(list);
+    myList.innerHTML = '';
+    if (myCount) myCount.textContent = list.length;
+
+    if (!list.length) {
+      myList.innerHTML = '<li class="np-my-empty">플레이리스트가 비어 있어요.<a href="chart.html">차트에서 곡 담기 →</a></li>';
+      return;
+    }
+
+    list.forEach((t, n) => {
+      const li = document.createElement('li');
+      li.className = 'np-track-item np-my-item' + (t.audioSrc === cur ? ' current' : '');
+      li.dataset.src = t.audioSrc;
+      li.innerHTML = `
+        <button type="button" class="np-my-drag" aria-label="순서 바꾸기 (끌거나 위아래 방향키)" title="끌어서 순서 바꾸기">⠿</button>
+        <span class="np-ti-num">${t.audioSrc === cur ? '▶' : n + 1}</span>
+        <div class="np-ti-info">
+          <div class="np-ti-title"></div>
+          <div class="np-ti-artist"></div>
+        </div>
+        <span class="np-ti-dur"></span>
+        <button type="button" class="np-my-remove" aria-label="플레이리스트에서 빼기" title="빼기">×</button>`;
+      li.querySelector('.np-ti-title').textContent  = t.title || '';
+      li.querySelector('.np-ti-artist').textContent = t.artist || '';
+      li.querySelector('.np-ti-dur').textContent    = t.dur || '';
+      li.addEventListener('click', e => {
+        if (e.target.closest('.np-my-drag')) return;
+        if (e.target.closest('.np-my-remove')) {
+          saveMyTracks(myTracks().filter(x => x.audioSrc !== t.audioSrc));
+          buildMyPlaylist();
+          if (window.OmixMyPlayer) refreshAfterRealNav();
+          return;
+        }
+        playMyTrack(t.audioSrc);
+      });
+      bindMyDrag(li);
+      myList.appendChild(li);
+    });
+  }
+
+  /* 곡이 저절로 넘어가도 ▶ 표시가 따라가게 (끄는 중엔 건드리지 않는다) */
+  function updateMyHighlight() {
+    if (!myList || myList.querySelector('.dragging')) return;
+    const rows = [...myList.querySelectorAll('.np-my-item')];
+    if (!rows.length) return;
+    const cur = myCurrentSrc(myTracks());
+    rows.forEach((li, n) => {
+      const on = li.dataset.src === cur;
+      li.classList.toggle('current', on);
+      li.querySelector('.np-ti-num').textContent = on ? '▶' : n + 1;
+    });
+  }
+
+  /* 화면에 보이는 행 순서대로 저장 */
+  function saveMyOrderFromDom() {
+    const bySrc = new Map(myTracks().map(t => [t.audioSrc, t]));
+    const order = [...myList.querySelectorAll('.np-my-item')].map(li => bySrc.get(li.dataset.src)).filter(Boolean);
+    saveMyTracks(order);
+  }
+
+  function bindMyDrag(li) {
+    const handle = li.querySelector('.np-my-drag');
+    const scroller = li.closest('.np-pane-wrap') || myList;
+
+    handle.addEventListener('pointerdown', e => {
+      if (e.button !== 0) return;
+      e.preventDefault();
+      li.classList.add('dragging');
+      let scrollTimer = null;
+
+      const onMove = ev => {
+        if (ev.pointerId !== e.pointerId) return;
+        const others = [...myList.querySelectorAll('.np-my-item:not(.dragging)')];
+        const before = others.find(r => {
+          const b = r.getBoundingClientRect();
+          return ev.clientY < b.top + b.height / 2;
+        });
+        if (before) myList.insertBefore(li, before);
+        else myList.appendChild(li);
+
+        /* 목록 위·아래 끝에 가까우면 자동 스크롤 */
+        const box = scroller.getBoundingClientRect();
+        const dir = ev.clientY < box.top + 40 ? -1 : ev.clientY > box.bottom - 40 ? 1 : 0;
+        clearInterval(scrollTimer);
+        if (dir) scrollTimer = setInterval(() => { scroller.scrollTop += dir * 8; }, 16);
+      };
+      const onUp = ev => {
+        if (ev.pointerId !== e.pointerId) return;
+        clearInterval(scrollTimer);
+        document.removeEventListener('pointermove', onMove);
+        document.removeEventListener('pointerup', onUp);
+        document.removeEventListener('pointercancel', onUp);
+        li.classList.remove('dragging');
+        saveMyOrderFromDom();
+        buildMyPlaylist();
+      };
+      document.addEventListener('pointermove', onMove);
+      document.addEventListener('pointerup', onUp);
+      document.addEventListener('pointercancel', onUp);
+    });
+
+    /* 키보드: 손잡이에 포커스 후 ↑↓ 로 한 칸씩 이동 */
+    handle.addEventListener('keydown', e => {
+      if (e.key !== 'ArrowUp' && e.key !== 'ArrowDown') return;
+      e.preventDefault();
+      e.stopPropagation();
+      const sib = e.key === 'ArrowUp' ? li.previousElementSibling : li.nextElementSibling;
+      if (!sib) return;
+      if (e.key === 'ArrowUp') myList.insertBefore(li, sib);
+      else myList.insertBefore(sib, li);
+      const src = li.dataset.src;
+      saveMyOrderFromDom();
+      buildMyPlaylist();
+      const moved = [...myList.querySelectorAll('.np-my-item')].find(x => x.dataset.src === src);
+      if (moved) moved.querySelector('.np-my-drag').focus();
+    });
+  }
+
   function buildAllLists() {
-    buildList('npPlaylistList', TRACKS.map((_, i) => i));
+    buildMyPlaylist();
     buildList('npRecentList',   titlesToIndices(RECENT));
     buildList('npLikedList',    titlesToIndices(LIKED));
     buildList('npPopularList',  titlesToIndices(POPULAR));
@@ -2065,14 +2259,21 @@ Musang... it's all gone
     clearInterval(npTimer);
     clearInterval(npMirrorTimer);
     syncProgressFromMainPlayer();
-    npMirrorTimer = setInterval(syncProgressFromMainPlayer, 250);
+    npMirrorTimer = setInterval(() => {
+      syncProgressFromMainPlayer();
+      updateMyHighlight();
+    }, 250);
   }
   function stopProgressMirror() {
     clearInterval(npMirrorTimer);
   }
 
   /* ── 패널 열기/닫기 ── */
-  function openPanel() {
+  function openPanel(tabName) {
+    if (typeof tabName === 'string') {
+      const tab = [...tabs].find(t => t.dataset.tab === tabName);
+      if (tab) tab.click();
+    }
     buildAllLists();
     syncFromMainPlayer();
     if (currentTrack >= 0) renderTrack(currentTrack);

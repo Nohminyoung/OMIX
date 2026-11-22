@@ -6,6 +6,10 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Stack+Sans+Notch&display=swap');
 
+/* ── 페이지 전체 세로 스크롤바 숨김 (스크롤 기능은 그대로) ── */
+html, body { scrollbar-width: none; -ms-overflow-style: none; }
+html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; width: 0; }
+
 /* ── 디스플레이 타이틀 — Montserrat 900 ── */
 .hero-title .line,
 .ci-title,

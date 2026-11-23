@@ -201,13 +201,13 @@
       <div class="panel-library">
 
         <!-- ── QR로 받은 트랙 ──
-             전시 부스에서 QR로 받은 곡(card-overlay.js 가 localStorage 에 저장)을 보여준다.
+             전시 체험 전체 목록(card-list 함수 → R2, 전체 공개) + 내 기기에서 QR로 받은 곡을 차트처럼 보여준다.
              목록은 my-player.js [13-B] 에서 렌더링 -->
         <div class="library-section live-section" id="liveSection">
-          <p class="lib-section-title">QR로 받은 트랙</p>
+          <p class="lib-section-title">QR로 받은 트랙 <span class="live-count" id="liveCount"></span></p>
           <div id="liveTrackList"></div>
           <div class="live-empty" id="liveEmpty">
-            <p>아직 받은 트랙이 없어요.<br>전시 부스에서 QR을 스캔해보세요.</p>
+            <p>아직 올라온 체험 트랙이 없어요.<br>전시 부스에서 체험하고 QR을 스캔해보세요.</p>
             <a href="index.html?card=demo" class="live-empty-link">데모 카드 받아보기 →</a>
           </div>
         </div>

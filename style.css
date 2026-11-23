@@ -3497,7 +3497,11 @@ body.cursor-merged .cursor-dot { width: 7px; height: 7px; }
   position: sticky; top: calc(var(--nav-h) + var(--marquee-h));
   height: calc(100vh - var(--nav-h) - var(--marquee-h) - var(--player-h));
   overflow-y: auto;
+  /* 스크롤바를 숨겨 폭을 고정 — 스크롤바가 생기면 폭이 15px 줄어 앨범아트(정사각형)가 작아지고,
+     그러면 내용이 들어가 스크롤바가 사라지고… 를 반복하며 화면이 떨리던 문제 방지 (스크롤은 그대로) */
+  scrollbar-width: none;
 }
+.panel-now-playing::-webkit-scrollbar { display: none; width: 0; }
 
 /* 앨범 아트 프레임 — stc-br 브래킷 홀더 (overflow:hidden 밖에서) */
 .now-album-art-frame {
@@ -3710,6 +3714,35 @@ body.cursor-merged .cursor-dot { width: 7px; height: 7px; }
 .saved-track.live-track.current { background: rgba(249,21,54,0.08); }
 .saved-track.live-track.current .saved-track-name { color: var(--red); }
 .live-badge { font-size: 9px; font-weight: 800; letter-spacing: .15em; color: var(--red); border: 1px solid rgba(249,21,54,.4); border-radius: 999px; padding: 2px 7px; flex-shrink: 0; }
+/* QR로 받은 트랙 — 차트형 행 (순위 · 커버 · 곡명 · 날짜 · 재생) */
+.live-count { margin-left: 6px; font-size: 10px; font-weight: 700; letter-spacing: .15em; color: var(--gray-3); }
+#liveTrackList { max-height: 440px; overflow-y: auto; scrollbar-width: thin; }
+.live-chart-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px; border-radius: var(--radius); cursor: pointer;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  transition: background 0.2s;
+}
+.live-chart-row:hover { background: rgba(255,255,255,0.04); }
+.live-chart-row.current { background: rgba(249,21,54,0.08); }
+.live-rank { width: 22px; flex-shrink: 0; text-align: center; font-size: 13px; font-weight: 800; color: var(--gray-3); font-variant-numeric: tabular-nums; }
+.live-rank.top { color: var(--white); }
+.live-chart-row.current .live-rank { color: var(--red); }
+.live-art {
+  width: 40px; height: 40px; border-radius: 6px; overflow: hidden; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(135deg, #1a0408, #300a12); color: var(--red);
+  font-size: 10px; font-weight: 900; letter-spacing: .05em;
+}
+.live-art img { width: 100%; height: 100%; object-fit: cover; object-position: center bottom; display: block; }
+.live-info { min-width: 0; flex: 1; }
+.live-title { font-size: 13px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.live-chart-row.current .live-title { color: var(--red); }
+.live-artist { font-size: 11px; color: var(--gray-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.live-date { font-size: 11px; color: var(--gray-3); flex-shrink: 0; font-variant-numeric: tabular-nums; }
+.live-play { width: 18px; flex-shrink: 0; text-align: center; font-size: 11px; color: var(--gray-3); opacity: 0; transition: opacity .2s; }
+.live-chart-row:hover .live-play,
+.live-chart-row.current .live-play { opacity: 1; color: var(--red); }
 .live-empty { padding: 14px 8px; font-size: 12px; line-height: 1.6; color: var(--gray-3); }
 .live-empty-link { display: inline-block; margin-top: 8px; font-size: 11px; font-weight: 700; letter-spacing: .1em; color: var(--red); text-decoration: none; }
 .live-empty-link:hover { text-decoration: underline; }

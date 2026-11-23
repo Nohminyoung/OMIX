@@ -71,13 +71,27 @@ function savePlaylist() {
 }
 
 /* QR로 받은 트랙 — card-overlay.js 가 localStorage('omix_live_tracks')에 저장한 곡을
-   TRACKS 뒤에 붙여서 같은 플레이어로 재생한다 (liveId로 식별) */
-let LIVE_TRACKS = [];
-try { LIVE_TRACKS = JSON.parse(localStorage.getItem('omix_live_tracks') || '[]'); } catch (e) {}
-LIVE_TRACKS.forEach(t => {
-  TRACKS.push({ name: t.trackName, artist: t.djName, time: '--:--', sec: 0, emoji: 'LIVE',
-    bg: 'linear-gradient(135deg, #1a0408 0%, #300a12 50%, #0a0408 100%)', audioSrc: t.audioSrc, liveId: t.id });
-});
+   TRACKS 뒤에 붙여서 같은 플레이어로 재생한다 (liveId로 식별)
+   + 전시 체험 전체 목록(card-list 함수 → R2)을 받아와 합친다. 서버 목록은 전체 공개. */
+let MY_LIVE = [];
+try { MY_LIVE = JSON.parse(localStorage.getItem('omix_live_tracks') || '[]'); } catch (e) {}
+const MY_LIVE_IDS = new Set(MY_LIVE.map(t => t.id));
+let LIVE_TRACKS = MY_LIVE.slice();
+
+function toLiveTrack(t) {
+  return { name: t.trackName, artist: t.djName, time: '--:--', sec: 0, emoji: 'LIVE',
+    bg: 'linear-gradient(135deg, #1a0408 0%, #300a12 50%, #0a0408 100%)', audioSrc: t.audioSrc, liveId: t.id,
+    cover: t.cover || '' /* R2 카드로 받은 곡은 카드 사진을 커버로 */ };
+}
+LIVE_TRACKS.forEach(t => TRACKS.push(toLiveTrack(t)));
+
+/* R2 카드 id(20261122_130020_xxxx) → 'OMIX LIVE · 11/22 13:00' */
+function liveLabel(id, createdAt) {
+  const m = id.match(/^\d{4}(\d{2})(\d{2})_(\d{2})(\d{2})/);
+  if (m) return `OMIX LIVE · ${+m[1]}/${+m[2]} ${m[3]}:${m[4]}`;
+  const d = new Date(createdAt);
+  return `OMIX LIVE · ${d.getMonth() + 1}/${d.getDate()} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+}
 
 /* 실제 오디오 재생 담당 */
 const audioEl = new Audio();
@@ -146,6 +160,8 @@ function loadTrack(idx, autoplay) {
   if (nowAlbumImg) {
     if (t.cover) {
       nowAlbumImg.style.display = 'none';
+      /* 체험 카드(세로 2:3)는 아래쪽 기준으로 잘라 인물·하단 정보가 보이게 */
+      nowAlbumImg.style.objectPosition = t.liveId ? 'center bottom' : '';
       nowAlbumImg.onerror = () => { nowAlbumImg.style.display = 'none'; };
       nowAlbumImg.onload  = () => { nowAlbumImg.style.display = 'block'; };
       nowAlbumImg.src = t.cover;
@@ -527,27 +543,100 @@ document.querySelectorAll('.saved-track:not(.live-track)').forEach(el => {
 /* =====================================================
    [13-B] QR로 받은 트랙 칸 — 목록 렌더링 + 클릭 재생
    ===================================================== */
+/* 차트처럼 순위 번호 · 커버 · 곡명/아티스트 · 날짜 · 재생 표시를 한 줄에.
+   최신 체험이 01번. 내가 QR로 받은 곡에는 MY 배지 */
 const liveListEl  = document.getElementById('liveTrackList');
 const liveEmptyEl = document.getElementById('liveEmpty');
-if (liveListEl) {
+const liveCountEl = document.getElementById('liveCount');
+
+function renderLiveList() {
+  if (!liveListEl) return;
+  liveListEl.innerHTML = '';
   if (liveEmptyEl) liveEmptyEl.style.display = LIVE_TRACKS.length ? 'none' : '';
+  if (liveCountEl) liveCountEl.textContent = LIVE_TRACKS.length ? LIVE_TRACKS.length + ' TRACKS' : '';
   LIVE_TRACKS.forEach((t, i) => {
     const row = document.createElement('div');
-    row.className = 'saved-track live-track';
+    row.className = 'live-track live-chart-row';
     row.dataset.liveId = t.id;
-    const num = t.cardNumber ? 'NO.' + String(t.cardNumber).padStart(2, '0') : 'DEMO';
+    const d = new Date(t.createdAt);
     row.innerHTML = `
-      <div class="saved-track-art">LIVE</div>
-      <div class="saved-track-info">
-        <p class="saved-track-name"></p>
-        <p class="saved-track-artist"></p>
+      <span class="live-rank${i < 3 ? ' top' : ''}">${String(i + 1).padStart(2, '0')}</span>
+      <div class="live-art">LIVE</div>
+      <div class="live-info">
+        <p class="live-title"></p>
+        <p class="live-artist"></p>
       </div>
-      <span class="live-badge">${num}</span>`;
-    row.querySelector('.saved-track-name').textContent   = t.trackName;
-    row.querySelector('.saved-track-artist').textContent = t.djName + ' · ' + new Date(t.createdAt).toLocaleDateString('ko-KR');
+      ${MY_LIVE_IDS.has(t.id) ? '<span class="live-badge">MY</span>' : ''}
+      <span class="live-date">${isNaN(d) ? '' : `${d.getMonth() + 1}.${d.getDate()}`}</span>
+      <span class="live-play" aria-hidden="true">▶</span>`;
+    if (t.cover) {
+      const art = row.querySelector('.live-art');
+      const img = new Image();
+      img.alt = '';
+      img.loading = 'lazy';
+      img.onload = () => { art.textContent = ''; art.appendChild(img); };
+      img.src = t.cover;
+    }
+    row.querySelector('.live-title').textContent  = t.trackName;
+    row.querySelector('.live-artist').textContent = t.djName;
     row.addEventListener('click', () => loadTrack(TRACKS.findIndex(x => x.liveId === t.id), true));
     liveListEl.appendChild(row);
   });
+  if (typeof highlightCurrent === 'function') highlightCurrent();
+}
+renderLiveList();
+
+/* 전시 체험 전체 목록 받아오기 — 실패하면(로컬 미리보기 등) 내 기기에 저장된 곡만 보인다 */
+/* 법명은 카드 이미지 좌측 상단에 그려져 있어 데이터로는 없다 → live-names.json 에 id 별로 적어 둔다
+   { "<id>": { "name": "스카니아", "no": 48, "genre": "HIP-HOP MIX" } } */
+async function getJSON(url) {
+  try { const r = await fetch(url, { cache: 'no-store' }); return r.ok ? await r.json() : null; }
+  catch (e) { return null; }
+}
+
+async function loadPublicLive() {
+  const [data, names] = await Promise.all([
+    getJSON('/.netlify/functions/card-list'),
+    getJSON('live-names.json'),
+  ]);
+  const N = names || {};
+  const ok = data && data.mediaBase && Array.isArray(data.cards);
+  if (!ok && !names) return;
+
+  const fromServer = !ok ? [] : data.cards.map(c => ({
+    id: c.id, trackName: liveLabel(c.id, c.createdAt), djName: 'OMIX 체험 부스',
+    audioSrc: `${data.mediaBase}/cards/${c.id}/play.mp4`,
+    cover: c.hasCard ? `${data.mediaBase}/cards/${c.id}/card.jpg` : '',
+    createdAt: c.createdAt,
+  }));
+  const serverIds = new Set(fromServer.map(t => t.id));
+  /* 서버 목록 + (옛 로컬 서버·데모로 받은) 내 기기에만 있는 곡, 최신순 */
+  LIVE_TRACKS = fromServer.concat(MY_LIVE.filter(t => !serverIds.has(t.id)))
+    .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0))
+    .map(t => (N[t.id] && N[t.id].name ? { ...t, djName: N[t.id].name } : t));
+
+  /* TRACKS 의 라이브 부분만 갈아끼우고, 듣던 곡은 그대로 유지 */
+  const cur = TRACKS[currentIdx];
+  const base = TRACKS.filter(t => !t.liveId);
+  TRACKS.splice(0, TRACKS.length, ...base, ...LIVE_TRACKS.map(toLiveTrack));
+  if (cur) {
+    const i = cur.liveId ? TRACKS.findIndex(t => t.liveId === cur.liveId) : TRACKS.indexOf(cur);
+    if (i >= 0) currentIdx = i;
+    /* 듣던 곡이 체험 곡이면 바뀐 법명을 바로 반영 */
+    const now = TRACKS[currentIdx];
+    if (now && now.liveId) {
+      if (nowTrackArtist) nowTrackArtist.textContent = now.artist;
+      if (playerArtist)   playerArtist.textContent   = now.artist;
+    }
+  }
+  renderLiveList();
+
+  /* ?live=<id> 로 들어왔는데 처음엔 목록에 없던 곡이면 지금 띄운다 */
+  const want = new URLSearchParams(location.search).get('live');
+  if (want && !(cur && cur.liveId === want)) {
+    const i = TRACKS.findIndex(t => t.liveId === want);
+    if (i >= 0) loadTrack(i, false);
+  }
 }
 
 
@@ -735,6 +824,7 @@ const playIdx   = playParam ? TRACKS.findIndex(t => t.audioSrc === playParam) : 
 if (!TRACKS.length) clearPlayer();
 else if (playIdx >= 0) loadTrack(playIdx, true);
 else loadTrack(liveIdx >= 0 ? liveIdx : currentIdx);
+loadPublicLive();
 
 
 /* =====================================================

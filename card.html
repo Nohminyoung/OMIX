@@ -330,9 +330,28 @@ body {
       /* #t=0.1 → 아이폰에서도 재생 전 첫 장면이 썸네일로 보이게 */
       v.src = (DEMO ? src.video : bust(src.video)) + '#t=0.1';
       $('videoBox').classList.add('ready');
+      if (!DEMO) saveLiveTrack();
     }
   );
   })();
+
+  /* ── My Player 'QR로 받은 트랙' 칸에 저장 ──
+     my-player.js 가 같은 키(omix_live_tracks)를 읽어서 영상(play.mp4)의 소리를 재생한다.
+     R2 에는 곡 이름이 없으니 id 의 날짜·시간(20261122_130020_xxxx)으로 이름을 만든다 */
+  function saveLiveTrack() {
+    const m = id.match(/^(\d{4})(\d{2})(\d{2})_(\d{2})(\d{2})(\d{2})/);
+    const at = m ? new Date(+m[1], m[2] - 1, +m[3], +m[4], +m[5], +m[6]) : new Date();
+    const label = m ? `${+m[2]}/${+m[3]} ${m[4]}:${m[5]}` : id;
+    try {
+      const KEY = 'omix_live_tracks';
+      const list = JSON.parse(localStorage.getItem(KEY) || '[]').filter((t) => t.id !== id);
+      list.unshift({
+        id, trackName: `OMIX LIVE · ${label}`, djName: 'OMIX 체험 부스',
+        audioSrc: src.video, cover: src.card, createdAt: at.getTime(),
+      });
+      localStorage.setItem(KEY, JSON.stringify(list.slice(0, 30)));
+    } catch (e) {}
+  }
 
   /* ── 저장 ──
      아이폰: 공유 시트 → '이미지 저장' / '비디오 저장'

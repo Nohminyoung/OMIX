@@ -3734,7 +3734,8 @@ body.cursor-merged .cursor-dot { width: 7px; height: 7px; }
   background: linear-gradient(135deg, #1a0408, #300a12); color: var(--red);
   font-size: 10px; font-weight: 900; letter-spacing: .05em;
 }
-.live-art img { width: 100%; height: 100%; object-fit: cover; object-position: center bottom; display: block; }
+.live-art { position: relative; }
+.live-art img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center bottom; display: block; }
 .live-info { min-width: 0; flex: 1; }
 .live-title { font-size: 13px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .live-chart-row.current .live-title { color: var(--red); }

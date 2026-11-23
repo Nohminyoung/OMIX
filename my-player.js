@@ -85,6 +85,14 @@ function toLiveTrack(t) {
 }
 LIVE_TRACKS.forEach(t => TRACKS.push(toLiveTrack(t)));
 
+/* 카드 원본(2048x3072, 1.6MB)은 무거워서 넷리파이 이미지 CDN으로 줄여 받는다
+   (netlify.toml [images] remote_images 에 R2 주소 허용). 아래 기준으로 정사각형 자르기.
+   로컬 미리보기엔 이 기능이 없으니 원본 그대로 */
+function liveThumb(url, w) {
+  if (!/^https:\/\/[^/]+\.r2\.dev\//.test(url) || /^(localhost|127\.0\.0\.1)$/.test(location.hostname)) return url;
+  return `/.netlify/images?url=${encodeURIComponent(url)}&w=${w}&h=${w}&fit=cover&position=bottom&q=75`;
+}
+
 /* R2 카드 id(20261122_130020_xxxx) → 'OMIX LIVE · 11/22 13:00' */
 function liveLabel(id, createdAt) {
   const m = id.match(/^\d{4}(\d{2})(\d{2})_(\d{2})(\d{2})/);
@@ -164,7 +172,7 @@ function loadTrack(idx, autoplay) {
       nowAlbumImg.style.objectPosition = t.liveId ? 'center bottom' : '';
       nowAlbumImg.onerror = () => { nowAlbumImg.style.display = 'none'; };
       nowAlbumImg.onload  = () => { nowAlbumImg.style.display = 'block'; };
-      nowAlbumImg.src = t.cover;
+      nowAlbumImg.src = t.liveId ? liveThumb(t.cover, 640) : t.cover;
     } else {
       nowAlbumImg.style.display = 'none';
     }
@@ -570,12 +578,15 @@ function renderLiveList() {
       <span class="live-date">${isNaN(d) ? '' : `${d.getMonth() + 1}.${d.getDate()}`}</span>
       <span class="live-play" aria-hidden="true">▶</span>`;
     if (t.cover) {
+      /* 화면에 붙여 둬야 lazy 로딩이 동작한다 — 로드되면 'LIVE' 글자만 지운다 */
       const art = row.querySelector('.live-art');
       const img = new Image();
       img.alt = '';
       img.loading = 'lazy';
-      img.onload = () => { art.textContent = ''; art.appendChild(img); };
-      img.src = t.cover;
+      img.style.visibility = 'hidden';
+      img.onload = () => { art.firstChild.nodeType === 3 && art.firstChild.remove(); img.style.visibility = ''; };
+      img.src = liveThumb(t.cover, 120);
+      art.appendChild(img);
     }
     row.querySelector('.live-title').textContent  = t.trackName;
     row.querySelector('.live-artist').textContent = t.djName;

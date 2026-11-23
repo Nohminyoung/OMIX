@@ -5,6 +5,11 @@
 [functions]
   node_bundler = "esbuild"
 
+# 넷리파이 이미지 CDN(/.netlify/images)이 R2 카드 이미지를 줄여서 내려줄 수 있게 허용
+# (My Player 'QR로 받은 트랙' 썸네일 — 원본 1.6MB → 수십 KB)
+[images]
+  remote_images = ["https://pub-bc084b9edb6748dc955f9812e8d0542f\\.r2\\.dev/.*"]
+
 # QR 주소 /card?id=... → card.html (쿼리는 그대로 전달됨)
 [[redirects]]
   from = "/card"

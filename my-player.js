@@ -594,7 +594,18 @@ function renderLiveList() {
     liveListEl.appendChild(row);
   });
   if (typeof highlightCurrent === 'function') highlightCurrent();
+  updateLiveHint();
 }
+
+/* 스크롤 안내 화살표 — 아래에 더 볼 곡이 남아 있을 때만 */
+const liveHintEl = document.getElementById('liveScrollHint');
+function updateLiveHint() {
+  if (!liveHintEl || !liveListEl) return;
+  const more = liveListEl.scrollHeight - liveListEl.clientHeight - liveListEl.scrollTop > 8;
+  liveHintEl.classList.toggle('show', more);
+}
+liveListEl?.addEventListener('scroll', updateLiveHint, { passive: true });
+window.addEventListener('resize', updateLiveHint);
 renderLiveList();
 
 /* 전시 체험 전체 목록 받아오기 — 실패하면(로컬 미리보기 등) 내 기기에 저장된 곡만 보인다 */

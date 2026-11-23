@@ -205,7 +205,13 @@
              목록은 my-player.js [13-B] 에서 렌더링 -->
         <div class="library-section live-section" id="liveSection">
           <p class="lib-section-title">QR로 받은 트랙 <span class="live-count" id="liveCount"></span></p>
-          <div id="liveTrackList"></div>
+          <div class="live-list-wrap">
+            <div id="liveTrackList"></div>
+            <!-- 아래에 곡이 더 있을 때만 보이는 스크롤 안내 (my-player.js 가 표시/숨김) -->
+            <div class="live-scroll-hint" id="liveScrollHint" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+            </div>
+          </div>
           <div class="live-empty" id="liveEmpty">
             <p>아직 올라온 체험 트랙이 없어요.<br>전시 부스에서 체험하고 QR을 스캔해보세요.</p>
             <a href="index.html?card=demo" class="live-empty-link">데모 카드 받아보기 →</a>

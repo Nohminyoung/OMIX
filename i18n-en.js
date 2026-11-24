@@ -119,6 +119,8 @@ window.OMIX_EN = {
   "이번 주": "This week",
   "총 재생": "Total plays",
   "QR로 받은 트랙": "Tracks received via QR",
+  "QR을 찍으면 체험 영상과 카드를 다시 받을 수 있어요.": "Scan the QR to get your booth video and card again.",
+  "카드 페이지 열기 →": "Open card page →",
   "아직 받은 트랙이 없어요.": "You haven't received any tracks yet.",
   "전시 부스에서 QR을 스캔해보세요.": "Scan the QR code at the exhibition booth.",
   "아직 올라온 체험 트랙이 없어요.": "No exhibition tracks yet.",

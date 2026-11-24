@@ -3758,6 +3758,41 @@ body.cursor-merged .cursor-dot { width: 7px; height: 7px; }
 .live-play { width: 18px; flex-shrink: 0; text-align: center; font-size: 11px; color: var(--gray-3); opacity: 0; transition: opacity .2s; }
 .live-chart-row:hover .live-play,
 .live-chart-row.current .live-play { opacity: 1; color: var(--red); }
+/* QR 다시 보기 버튼 + 창 */
+.live-qr {
+  width: 26px; height: 26px; flex-shrink: 0; padding: 4px; border: 0; border-radius: 6px;
+  background: transparent; color: var(--gray-2); cursor: pointer; transition: color .2s, background .2s;
+}
+.live-qr svg { width: 100%; height: 100%; display: block; }
+.live-qr:hover, .live-qr:focus-visible { color: var(--red); background: rgba(249,21,54,0.1); }
+.lqr-modal {
+  position: fixed; inset: 0; z-index: 9000; display: flex; align-items: center; justify-content: center;
+  padding: 16px; background: rgba(0,0,0,.72); backdrop-filter: blur(6px);
+  opacity: 0; pointer-events: none; transition: opacity .25s;
+}
+.lqr-modal.show { opacity: 1; pointer-events: auto; }
+.lqr-box {
+  position: relative; width: min(320px, 100%); padding: 28px 24px 22px; text-align: center;
+  background: var(--bg-main); border: 1px solid rgba(255,255,255,.08); border-radius: 14px;
+  transform: translateY(8px); transition: transform .25s;
+}
+.lqr-modal.show .lqr-box { transform: none; }
+.lqr-close {
+  position: absolute; top: 8px; right: 10px; width: 32px; height: 32px; border: 0; background: none;
+  color: var(--gray-2); font-size: 22px; line-height: 1; cursor: pointer;
+}
+.lqr-close:hover { color: var(--white); }
+.lqr-kicker { font-size: 10px; font-weight: 800; letter-spacing: .2em; color: var(--red); margin-bottom: 14px; }
+.lqr-code { width: 216px; height: 216px; margin: 0 auto 16px; padding: 8px; background: #fff; border-radius: 8px; }
+.lqr-code img, .lqr-code canvas { width: 200px !important; height: 200px !important; display: block; }
+.lqr-name { font-size: 18px; font-weight: 800; color: var(--white); }
+.lqr-label { margin-top: 4px; font-size: 12px; color: var(--gray-2); font-variant-numeric: tabular-nums; }
+.lqr-desc { margin-top: 14px; font-size: 12px; line-height: 1.6; color: var(--gray-2); }
+.lqr-open {
+  display: inline-block; margin-top: 16px; padding: 10px 18px; border-radius: 999px;
+  background: var(--red); color: #fff; font-size: 12px; font-weight: 800; letter-spacing: .05em; text-decoration: none;
+}
+.lqr-open:hover { background: var(--red-dk); }
 .live-empty { padding: 14px 8px; font-size: 12px; line-height: 1.6; color: var(--gray-3); }
 .live-empty-link { display: inline-block; margin-top: 8px; font-size: 11px; font-weight: 700; letter-spacing: .1em; color: var(--red); text-decoration: none; }
 .live-empty-link:hover { text-decoration: underline; }

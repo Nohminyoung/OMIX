@@ -575,8 +575,9 @@ function renderLiveList() {
         <p class="live-artist"></p>
       </div>
       ${MY_LIVE_IDS.has(t.id) ? '<span class="live-badge">MY</span>' : ''}
-      <span class="live-date">${isNaN(d) ? '' : `${d.getMonth() + 1}.${d.getDate()}`}</span>
-      <span class="live-play" aria-hidden="true">▶</span>`;
+      <button type="button" class="live-qr" aria-label="QR 다시 보기" title="QR 다시 보기">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3M21 14v.01M17 21h4v-4M14 18v3"/></svg>
+      </button>`;
     if (t.cover) {
       /* 화면에 붙여 둬야 lazy 로딩이 동작한다 — 로드되면 'LIVE' 글자만 지운다 */
       const art = row.querySelector('.live-art');
@@ -589,13 +590,41 @@ function renderLiveList() {
       art.appendChild(img);
     }
     row.querySelector('.live-title').textContent  = t.trackName;
-    row.querySelector('.live-artist').textContent = t.djName;
+    /* 날짜는 법명 옆에 — 오른쪽을 QR 버튼에 내주고 제목 칸을 넓게 쓴다 */
+    row.querySelector('.live-artist').textContent = isNaN(d) ? t.djName : `${t.djName} · ${d.getMonth() + 1}.${d.getDate()}`;
     row.addEventListener('click', () => loadTrack(TRACKS.findIndex(x => x.liveId === t.id), true));
+    row.querySelector('.live-qr').addEventListener('click', e => { e.stopPropagation(); openLiveQR(t); });
     liveListEl.appendChild(row);
   });
   if (typeof highlightCurrent === 'function') highlightCurrent();
   updateLiveHint();
 }
+
+/* QR 다시 보기 — 전시 카드의 QR과 같은 주소(/card?id=<id>)를 그 자리에서 다시 그린다.
+   카드를 잃어버렸거나, 폰 화면이라 QR을 못 찍는 사람은 '카드 페이지 열기'로 바로 간다 */
+const CARD_SITE = 'https://omix-project.netlify.app';
+const liveQrEl = document.getElementById('liveQrModal');
+function openLiveQR(t) {
+  if (!liveQrEl) return;
+  const url = `${CARD_SITE}/card?id=${encodeURIComponent(t.id)}`;
+  const box = liveQrEl.querySelector('.lqr-code');
+  box.innerHTML = '';
+  if (window.QRCode) {
+    new QRCode(box, { text: url, width: 200, height: 200, colorDark: '#000000', colorLight: '#ffffff', correctLevel: QRCode.CorrectLevel.M });
+  }
+  liveQrEl.querySelector('.lqr-name').textContent  = t.djName;
+  liveQrEl.querySelector('.lqr-label').textContent = t.trackName;
+  liveQrEl.querySelector('.lqr-open').href = url;
+  liveQrEl.classList.add('show');
+  liveQrEl.setAttribute('aria-hidden', 'false');
+}
+function closeLiveQR() {
+  if (!liveQrEl) return;
+  liveQrEl.classList.remove('show');
+  liveQrEl.setAttribute('aria-hidden', 'true');
+}
+liveQrEl?.addEventListener('click', e => { if (e.target === liveQrEl || e.target.closest('.lqr-close')) closeLiveQR(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLiveQR(); });
 
 /* 스크롤 안내 화살표 — 아래에 더 볼 곡이 남아 있을 때만 */
 const liveHintEl = document.getElementById('liveScrollHint');

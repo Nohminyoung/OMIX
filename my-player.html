@@ -346,6 +346,20 @@
     <button class="player-like" id="globalLike">♡</button>
   </div>
 
+  <!-- QR 다시 보기 창 — 'QR로 받은 트랙' 목록의 QR 아이콘을 누르면 뜬다 (my-player.js openLiveQR) -->
+  <div class="lqr-modal" id="liveQrModal" aria-hidden="true" role="dialog" aria-label="QR 다시 보기">
+    <div class="lqr-box">
+      <button type="button" class="lqr-close" aria-label="닫기">×</button>
+      <p class="lqr-kicker">OMIX LIVE CARD</p>
+      <div class="lqr-code"></div>
+      <p class="lqr-name"></p>
+      <p class="lqr-label"></p>
+      <p class="lqr-desc">QR을 찍으면 체험 영상과 카드를 다시 받을 수 있어요.</p>
+      <a class="lqr-open" href="#" target="_blank" rel="noopener">카드 페이지 열기 →</a>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <!-- my-player.js: 커서, nav, 플레이어 컨트롤, 트랙 전환, 탭, 저장 트랙 -->
   <script src="my-playlist.js"></script>
   <script src="my-player.js"></script>

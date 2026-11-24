@@ -86,7 +86,7 @@ const ALL_TRACKS = [
   { rank:4,  title:'No Score, Just Soul', artist:'OMIX Studio',           genre:'healing',    dur:'5:01', plays:'2.6M',  g:3, audioSrc:'music/No%20Score,%20Just%20Soul.mp3', detailIdx:17 },
   { rank:5,  title:'Temple Echo Loop',  artist:'OMIX Studio',             genre:'ambient',    dur:'4:09', plays:'2.5M',  g:4, audioSrc:'music/Temple%20Echo%20Loop.mp3', detailIdx:18 },
   { rank:6,  title:'공즉',              artist:'OMIX Studio',             genre:'meditation', dur:'2:53', plays:'2.4M',  g:5, audioSrc:'music/공즉.mp3', detailIdx:19 },
-  { rank:7,  title:'무명등',            artist:'OMIX Studio',             genre:'mindful',    dur:'2:55', plays:'2.3M',  g:6, audioSrc:'music/무명등.mp3', detailIdx:20 },
+  { rank:7,  title:'무명등',            artist:'OMIX Studio',             genre:'mindful',    dur:'3:04', plays:'2.3M',  g:6, audioSrc:'music/무명등.mp4', detailIdx:20 },
   { rank:8,  title:'사계윤회',          artist:'OMIX Studio',             genre:'world',      dur:'2:30', plays:'2.2M',  g:7, audioSrc:'music/사계윤회.mp3', detailIdx:21 },
   { rank:9,  title:'업보 Bounce',       artist:'OMIX Studio',             genre:'dance',      dur:'3:14', plays:'2.1M',   g:8, audioSrc:'music/업보%20Bounce.mp3', detailIdx:22 },
   { rank:10, title:'파도에 맡겨',       artist:'OMIX Studio',             genre:'healing',    dur:'4:09', plays:'2.0M',   g:9, audioSrc:'music/파도에%20맡겨.mp3', detailIdx:23 },

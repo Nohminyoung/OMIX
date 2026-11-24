@@ -544,7 +544,7 @@ OMIX sound, we go higher
 오오오옴—
 공즉 flow
 OMIX)` },
-    { title: '무명등',               artist: 'OMIX Studio',            duration: '2:55', genre: 'MINDFUL',    label: 'OMIX.LP.02', year: '2025',
+    { title: '무명등',               artist: 'OMIX Studio',            duration: '3:04', genre: 'MINDFUL',    label: 'OMIX.LP.02', year: '2025',
       lyrics: `OMIX
 yeah
 
